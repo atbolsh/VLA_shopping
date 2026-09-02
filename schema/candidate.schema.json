@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/lva-shopping/candidate.schema.json",
+  "title": "LVACandidate",
+  "description": "One shoppable Vision-Language-Action (VLA / LVA) model. Frontmatter in candidates/*.md must validate against this.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "tier",
+    "params_b",
+    "dual_class",
+    "scores",
+    "open_weights",
+    "survey_date"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "name": { "type": "string" },
+    "tier": {
+      "type": "string",
+      "enum": ["A-true-dual-7b", "B-near-dual-mature", "C-kit-or-reference"]
+    },
+    "org": { "type": "string" },
+    "params_b": {
+      "type": "number",
+      "description": "Approximate total parameters in billions. Use the System-2 backbone size when the action head is much smaller and listed separately."
+    },
+    "params_note": { "type": "string" },
+    "backbone": { "type": "string" },
+    "system1": { "type": "string" },
+    "dual_class": {
+      "type": "string",
+      "enum": [
+        "true_async",
+        "true_embedded",
+        "true_hierarchical",
+        "near_expert",
+        "behavioral_switch",
+        "single",
+        "kit",
+        "closed_reference"
+      ]
+    },
+    "dual_note": { "type": "string" },
+    "open_weights": { "type": "boolean" },
+    "license": { "type": "string" },
+    "hf": { "type": "array", "items": { "type": "string", "format": "uri" } },
+    "code": { "type": "array", "items": { "type": "string", "format": "uri" } },
+    "paper": { "type": "array", "items": { "type": "string" } },
+    "project": { "type": "string" },
+    "videos": { "type": "array", "items": { "type": "string" } },
+    "interactive": { "type": "array", "items": { "type": "string" } },
+    "envs": { "type": "array", "items": { "type": "string" } },
+    "robots": { "type": "array", "items": { "type": "string" } },
+    "overnight": { "type": "string" },
+    "reasoning_vs_gemma4_12b": {
+      "type": "string",
+      "enum": ["above", "near", "below_ok", "below_reject", "unknown"]
+    },
+    "scores": {
+      "type": "object",
+      "required": [
+        "dual",
+        "reasoning",
+        "size_fit",
+        "env_play",
+        "cheap_robot",
+        "overnight",
+        "openness"
+      ],
+      "properties": {
+        "dual": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "reasoning": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "size_fit": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "env_play": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "cheap_robot": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "overnight": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "openness": { "type": "integer", "minimum": 1, "maximum": 5 }
+      }
+    },
+    "pull_priority": { "type": "integer", "minimum": 1, "maximum": 12 },
+    "survey_date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
+  }
+}

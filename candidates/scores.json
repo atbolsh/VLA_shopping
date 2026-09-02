@@ -1,0 +1,19 @@
+{
+  "survey_date": "2026-09-02",
+  "score_max": 35,
+  "rubric": "AGENTS.md",
+  "candidates": [
+    {"id": "internvla-n1", "total": 29, "pull": 1, "scores": {"dual": 5, "reasoning": 4, "size_fit": 5, "env_play": 5, "cheap_robot": 2, "overnight": 3, "openness": 5}},
+    {"id": "gemma4-diy", "total": 30, "pull": 2, "note": "dual=5 is potential", "scores": {"dual": 5, "reasoning": 5, "size_fit": 4, "env_play": 4, "cheap_robot": 3, "overnight": 4, "openness": 5}},
+    {"id": "molmoact2", "total": 28, "pull": 3, "scores": {"dual": 3, "reasoning": 4, "size_fit": 5, "env_play": 4, "cheap_robot": 5, "overnight": 2, "openness": 5}},
+    {"id": "groot-n17", "total": 28, "pull": 4, "scores": {"dual": 3, "reasoning": 2, "size_fit": 5, "env_play": 5, "cheap_robot": 4, "overnight": 5, "openness": 4}},
+    {"id": "navila", "total": 28, "pull": 5, "scores": {"dual": 5, "reasoning": 3, "size_fit": 5, "env_play": 5, "cheap_robot": 3, "overnight": 2, "openness": 5}},
+    {"id": "fis-vla", "total": 25, "pull": 6, "scores": {"dual": 5, "reasoning": 2, "size_fit": 5, "env_play": 4, "cheap_robot": 2, "overnight": 2, "openness": 5}},
+    {"id": "openhelix", "total": 24, "pull": 7, "scores": {"dual": 5, "reasoning": 2, "size_fit": 5, "env_play": 4, "cheap_robot": 1, "overnight": 2, "openness": 5}},
+    {"id": "pi05", "total": 26, "pull": 8, "scores": {"dual": 3, "reasoning": 2, "size_fit": 5, "env_play": 5, "cheap_robot": 5, "overnight": 2, "openness": 4}},
+    {"id": "robodual", "total": 24, "pull": 9, "scores": {"dual": 5, "reasoning": 2, "size_fit": 5, "env_play": 4, "cheap_robot": 1, "overnight": 2, "openness": 5}},
+    {"id": "onetwovla", "total": 23, "pull": 10, "scores": {"dual": 4, "reasoning": 3, "size_fit": 5, "env_play": 2, "cheap_robot": 2, "overnight": 4, "openness": 3}},
+    {"id": "magma-8b", "total": 21, "pull": 11, "scores": {"dual": 1, "reasoning": 3, "size_fit": 5, "env_play": 4, "cheap_robot": 2, "overnight": 2, "openness": 4}},
+    {"id": "helix-closed", "total": 17, "pull": null, "scores": {"dual": 5, "reasoning": 3, "size_fit": 5, "env_play": 1, "cheap_robot": 1, "overnight": 1, "openness": 1}}
+  ]
+}

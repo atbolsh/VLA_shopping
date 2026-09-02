@@ -1,0 +1,59 @@
+# Machine-readable shortlist. Bodies live in sibling *.md files.
+# survey_date: 2026-09-02
+candidates:
+  - id: internvla-n1
+    file: internvla-n1.md
+    pull_priority: 1
+    tier: A-true-dual-7b
+  - id: gemma4-diy
+    file: gemma4-diy.md
+    pull_priority: 2
+    tier: C-kit-or-reference
+  - id: molmoact2
+    file: molmoact2.md
+    pull_priority: 3
+    tier: B-near-dual-mature
+  - id: groot-n17
+    file: groot-n17.md
+    pull_priority: 4
+    tier: B-near-dual-mature
+  - id: navila
+    file: navila.md
+    pull_priority: 5
+    tier: A-true-dual-7b
+  - id: fis-vla
+    file: fis-vla.md
+    pull_priority: 6
+    tier: A-true-dual-7b
+  - id: openhelix
+    file: openhelix.md
+    pull_priority: 7
+    tier: A-true-dual-7b
+  - id: pi05
+    file: pi05.md
+    pull_priority: 8
+    tier: B-near-dual-mature
+  - id: robodual
+    file: robodual.md
+    pull_priority: 9
+    tier: A-true-dual-7b
+  - id: onetwovla
+    file: onetwovla.md
+    pull_priority: 10
+    tier: B-near-dual-mature
+  - id: magma-8b
+    file: magma-8b.md
+    pull_priority: 11
+    tier: C-kit-or-reference
+  - id: helix-closed
+    file: helix-closed.md
+    pull_priority: 12
+    tier: C-kit-or-reference
+honorable:
+  - smolvla
+  - nora
+  - openvla-7b
+  - lcb
+  - hirt
+  - internvla-a1
+  - vesta
