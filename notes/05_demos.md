@@ -2,6 +2,8 @@
 
 Hosted interactive demos are rare. Most "demos" are project-page videos. This list is only things that actually exist.
 
+**Next-session look order:** RynnVLA-001/002 + WorldVLA → MolmoAct2 → InternVLA-N1. Script: [`09_next_session.md`](09_next_session.md).
+
 ## Hosted interactive (browser)
 
 | What | URL | Tied to |
@@ -9,17 +11,22 @@ Hosted interactive demos are rare. Most "demos" are project-page videos. This li
 | **InternNav eval (Gradio)** | https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo | InternVLA-N1 — **the one real hosted VLA-nav playground** |
 | Gemini ER + MuJoCo WASM | https://avikde.github.io/vla-pipeline/ | Not a candidate. Slow Gemini planner, classical IK. Useful as a "what Path K feels like" toy. Needs a Gemini key or uses a cached plan. |
 
+RynnVLA / WorldVLA / MolmoAct2 have **no** hosted net. Their "interactive" is HF card GIFs plus a later local LIBERO sandbox.
+
 ## Project-page video (watch before installing)
 
 | Page | Watch for |
 |---|---|
+| https://huggingface.co/blog/Alibaba-DAMO-Academy/rynnvla-001 | RynnVLA-001 — ego-video pretrain → VLA. YouTube/Bilibili on the [GitHub README](https://github.com/alibaba-damo-academy/RynnVLA-001) |
+| https://huggingface.co/Alibaba-DAMO-Academy/WorldVLA | WorldVLA — action GIFs and action→next-frame GIFs |
+| https://huggingface.co/Alibaba-DAMO-Academy/RynnVLA-002 | RynnVLA-002 — LIBERO + wrist generation / world-model tables |
+| https://allenai.org/blog/molmoact2 | SO-10x, traces, Think |
 | https://internrobotics.github.io/internvla-n1.github.io/ | House-scale nav, dual system |
 | https://navila-bot.github.io/ | Go2 / H1, language macros |
 | https://openhelix-robot.github.io/ | CALVIN dual-system |
 | https://fast-in-slow.github.io/ | Embedded S1, 20+ Hz |
 | https://opendrivelab.github.io/RoboDual/ | Generalist + specialist |
 | https://one-two-vla.github.io/ | Reason ↔ act flips, cocktails |
-| https://allenai.org/blog/molmoact2 | SO-10x, traces, Think |
 | https://microsoft.github.io/Magma/ | UI + WidowX |
 | https://www.figure.ai/news/helix | The closed ceiling, 200 Hz S1 |
 | https://www.physicalintelligence.company/blog/pi0 | π0 folding / kitchen |
@@ -33,6 +40,7 @@ Hosted interactive demos are rare. Most "demos" are project-page videos. This li
 | Playground | URL | Notes |
 |---|---|---|
 | InternNav | https://github.com/InternRobotics/InternNav | Habitat / Isaac; official N1 loop |
+| WorldVLA / RynnVLA-002 LIBERO | https://github.com/alibaba-damo-academy/WorldVLA | Decoder-family sandbox after the look |
 | NaVILA-Bench | https://github.com/yang-zj1026/NaVILA-Bench | Isaac Lab VLN |
 | LIBERO via LeRobot | `lerobot-eval --env.type=libero ...` | π0.5, MolmoAct2, GR00T |
 | CALVIN | http://calvin.cs.uni-freiburg.de/ | OpenHelix, RoboDual |
@@ -42,5 +50,5 @@ Hosted interactive demos are rare. Most "demos" are project-page videos. This li
 ## What does not exist (do not hunt)
 
 - A public Helix or Gemini Robotics weights playground.
-- A browser demo of OpenHelix / FiS / MolmoAct2 that runs the real net.
+- A browser demo of OpenHelix / FiS / MolmoAct2 / RynnVLA / WorldVLA that runs the real net.
 - An official SO-101 web teleop that also runs a 7B VLA in the cloud (LeRobot is local).

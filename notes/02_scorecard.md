@@ -4,6 +4,8 @@ Scores are 1–5. Rubric lives in `../AGENTS.md`. Totals are an unweighted sum (
 
 **Do not treat the total as "buy this."** InternVLA-N1 wins navigation+dual+reasoning. MolmoAct2 / GR00T / π0.5 win "I want a robot on the desk this month." OpenHelix wins "I want to swap my Gemma in as S2."
 
+The `pull` column is shopping rank. **Next window is a look order**, not this table: RynnVLA-001/002 + WorldVLA → MolmoAct2 → InternVLA-N1 → small sandboxes. [`09_next_session.md`](09_next_session.md).
+
 | id | name | params | dual class | dual | reason | size | env | robot | night | open | total | pull |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | internvla-n1 | InternVLA-N1 | ~8B S2 | true_async | 5 | 4 | 5 | 5 | 2 | 3 | 5 | 29 | 1 |

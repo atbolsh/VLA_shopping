@@ -10,7 +10,9 @@ The parseable human source of truth for Network / Action / World / Paper is `not
 2. `candidates/index.yaml` — machine-readable shortlist.
 3. `candidates/*.md` — one card per model. YAML frontmatter must match `schema/candidate.schema.json`.
 4. `notes/02_scorecard.md` — why the scores are what they are.
-5. `papers/README.md` — what was pulled and why.
+5. `notes/09_next_session.md` — next window: look RynnVLA → MolmoAct2 → InternVLA-N1, then sandboxes. Do not start that in a window that only wrote the note.
+6. `notes/08_community_gems.md` — HF community sweep. Do not promote Hub training dumps to cards.
+7. `papers/README.md` — what was pulled and why.
 
 ## How to add or revise a candidate
 
@@ -46,3 +48,4 @@ The parseable human source of truth for Network / Action / World / Paper is `not
 - Treat Helix, Gemini Robotics, or π0.5's *paper* hierarchy as pullable.
 - Recommend SmolVLA / 2B-class VLMs as the reasoning core. The user already rejected Gemma 4 e4B.
 - Invent interactive demos. If there is no hosted playground, say so and point at the local eval.
+- Promote a LeRobot auto-upload (`tylergp/molmoact2-*`, unnamed `*so101*` LoRAs) to a candidate card. Those are training dumps. The community sweep lives in `notes/08_community_gems.md`.

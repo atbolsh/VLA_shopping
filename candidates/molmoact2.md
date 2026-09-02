@@ -74,6 +74,6 @@ Best 2026 **open + cheap-robot + spatial reasoning** VLA. Dual purity is only "n
 
 ## First pull
 
-`allenai/MolmoAct2-Think-LIBERO` via their server scripts, then `MolmoAct2-SO100_101` if an arm exists. Read the adaptive-depth cache API; that is the bit that maps onto the sibling problem.
+Second in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)): watch the [blog](https://allenai.org/blog/molmoact2) after RynnVLA, before InternVLA-N1 Gradio. Then `allenai/MolmoAct2-Think-LIBERO` as sandbox B. Read the adaptive-depth cache API; that is the bit that maps onto the sibling problem. SO-101 later.
 
 ## Pull log

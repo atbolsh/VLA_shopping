@@ -12,8 +12,9 @@ Sibling problem statement (why dual-loop at all): [`../stateful_realtime_thinkin
 2. [`notes/00_brief.md`](notes/00_brief.md) — your four constraints.
 3. [`notes/01_taxonomy.md`](notes/01_taxonomy.md) — what "true dual" means. π0 and GR00T are useful and **not** Helix.
 4. [`notes/02_scorecard.md`](notes/02_scorecard.md) or the canvas — pick **one** path. Do not clone twelve repos.
+5. **Next window:** [`notes/09_next_session.md`](notes/09_next_session.md) — look RynnVLA → MolmoAct2 → InternVLA-N1, then small sandboxes.
 
-Env/robot/demo lists: [`notes/03_envs_and_robots.md`](notes/03_envs_and_robots.md), [`notes/05_demos.md`](notes/05_demos.md).
+Env/robot/demo lists: [`notes/03_envs_and_robots.md`](notes/03_envs_and_robots.md), [`notes/05_demos.md`](notes/05_demos.md). Community / decoder-head sweep: [`notes/08_community_gems.md`](notes/08_community_gems.md).
 
 Machine-facing cards: [`candidates/`](candidates/) (YAML frontmatter + `schema/candidate.schema.json`). Agent conventions: [`AGENTS.md`](AGENTS.md).
 
@@ -54,11 +55,13 @@ scripts/         fetch_papers.sh
 AGENTS.md        how a later agent should edit this
 ```
 
-## Pull order when that day comes
+## Next session (look, then sandboxes)
 
-1. InternVLA-N1 System 2 reasoning smoke + Gradio.
-2. OpenHelix paper (even if Path N wins — it is the taxonomy).
-3. MolmoAct2-Think-LIBERO **or** GR00T-N1.7-LIBERO, not both the first weekend.
-4. Only then: Habitat install or an SO-101.
+Scorecard pull numbers are shopping rank, not the next window. Next window:
 
-Details: [`notes/04_test_plan.md`](notes/04_test_plan.md).
+1. Watch **RynnVLA-001 / 002 + WorldVLA** (videos / HF GIFs; no hosted playground).
+2. Watch **MolmoAct2** ([blog](https://allenai.org/blog/molmoact2)).
+3. Play **InternVLA-N1** ([Gradio](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo) + homepage videos).
+4. Then one small sandbox at a time: Gradio house, MolmoAct2-LIBERO, WorldVLA/RynnVLA-002 LIBERO. Habitat / SO-101 wait.
+
+Full link list: [`notes/09_next_session.md`](notes/09_next_session.md). Later smokes: [`notes/04_test_plan.md`](notes/04_test_plan.md).

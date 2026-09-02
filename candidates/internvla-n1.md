@@ -71,6 +71,8 @@ Best **off-the-shelf** match to "navigate a detailed 3D world with a slow planne
 
 ## First pull
 
+Third in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)), after RynnVLA and MolmoAct2 videos.
+
 1. Open the Gradio space and the project page videos.
 2. Reasoning smoke on the System 2 card alone (`InternVLA-N1-System2`).
 3. If that holds, install InternNav Habitat eval before touching Isaac.

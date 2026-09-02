@@ -19,4 +19,4 @@ You want an off-the-shelf or minimally-finetuned **LVA** (your word; literature 
 
 ## What this repo is for
 
-Not pulling weights yet. Compile a balanced shortlist, keep papers local, and leave cards that both a human and a later agent can update after the first download-and-smoke-test pass (`notes/04_test_plan.md`).
+Not pulling weights yet. Compile a balanced shortlist, keep papers local, and leave cards that both a human and a later agent can update after the first look-and-sandbox pass (`notes/09_next_session.md`, then `notes/04_test_plan.md`).
