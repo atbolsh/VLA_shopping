@@ -48,6 +48,10 @@ def _load_env() -> None:
         os.environ.setdefault(key.strip(), val.strip().strip("'").strip('"'))
 
 
+def _ok_png(path: Path) -> bool:
+    return path.is_file() and path.stat().st_size > 10_000
+
+
 def main() -> int:
     _load_env()
     OUT.mkdir(parents=True, exist_ok=True)
@@ -60,19 +64,25 @@ def main() -> int:
 
     for name in FILES:
         dest = OUT / Path(name).name
+        if _ok_png(dest):
+            print(f"already {dest} ({dest.stat().st_size} B)", flush=True)
+            continue
         src = local_root / name
-        if src.is_file():
+        if _ok_png(src):
             shutil.copy2(src, dest)
-            print(f"copied {src} -> {dest}", flush=True)
+            print(f"copied {src} -> {dest} ({dest.stat().st_size} B)", flush=True)
             continue
         if hf_hub_download is None:
             print("need huggingface_hub to fetch official frames", file=sys.stderr)
             return 1
-        path = hf_hub_download(
-            repo_id=REPO, filename=name, token=token
+        path = Path(
+            hf_hub_download(repo_id=REPO, filename=name, token=token)
         )
         shutil.copy2(path, dest)
-        print(f"downloaded {name} -> {dest}", flush=True)
+        print(f"downloaded {name} -> {dest} ({dest.stat().st_size} B)", flush=True)
+        if not _ok_png(dest):
+            print(f"refusing tiny frame {dest}", file=sys.stderr)
+            return 1
 
     print(f"screenshot/ ready: {sorted(p.name for p in OUT.glob('*.png'))}")
     return 0

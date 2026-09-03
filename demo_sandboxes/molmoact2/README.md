@@ -28,7 +28,10 @@ bash setup.sh
 
 `setup.sh` clones with `GIT_LFS_SKIP_SMUDGE=1`. A few LeRobot test PNGs in that repo 404 on LFS; we do not need them. If a previous clone left `vendor/molmoact2` half-checked-out, just re-run `setup.sh`.
 
-Open `demo.ipynb`. Frames come from the Think-LIBERO card (`screenshot/sample_*_rgb.png`), not the orange/blue placeholders.
+Frames come from the Think-LIBERO card (`screenshot/sample_agentview_rgb.png`, `sample_wrist_rgb.png`), not the orange/blue placeholders.
+
+- **`think_inject.ipynb`** — caution sentence in the official `task=` slot; full `generated_token_ids` decode; `█` over depth/action payload tokens; then depth bins + action vectors. One model (Think-LIBERO).
+- **`demo.ipynb`** — older two-surface notebook (Think + Molmo2-ER). Do not load both on one 5090.
 
 If `setup.sh` already finished:
 
@@ -37,4 +40,4 @@ source .venv/bin/activate
 python download_frames.py
 ```
 
-Then **restart the `molmoact2` kernel** so it picks up `src/think_act.py` (processor list→dict shim + `AutoModelForImageTextToText`).
+Then **restart the `molmoact2` kernel** and open `think_inject.ipynb`.

@@ -114,9 +114,28 @@ if [[ -n "${HF_TOKEN:-}" ]]; then
 fi
 python - <<'PY'
 from huggingface_hub import snapshot_download
-snapshot_download("allenai/MolmoAct2-Think-LIBERO", local_dir="weights/MolmoAct2-Think-LIBERO", local_dir_use_symlinks=False)
-snapshot_download("allenai/Molmo2-ER", local_dir="weights/Molmo2-ER", local_dir_use_symlinks=False)
+snapshot_download(
+    "allenai/MolmoAct2-Think-LIBERO",
+    local_dir="weights/MolmoAct2-Think-LIBERO",
+    local_dir_use_symlinks=False,
+)
+snapshot_download(
+    "allenai/Molmo2-ER",
+    local_dir="weights/Molmo2-ER",
+    local_dir_use_symlinks=False,
+)
 print("downloaded Think-LIBERO + Molmo2-ER")
+PY
+
+python - <<'PY'
+import sys
+from pathlib import Path
+sys.path.insert(0, "src")
+from hf_load import sanitize_tokenizer_config
+for p in Path("weights").iterdir():
+    if p.is_dir():
+        sanitize_tokenizer_config(p)
+        print("sanitized", p / "tokenizer_config.json")
 PY
 
 python download_frames.py
@@ -148,3 +167,5 @@ fi
 } > .rung
 echo "MOLMOACT2 setup done. Rung:"
 cat .rung
+echo "Official cameras: screenshot/sample_agentview_rgb.png + sample_wrist_rgb.png"
+echo "Inject notebook: think_inject.ipynb (kernel molmoact2). Old two-surface: demo.ipynb."
