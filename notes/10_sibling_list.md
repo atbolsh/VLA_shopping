@@ -12,7 +12,7 @@ The parseable score table is below. The canvas mirrors it; do not invent a secon
 
 Same list as [`09_next_session.md`](09_next_session.md). Do not start this in the window that only wrote the note.
 
-1. **JARVIS-VLA** — only open 7B that is still a VLM, has a chat template, and has a documented MineStudio / vLLM loop. 5.5 FPS is hitchy, not paused-on-purpose. Attaching a custom S1 later is the same job as Path K on Gemma 4 12B.
+1. **JARVIS-VLA** — **done 2026-09-03.** Mouth is dead (`action_tokens` only). Skip MineStudio. Custom S1 later is Path K (Gemma 4 12B + STEVE-1), not this 7B.
 2. **Chameleon family (RynnVLA-001/002 + WorldVLA)** — vision decoder you actually want. Official harness does not talk. **Note-goal:** leftover English or a logged miss; decoder stays first-class. Spec (no code yet): [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md).
 3. **MolmoAct2** — shopping Path R look. Molmo2-ER can VQA if you ask; Think mode is depth tokens.
 4. **InternVLA-N1** — shopping Path N look. Hosted Gradio. True dual; product loop is mute.
@@ -25,13 +25,13 @@ Dual-class words are the same as [`../AGENTS.md`](../AGENTS.md). `reasoning_vs_g
 
 | id | dual class | S1 eyes | chatty | clock | env | vs 12B | test |
 |---|---|---|---|---|---|---|---|
-| **jarvis-vla** | `single` | n/a (the 7B *is* the policy) | **leftover** — Qwen2-VL chat template; ActVLP did VQA/grounding *before* action SFT. First smoke is a screenshot → “what are you looking at?” | hitchy single (~**5.5 FPS** 7B, chunk 1) | Minecraft / [MineStudio](https://github.com/CraftJarvis/MineStudio) | `below_ok` (Qwen2-VL-7B, not Gemma 4) | **1** |
+| **jarvis-vla** | `single` | n/a (the 7B *is* the policy) | **mute** — leftover Qwen mouth is gone. 2026-09-03 VQA: only `<\|reserved_special_token_*\|>`, no English. Skip MineStudio. | hitchy single (~**5.5 FPS** 7B, chunk 1) | Minecraft / [MineStudio](https://github.com/CraftJarvis/MineStudio) | `below_ok` (Qwen2-VL-7B, not Gemma 4) | **1 (done)** |
 | **rynn-worldvla** | `single` (generative prior) | n/a | **mute** in the official harness; **hack goal** for leftover English | robot LIBERO, not a game clock | LIBERO (not a video game) | `below_ok` / unknown; Chameleon-7B ≠ Gemma | **2** |
 | **omnijarvis** | periodic latent dual (not `true_async`) | **yes** — GROOT-style IL decoder \(\pi(a_t \mid o_{1:t}, z)\) | **paper_qa** — CoT + answers, then 5 FSQ behavior tokens | S2 parked; S1 rolls ~32 steps (fig. caption also says 128 = tokenizer trunk) | Minecraft | `below_reject` (LLaVA-1.5-7B) | later |
 | **steve-1** | S1 only | **yes** | **mute** | ~20 FPS | MineRL / MineStudio | n/a | steal-S1 |
 | **vpt** | S1 only | **yes** | **mute** | ~20 FPS | Minecraft (human kbd/mouse) | n/a | steal-S1 |
 | **rocket-1** | `true_hierarchical` if you bring a VLM | **yes** (SAM-2 + policy on pixels+masks) | planner is yours | S1 real-time; S2 you call | Minecraft | depends on the VLM you plug | steal-S1 |
-| **gemma-steve** | `kit` / `true_hierarchical` | **yes** (STEVE-1) | **by_construction** | S1 ticks; S2 when you say | MineStudio | `above` (your 12B) | kit, after 1 |
+| **gemma-steve** | `kit` / `true_hierarchical` | **yes** (STEVE-1) | **by_construction** | S1 ticks; S2 when you say | MineStudio | `above` (your 12B) | kit (unlocked; not the next 5090 hour) |
 
 **JARVIS-VLA is not S1/S2.** One Qwen2-VL forward → keyboard/mouse tokens (optional chunk of 2). They built it to *remove* OmniJARVIS’s extra grounding policy.
 
@@ -99,8 +99,19 @@ Success is “it answered in English *or* it moved,” not a new shopping total.
 
 | Order | What | Success |
 |---|---|---|
-| S | JARVIS-VLA: screenshot → VQA, then one MineStudio rollout (`vLLM` + official rollout script) | Leftover mouth still answers; agent takes kbd/mouse in-game. |
+| S | JARVIS-VLA screenshot VQA (`demo_sandboxes/jarvis_vqa`) | **Done 2026-09-03.** `action_tokens` only. MineStudio skipped (same mute 7B + JDK weekend). |
 | C | Chameleon: one WorldVLA / RynnVLA-002 LIBERO task and one action → next-frame sample. Talk-harness is the note-goal in [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md), not this window’s code. | Decoder visible. Leftover English later, or a logged miss. |
-| K | Only if S’s mouth is dead: Gemma 4 12B + STEVE-1 dummy handoff | 12B talks; STEVE-1 walks for N ticks. |
+| K | JARVIS mouth is dead: Gemma 4 12B + STEVE-1 dummy handoff | 12B talks; STEVE-1 walks for N ticks. Not the next rented-GPU hour. |
 
 Habitat / SO-101 / the twelve-card zoo stay on the shopping path.
+
+## Pull log
+
+### jarvis-vla (2026-09-03)
+
+- **Box:** 1× RTX 5090, `demo_sandboxes/jarvis_vqa`.
+- **Prompt:** official SFT / `VLLM_AGENT` layout — `{question}\nobservation: \n` then image. Qwen2-VL chat template on `CraftJarvis/JarvisVLA-Qwen2-VL-7B`.
+- **Frames:** official `CraftJarvis/minecraft-vla-sft` **valid** split (not the 106 GB train set).
+- **Mouth:** `action_tokens`. Reply is only `<|reserved_special_token_*|>`. No English, no other leftover tokens, no useful feedback. First decode (`skip_special_tokens=True`) looked like garbage because it stripped the action stream.
+- **Decision:** skip `demo_sandboxes/jarvis_minestudio`. Same weights; will not talk. Minecraft-with-a-mouth is smoke K (Gemma 4 12B + STEVE-1) when you want it.
+- **Do not** treat OmniJARVIS or JARVIS-1 as the same result. Those are other animals.

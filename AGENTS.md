@@ -10,7 +10,7 @@ The parseable human source of truth for Network / Action / World / Paper is `not
 2. `candidates/index.yaml` — machine-readable shortlist.
 3. `candidates/*.md` — one card per model. YAML frontmatter must match `schema/candidate.schema.json`.
 4. `notes/02_scorecard.md` — why the scores are what they are.
-5. `notes/09_next_session.md` — next window, four looks: JARVIS-VLA → Chameleon/Rynn/WorldVLA (decoder + harness-talk goal) → MolmoAct2 → InternVLA-N1, then sandboxes. Do not start that in a window that only wrote the note.
+5. `notes/09_next_session.md` — four looks then sandboxes. **JARVIS-VLA mouth is dead** (2026-09-03, `action_tokens`); skip MineStudio. Next 1×5090 install is `demo_sandboxes/molmoact2`. Sibling log: `notes/10_sibling_list.md`.
 6. `notes/10_sibling_list.md` — sibling (talk + 3D game) scorecard. Hard filter: policy weights. Not a twelfth shopping card.
 7. `notes/08_community_gems.md` — HF community sweep. Do not promote Hub training dumps to cards.
 8. `papers/README.md` — what was pulled and why.

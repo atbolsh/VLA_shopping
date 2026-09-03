@@ -18,11 +18,11 @@ Every `setup.sh` aborts unless `nvidia-smi` reports an RTX 5090, or you set `FOR
 
 | Order | Folder | Disk (weights, rough) | What you learn |
 |---|---|---|---|
-| 1 | [`jarvis_vqa`](jarvis_vqa/README.md) | ~16 GB | Leftover Qwen mouth on a screenshot |
-| 2 | [`molmoact2`](molmoact2/README.md) | ~20 GB Think + ~16 GB Molmo2-ER | Depth-token think + official VQA |
-| 3 | [`internvla_n1`](internvla_n1/README.md) | ~16 GB DualVLN + ~16 GB System2 | Pixel-goal + S2 text (2×5090) |
-| 4 | [`rynn_worldvla`](rynn_worldvla/README.md) | ~16–25 GB | Action / next-frame / leftover BPE |
-| 5 | [`jarvis_minestudio`](jarvis_minestudio/README.md) | same 7B as #1 if you reuse the cache | JDK 8 + vLLM + kbd/mouse |
+| 1 | [`jarvis_vqa`](jarvis_vqa/README.md) | ~16 GB | **Done 2026-09-03:** `action_tokens` only. Mouth gone. |
+| 2 | [`molmoact2`](molmoact2/README.md) | ~20 GB Think + ~16 GB Molmo2-ER | **Next on a 1×5090.** Depth-token think + official VQA |
+| 3 | [`internvla_n1`](internvla_n1/README.md) | ~16 GB DualVLN + ~16 GB System2 | Pixel-goal + S2 text — needs **2×5090** |
+| 4 | [`rynn_worldvla`](rynn_worldvla/README.md) | ~16–25 GB | Action / next-frame / leftover BPE (harness still rough) |
+| 5 | [`jarvis_minestudio`](jarvis_minestudio/README.md) | same 7B as #1 | **Skip.** Same mute weights + JDK 8. |
 
 Install **one folder at a time**. Do not `pip install` from this README.
 

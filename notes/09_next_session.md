@@ -25,6 +25,8 @@ Open 7B Minecraft VLA. `single`, hitchy (~5.5 FPS), leftover Qwen chat. Custom S
 
 Ask while looking: does a screenshot still get an English answer? If action SFT ate the mouth, you know before a weekend of JDK 8.
 
+**Done 2026-09-03** (`demo_sandboxes/jarvis_vqa`): `action_tokens` only — no English. Skip MineStudio. Details: [`10_sibling_list.md`](10_sibling_list.md#pull-log).
+
 ### 2. RynnVLA-001 / 002 + WorldVLA (Chameleon)
 
 Same DAMO family. You like the vision decoder. Official loop emits actions / next frames, not chat. **Note-goal (not a Cursor official goal):** leftover English from the VLA weights, decoder kept. Spec: [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md). No code this window. Base Meta Chameleon can emit text; do not confuse that with this checkpoint.
@@ -73,11 +75,11 @@ After the looks. Success is “it answered or it moved,” not a new scorecard.
 
 | Order | Sandbox | Success |
 |---|---|---|
-| S | JARVIS-VLA: screenshot VQA, then one MineStudio rollout | English leftover mouth *or* you log that SFT ate it; agent clicks in Minecraft. |
+| S | JARVIS-VLA screenshot VQA (`jarvis_vqa`). MineStudio skipped. | **Done 2026-09-03:** SFT ate the mouth (`action_tokens`). |
 | A | InternNav official inference-only notebook (`demo_sandboxes/internvla_n1`) — hosted Gradio is down | Follow one English instruction on their sample RGB stream; see pixel-goal + S2 text. |
 | B | MolmoAct2-Think-LIBERO **or** `lerobot-eval` on the LeRobot MolmoAct2/LIBERO card | One LIBERO task completes. |
 | C | WorldVLA or RynnVLA-002 **LIBERO** from their GitHub | One LIBERO suite, one *action → next frame* sample, **and** one harness attempt at leftover English (usable reply or a logged miss). |
 
-Do **not** install Habitat, Isaac, or an SO-101 until a sandbox has a winner you still care about. Gemma+STEVE-1 waits until S’s mouth is dead or you want Path K in Minecraft.
+Do **not** install Habitat, Isaac, or an SO-101 until a sandbox has a winner you still care about. S’s mouth is dead; Gemma+STEVE-1 is smoke K when you want Minecraft talk, not the next 5090 hour. Next box install: [`../demo_sandboxes/molmoact2`](../demo_sandboxes/molmoact2/README.md) (1×5090). `internvla_n1` needs 2×5090. `rynn_worldvla` can wait — watch the look-2 GIFs on the notes machine if the box is still rented.
 
 Smoke-0 reasoning prompts and the older three-path deep dives stay in [`04_test_plan.md`](04_test_plan.md). Run those only after a sandbox you like.

@@ -6,7 +6,7 @@ The rest of this file is the later pull-day smokes, after those looks.
 
 ## Look order (next session)
 
-1. **JARVIS-VLA** — sibling first. Screenshot VQA, then MineStudio. [`10_sibling_list.md`](10_sibling_list.md).
+1. **JARVIS-VLA** — **done 2026-09-03.** Mouth dead (`action_tokens`). Skip MineStudio. [`10_sibling_list.md`](10_sibling_list.md#pull-log).
 2. **RynnVLA-001 / 002 + WorldVLA** — videos, HF GIFs, GitHub. Vision decoder / next-frame path. Then hack a harness for leftover English.
 3. **MolmoAct2** — [blog](https://allenai.org/blog/molmoact2). Think + SO-10x. No hosted net.
 4. **InternVLA-N1** — [Gradio](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo) + [homepage](https://internrobotics.github.io/internvla-n1.github.io/).
@@ -17,7 +17,7 @@ Links live in [`09_next_session.md`](09_next_session.md) and [`05_demos.md`](05_
 
 | Order | Install | Success looks like |
 |---|---|---|
-| S | JARVIS-VLA screenshot VQA + one MineStudio rollout | Leftover mouth still answers, or you log that SFT ate it; agent uses kbd/mouse. |
+| S | JARVIS-VLA screenshot VQA (`jarvis_vqa`). MineStudio skipped. | **Done 2026-09-03:** `action_tokens` only. |
 | A | InternNav Gradio (already in look 4) | Agent follows a language instruction in a house for >30 s without a human clicking actions. |
 | B | MolmoAct2-Think-LIBERO or `lerobot-eval` on the LeRobot MolmoAct2/LIBERO card | Cube/object task completes. |
 | C | WorldVLA or RynnVLA-002 LIBERO from their GitHub | One LIBERO suite, one action-conditioned next-frame sample, one leftover-English harness attempt. |
