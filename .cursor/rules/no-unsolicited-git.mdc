@@ -1,0 +1,14 @@
+---
+description: Do not git add or commit unless he explicitly asks
+alwaysApply: true
+---
+
+# No unsolicited git
+
+He keeps editorial control of the tree. Write and edit files. Then stop.
+
+- Do **not** run `git add`, `git commit`, or `git push` unless he explicitly asks in that turn.
+- "So I can run it", "fix this", "on the box", or finishing a feature is **not** a commit request.
+- Do not stage "while you're here" extras. Leave everything unstaged for him to review.
+- If he asks you to commit, add only the paths he named (or the files from that request). Show him the status first if anything else is dirty.
+- Never `git add -A` / `git add .` unless he said to include everything.
