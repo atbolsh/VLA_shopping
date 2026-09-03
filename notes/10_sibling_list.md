@@ -14,10 +14,25 @@ Same list as [`09_next_session.md`](09_next_session.md). Do not start this in th
 
 1. **JARVIS-VLA** — **done 2026-09-03.** Mouth is dead (`action_tokens` only). Skip MineStudio. Custom S1 later is Path K (Gemma 4 12B + STEVE-1), not this 7B.
 2. **Chameleon family (RynnVLA-001/002 + WorldVLA)** — vision decoder you actually want. Official harness does not talk. **Note-goal:** leftover English or a logged miss; decoder stays first-class. Spec (no code yet): [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md).
-3. **MolmoAct2** — shopping Path R look. Molmo2-ER can VQA if you ask; Think mode is depth tokens.
-4. **InternVLA-N1** — shopping Path N look. Hosted Gradio. True dual; product loop is mute.
+3. **MolmoAct2** — **done 2026-09-03.** Molmo2-ER Ask answers English. Think-LIBERO `predict_action` does not: inject (“ask a follow-up; keep the arm still”) was ignored; output stayed depth + a 10-step action chunk. See [pull log](#pull-log).
+4. **InternVLA-N1** — **next (2×5090).** True dual. Official walk loop is mute toward you; S2 `llm_output` is mid-level English you can read. Free-form talk is the separate System-2 Qwen card (`system2_ask`), not DualVLN.
 
 Later, not in the four: OmniJARVIS (gated card + GROOT decoder); Gemma 4 12B + STEVE-1 if JARVIS-VLA’s mouth is dead.
+
+### Mouth status (2026-09-03)
+
+None of the **product** loops are a companion. Separate VLM cards still answer if you ask them.
+
+| Surface | Talks to you? | Internal language? |
+|---|---|---|
+| JARVIS-VLA 7B | No | No. Action tokens only. |
+| MolmoAct2-Think-LIBERO `predict_action` | No. Caution inject failed. | Depth codes + `generated_token_ids`, not English. |
+| Molmo2-ER Ask | **Yes** (seen). Separate net; cannot act. | Ordinary VQA. |
+| InternVLA-N1 DualVLN `step` (tomorrow) | **No** — will not interview you. | **Yes:** S2 `llm_output` (mid-level English) + pixel-goal, only every `plan_step_gap`. |
+| InternVLA-N1 System2 `system2_ask` | **Yes**, if you use that cell. Same *kind* as Molmo2-ER. | Ordinary Qwen generate. |
+| WorldVLA / Rynn official harness | No (later look). | Leftover BPE is a note-goal, not this window. |
+
+**Finetune:** a talking **gate** (Molmo2-ER or Gemma 4 12B) in front of Think / DualVLN is plausible. Light SFT or more prompt text on `predict_action` / official `step` is unlikely to grow SIMA-2 clarifiers. Path K is the mouth by construction.
 
 ## Scorecard (weights available)
 
@@ -99,9 +114,11 @@ Success is “it answered in English *or* it moved,” not a new shopping total.
 
 | Order | What | Success |
 |---|---|---|
-| S | JARVIS-VLA screenshot VQA (`demo_sandboxes/jarvis_vqa`) | **Done 2026-09-03.** `action_tokens` only. MineStudio skipped (same mute 7B + JDK weekend). |
-| C | Chameleon: one WorldVLA / RynnVLA-002 LIBERO task and one action → next-frame sample. Talk-harness is the note-goal in [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md), not this window’s code. | Decoder visible. Leftover English later, or a logged miss. |
-| K | JARVIS mouth is dead: Gemma 4 12B + STEVE-1 dummy handoff | 12B talks; STEVE-1 walks for N ticks. Not the next rented-GPU hour. |
+| S | JARVIS-VLA screenshot VQA (`demo_sandboxes/jarvis_vqa`) | **Done 2026-09-03.** `action_tokens` only. MineStudio skipped. |
+| B | MolmoAct2 Think-LIBERO + Molmo2-ER Ask (`demo_sandboxes/molmoact2`) | **Done 2026-09-03.** Ask talks. Think does not; task inject failed. |
+| C | Chameleon: one WorldVLA / RynnVLA-002 LIBERO task and one action → next-frame sample. Talk-harness is the note-goal in [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md). | Decoder visible. Leftover English later, or a logged miss. |
+| A | InternVLA-N1 (`demo_sandboxes/internvla_n1`), 2×5090 | S2 `llm_output` + pixel-goal on the sample RGB stream; optional System-2 chat. |
+| K | Gemma 4 12B + STEVE-1 dummy handoff | 12B talks; STEVE-1 walks for N ticks. Unlocked; not the next GPU hour. |
 
 Habitat / SO-101 / the twelve-card zoo stay on the shopping path.
 
@@ -115,3 +132,12 @@ Habitat / SO-101 / the twelve-card zoo stay on the shopping path.
 - **Mouth:** `action_tokens`. Reply is only `<|reserved_special_token_*|>`. No English, no other leftover tokens, no useful feedback. First decode (`skip_special_tokens=True`) looked like garbage because it stripped the action stream.
 - **Decision:** skip `demo_sandboxes/jarvis_minestudio`. Same weights; will not talk. Minecraft-with-a-mouth is smoke K (Gemma 4 12B + STEVE-1) when you want it.
 - **Do not** treat OmniJARVIS or JARVIS-1 as the same result. Those are other animals.
+
+### molmoact2 (2026-09-03)
+
+- **Box:** 1× RTX 5090. Think-LIBERO and Molmo2-ER **cannot** sit in VRAM together; ran as two kernel sessions.
+- **Ask (`allenai/Molmo2-ER`):** leftover / intended mouth works. Separate VLM. Answered the table question in English. Not the policy.
+- **Think (`allenai/MolmoAct2-Think-LIBERO`):** official `predict_action` on the card’s libero_10 / ep0 / t0 cameras + EEF. Returned a 10×7 continuous action chunk (and depth bins). Internal “think” is `<depth_start>` … depth codes … `<depth_end>`, then the flow expert — not a `<think>` chat span.
+- **Inject (`think_inject.ipynb`):** spliced “if an instruction is unclear, ask a follow-up before committing; keep the arm still until you are certain” into the official `The task is to {task}` slot (`normalize_language=False`). **Did not** get follow-ups or a still arm. Policy still committed actions. Prompt-inject will not grow a mouth on this SFT.
+- **Finetune:** plausible on **Molmo2-ER (or Gemma 4 12B) as a gate**, then call Think only on a clean task. Low confidence that further SFT on `predict_action` will make Think interview you; that head is trained to emit depth then move.
+- **Decision:** Path R still stands as an arm policy. Sibling “talk while acting” is not this checkpoint. Next look: InternVLA-N1 on **2×5090**.

@@ -71,10 +71,17 @@ Best **off-the-shelf** match to "navigate a detailed 3D world with a slow planne
 
 ## First pull
 
-Fourth in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)), after JARVIS-VLA, Chameleon/Rynn/WorldVLA, and MolmoAct2.
+Fourth in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)). Gradio is down (401). Next box is [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) on **2×5090**.
 
-1. Open the Gradio space and the project page videos.
-2. Reasoning smoke on the System 2 card alone (`InternVLA-N1-System2`).
-3. If that holds, install InternNav Habitat eval before touching Isaac.
+1. DualVLN `step` on their sample RGB: watch S2 `llm_output` + pixel-goal. Do not expect follow-up questions.
+2. Optional: `system2_ask` on `InternVLA-N1-System2` / `cuda:1` (Qwen chat, not the walk loop).
+3. Habitat / Isaac stay later.
 
 ## Pull log
+
+Not pulled yet. Expectation before the 2026-09-04 2×5090 box (do not inflate this into a score):
+
+- Official `InternVLAN1AsyncAgent.step` is **mute toward you**. You should see S2 `llm_output` (mid-level English) + a pixel-goal. That is internal language, not a follow-up interview.
+- DualVLN (S1) does not chat.
+- `system2_ask` on `InternVLA-N1-System2` / `cuda:1` is the Qwen2.5-VL mouth — same *kind* of surface as Molmo2-ER Ask, not the walk loop.
+- Product loop will not SIMA-2-ask unless you add a gate (and likely finetune).

@@ -9,6 +9,8 @@ Two **official** surfaces, not one blended chat:
 
 Do not stuff Gemma-style system prompts into `predict_action`.
 
+**Tried 2026-09-03:** Molmo2-ER Ask answered English. Think-LIBERO `predict_action` returned depth + a 10-step action chunk. Caution-sentence inject (`think_inject.ipynb`) did not get follow-ups or a still arm. Do not re-run inject expecting a mouth. Log: [`notes/10_sibling_list.md`](../../notes/10_sibling_list.md#pull-log).
+
 - Box: 1× RTX 5090. Official 5090 pin: **torch 2.11.0 + torchvision 0.26.0 cu128**, `transformers` 4.57.x, Python 3.11–3.12.
 - Disk: ~20 GB Think-LIBERO + ~16 GB Molmo2-ER.
 

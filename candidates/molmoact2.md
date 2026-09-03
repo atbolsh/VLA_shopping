@@ -77,3 +77,12 @@ Best 2026 **open + cheap-robot + spatial reasoning** VLA. Dual purity is only "n
 Third in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)): watch the [blog](https://allenai.org/blog/molmoact2) after JARVIS-VLA and Chameleon/Rynn/WorldVLA, before InternVLA-N1 Gradio. Then `allenai/MolmoAct2-Think-LIBERO` as sandbox B. Read the adaptive-depth cache API; that is the bit that maps onto the sibling problem. SO-101 later.
 
 ## Pull log
+
+```text
+pulled: 2026-09-03
+gpu: 1x RTX 5090
+vram_gb: 32 (Think and Molmo2-ER OOM if both resident)
+reasoning_smoke: not_run (Ask answered a table VQA; not Smoke 0)
+env_smoke: not_tried (no closed-loop LIBERO)
+notes: Molmo2-ER Ask talks. Think-LIBERO predict_action returned depth + a 10x7 action chunk on the official sample. Caution-sentence inject into task= did not produce follow-ups or a still arm. Do not treat Think as a talking S2. Sibling talk requires a separate gate (Molmo2-ER or Gemma 4 12B), not more prompt text on predict_action.
+```

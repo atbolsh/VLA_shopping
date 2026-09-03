@@ -25,6 +25,9 @@ bash setup.sh
 # kernel: internvla-n1
 ```
 
-Open `demo.ipynb`. Type an English house instruction; step the official agent on their sample frames. Reply pane = S2 `llm_output` + pixel-goal. Free-form “what are you doing?” uses System 2’s Qwen2.5-VL card on `cuda:1`.
+Open `demo.ipynb`. Type an English house instruction; step the official agent on their sample frames.
+
+- **Walk loop** (`DualVlnPlay.step`): mute toward you. Reply pane is S2 `llm_output` (mid-level English) + a pixel-goal, only every `plan_step_gap`. It will not ask a clarifier.
+- **Ask** (`System2Ask` on `cuda:1`): Qwen2.5-VL chat on the System-2 card. Same *kind* of leftover mouth as Molmo2-ER, not the navigator.
 
 Habitat `scripts/eval/eval.py` stays a later job.

@@ -57,6 +57,8 @@ Ask while watching: can this thing show you *what happens if I take this action*
 
 No hosted net. Watch Think / traces / SO-10x. Compare to Rynn: MolmoAct2 reasons in depth tokens; it does **not** decode a future RGB frame. Unlike JARVIS-VLA / Rynn, the Molmo2-ER backbone *can* do VQA if you ask.
 
+**Done 2026-09-03:** Ask talks. Think-LIBERO does not; caution-sentence inject failed. Details: [`10_sibling_list.md`](10_sibling_list.md#pull-log).
+
 ### 4. InternVLA-N1
 
 | What | URL |
@@ -67,7 +69,7 @@ No hosted net. Watch Think / traces / SO-10x. Compare to Rynn: MolmoAct2 reasons
 | DualVLN (recommended whole system) | https://huggingface.co/InternRobotics/InternVLA-N1-DualVLN |
 | Card in this repo | [`../candidates/internvla-n1.md`](../candidates/internvla-n1.md) |
 
-S1 **does** get fresh RGB (DualVLN) or RGB-D (NavDP*). Pixel-goal is the S2→S1 *handoff*, not S1’s only input. Product loop is mute. See [`08_community_gems.md`](08_community_gems.md) only for the M1 contrast; do not re-open that.
+S1 **does** get fresh RGB (DualVLN) or RGB-D (NavDP*). Pixel-goal is the S2→S1 *handoff*, not S1’s only input. Product loop is mute **toward you**. You should still see S2 `llm_output` (mid-level English) when S2 runs. Free-form talk is `system2_ask` on `cuda:1`, not DualVLN. See [`08_community_gems.md`](08_community_gems.md) only for the M1 contrast; do not re-open that.
 
 ## Then: small sandboxes (one at a time)
 
@@ -77,9 +79,9 @@ After the looks. Success is “it answered or it moved,” not a new scorecard.
 |---|---|---|
 | S | JARVIS-VLA screenshot VQA (`jarvis_vqa`). MineStudio skipped. | **Done 2026-09-03:** SFT ate the mouth (`action_tokens`). |
 | A | InternNav official inference-only notebook (`demo_sandboxes/internvla_n1`) — hosted Gradio is down | Follow one English instruction on their sample RGB stream; see pixel-goal + S2 text. |
-| B | MolmoAct2-Think-LIBERO **or** `lerobot-eval` on the LeRobot MolmoAct2/LIBERO card | One LIBERO task completes. |
+| B | MolmoAct2-Think-LIBERO + Molmo2-ER Ask (`molmoact2`) | **Done 2026-09-03:** Ask talks; Think stays a mute policy. Inject failed. |
 | C | WorldVLA or RynnVLA-002 **LIBERO** from their GitHub | One LIBERO suite, one *action → next frame* sample, **and** one harness attempt at leftover English (usable reply or a logged miss). |
 
-Do **not** install Habitat, Isaac, or an SO-101 until a sandbox has a winner you still care about. S’s mouth is dead; Gemma+STEVE-1 is smoke K when you want Minecraft talk, not the next 5090 hour. Next box install: [`../demo_sandboxes/molmoact2`](../demo_sandboxes/molmoact2/README.md) (1×5090). `internvla_n1` needs 2×5090. `rynn_worldvla` can wait — watch the look-2 GIFs on the notes machine if the box is still rented.
+Do **not** install Habitat, Isaac, or an SO-101 until a sandbox has a winner you still care about. Next box: [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) on **2×5090**. Official walk loop will show S2 `llm_output` (mid-level English) + pixel-goal; it will **not** interview you. Free-form talk is `system2_ask` on `cuda:1`. Rynn GIFs can wait on the notes machine. Gemma+STEVE-1 remains smoke K.
 
 Smoke-0 reasoning prompts and the older three-path deep dives stay in [`04_test_plan.md`](04_test_plan.md). Run those only after a sandbox you like.
