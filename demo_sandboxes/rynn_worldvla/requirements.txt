@@ -1,0 +1,21 @@
+# Record of the *base* set. Not the official frozen file (that file pins
+# torch==2.2.0 and nvidia-*-cu12 12.1 — no sm_120).
+# setup.sh installs torch 2.7.0+cu128 then 2.8.0+cu128, then these pins.
+# Keep transformers==4.43.0 (xllmx/Lumina).
+transformers==4.43.0
+tokenizers==0.19.1
+accelerate==0.33.0
+numpy==1.24.4
+pillow==10.2.0
+safetensors==0.4.2
+sentencepiece==0.1.99
+einops==0.6.1
+huggingface-hub==0.23.4
+omegaconf
+pyyaml
+tqdm
+opencv-python==4.6.0.66
+ipykernel
+ipywidgets
+jupyter
+python-dotenv

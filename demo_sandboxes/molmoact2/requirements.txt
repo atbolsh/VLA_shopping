@@ -1,0 +1,16 @@
+# Record of the 5090-verified set (allenai/molmoact2 README + issue 27).
+# setup.sh installs torch==2.11.0 / torchvision==0.26.0 from cu128, then
+# transformers 4.57.x. Do not use torch==2.5.1+cu121 (no sm_120).
+accelerate>=1.0
+safetensors>=0.4
+huggingface-hub[cli]>=0.36
+hf-transfer>=0.1.8
+pillow>=10
+numpy>=1.26,<3
+einops>=0.7
+sentencepiece>=0.2
+protobuf>=4.25
+ipykernel
+ipywidgets
+jupyter
+python-dotenv

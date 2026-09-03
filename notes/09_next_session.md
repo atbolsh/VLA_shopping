@@ -59,7 +59,7 @@ No hosted net. Watch Think / traces / SO-10x. Compare to Rynn: MolmoAct2 reasons
 
 | What | URL |
 |---|---|
-| **Hosted Gradio** (the one real interactive VLA-nav) | https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo |
+| **Hosted Gradio** (down as of 2026-09-03: 401 / remote backend) | https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo — do not hunt clones. Local sandbox: [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) |
 | Project page / videos | https://internrobotics.github.io/internvla-n1.github.io/ |
 | S2 card | https://huggingface.co/InternRobotics/InternVLA-N1-System2 |
 | DualVLN (recommended whole system) | https://huggingface.co/InternRobotics/InternVLA-N1-DualVLN |
@@ -74,7 +74,7 @@ After the looks. Success is “it answered or it moved,” not a new scorecard.
 | Order | Sandbox | Success |
 |---|---|---|
 | S | JARVIS-VLA: screenshot VQA, then one MineStudio rollout | English leftover mouth *or* you log that SFT ate it; agent clicks in Minecraft. |
-| A | InternNav Gradio (already open from look 4) if it still works | Follow one English instruction in a house without clicking actions. |
+| A | InternNav official inference-only notebook (`demo_sandboxes/internvla_n1`) — hosted Gradio is down | Follow one English instruction on their sample RGB stream; see pixel-goal + S2 text. |
 | B | MolmoAct2-Think-LIBERO **or** `lerobot-eval` on the LeRobot MolmoAct2/LIBERO card | One LIBERO task completes. |
 | C | WorldVLA or RynnVLA-002 **LIBERO** from their GitHub | One LIBERO suite, one *action → next frame* sample, **and** one harness attempt at leftover English (usable reply or a logged miss). |
 

@@ -1,1 +1,12 @@
 .DS_Store
+.env
+__pycache__/
+*.pyc
+
+demo_sandboxes/**/weights/
+demo_sandboxes/**/logs/
+demo_sandboxes/**/vendor/
+demo_sandboxes/**/.venv/
+demo_sandboxes/**/.venv-lerobot/
+demo_sandboxes/**/.rung
+demo_sandboxes/**/.ipynb_checkpoints/

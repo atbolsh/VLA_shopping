@@ -1,0 +1,27 @@
+# Record of non-torch / non-vllm pins from official JarvisVLA requirements.txt.
+# setup.sh installs vllm FIRST (it brings torch), then these, then
+# vendor/JarvisVLA with --no-deps. Do not let this file replace torch.
+accelerate==1.2.1
+attrs==24.3.0
+av==14.1.0
+huggingface-hub==0.28.1
+hydra-core
+numpy==1.26.4
+omegaconf
+openai
+opencv-python
+opencv-python-headless
+peft==0.14.0
+pillow==10.4.0
+qwen-vl-utils
+rich
+sentencepiece==0.2.0
+tokenizers==0.21.0
+tqdm
+trl
+gcsfs==2024.12.0
+fsspec==2024.12.0
+ipykernel
+ipywidgets
+jupyter
+python-dotenv

@@ -1,0 +1,19 @@
+# Record of the resolved set this sandbox wants.
+# setup.sh is the executor: it installs torch from the cu128 index
+# (latest stable, then 2.9.1, then 2.8.0) and transformers 4.49.0
+# then 4.45.2. Do not pip-install this file as a torch source.
+#
+# Official JarvisVLA non-torch pins:
+# https://github.com/CraftJarvis/JarvisVLA/blob/master/requirements.txt
+numpy==1.26.4
+pillow==10.4.0
+tokenizers==0.21.0
+huggingface-hub==0.28.1
+sentencepiece==0.2.0
+qwen-vl-utils
+accelerate
+safetensors
+ipykernel
+ipywidgets
+jupyter
+python-dotenv

@@ -1,0 +1,1 @@
+`libero_third.png` and `libero_wrist.png` are color placeholders. Replace them with real LIBERO frames (or extract a frame from the official WorldVLA GIFs after `vendor/` is cloned) before trusting act/dream/talk verdicts.

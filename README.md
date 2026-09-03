@@ -12,7 +12,7 @@ Sibling problem statement (why dual-loop at all): [`../stateful_realtime_thinkin
 2. [`notes/00_brief.md`](notes/00_brief.md) — your four constraints.
 3. [`notes/01_taxonomy.md`](notes/01_taxonomy.md) — what "true dual" means. π0 and GR00T are useful and **not** Helix.
 4. [`notes/02_scorecard.md`](notes/02_scorecard.md) or the canvas — pick **one** path. Do not clone twelve repos.
-5. **Next window:** [`notes/09_next_session.md`](notes/09_next_session.md) — four looks: JARVIS-VLA → Chameleon/Rynn/WorldVLA → MolmoAct2 → InternVLA-N1, then small sandboxes.
+5. **Next window:** [`notes/09_next_session.md`](notes/09_next_session.md) — four looks, then the five vast.ai sandboxes in [`demo_sandboxes/`](demo_sandboxes/README.md). The hosted InternNav Gradio is down (401 / remote backend); sandbox A is the official InternNav inference-only notebook, not that Space.
 
 Env/robot/demo lists: [`notes/03_envs_and_robots.md`](notes/03_envs_and_robots.md), [`notes/05_demos.md`](notes/05_demos.md). Community / decoder-head sweep: [`notes/08_community_gems.md`](notes/08_community_gems.md). Sibling (talk + 3D game) list: [`notes/10_sibling_list.md`](notes/10_sibling_list.md).
 
@@ -22,7 +22,7 @@ Machine-facing cards: [`candidates/`](candidates/) (YAML frontmatter + `schema/c
 
 | Path | Buy | If you care most about |
 |---|---|---|
-| **N — navigation** | [InternVLA-N1](candidates/internvla-n1.md) | A house you can install (Habitat / InternNav), a real dual loop, a 7B-class planner that might match Gemma 4 12B. Hosted Gradio: [InternNav-Eval-Demo](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo). Backup: [NaVILA](candidates/navila.md) on a Go2. |
+| **N — navigation** | [InternVLA-N1](candidates/internvla-n1.md) | A house you can install (Habitat / InternNav), a real dual loop, a 7B-class planner that might match Gemma 4 12B. Hosted Gradio is down; local notebook: [`demo_sandboxes/internvla_n1`](demo_sandboxes/internvla_n1/README.md). Backup: [NaVILA](candidates/navila.md) on a Go2. |
 | **K — keep your brain** | [Gemma 4 12B + stolen S1](candidates/gemma4-diy.md) | Criterion 3. Every 2024 dual-system 7B uses LLaVA/Llama-2, which is the e4B failure mode. Steal OpenHelix's `<ACT>` bridge or InternVLA-N1's S1. Read [OpenHelix](candidates/openhelix.md) and [FiS-VLA](candidates/fis-vla.md) as kits, not oracles. |
 | **R — cheap robot + nights** | [MolmoAct2-Think](candidates/molmoact2.md) on SO-101, or [GR00T N1.7](candidates/groot-n17.md) + DreamGen | A ~$122 DIY follower arm ([BOM](https://github.com/TheRobotStudio/SO-ARM100)), or the only published "daytime demos → overnight dreams → morning policy" factory. π0.5 is the smoother LeRobot on-ramp and a worse planner. |
 
@@ -62,8 +62,8 @@ Scorecard pull numbers are shopping rank, not the next window. Next window:
 1. **JARVIS-VLA** (sibling: leftover chat + MineStudio). Scorecard: [`notes/10_sibling_list.md`](notes/10_sibling_list.md).
 2. **RynnVLA-001 / 002 + WorldVLA** (vision decoder; then hack a harness for leftover English).
 3. **MolmoAct2** ([blog](https://allenai.org/blog/molmoact2)).
-4. **InternVLA-N1** ([Gradio](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo) + homepage videos).
+4. **InternVLA-N1** (homepage videos; Gradio Space is down — use [`demo_sandboxes/internvla_n1`](demo_sandboxes/internvla_n1/README.md)).
 
-Then one small sandbox at a time. Habitat / SO-101 wait.
+Then one small sandbox at a time on a rented 5090. Habitat / SO-101 wait. **Do not run `setup.sh` on this notes machine.**
 
-Full link list: [`notes/09_next_session.md`](notes/09_next_session.md). Later smokes: [`notes/04_test_plan.md`](notes/04_test_plan.md).
+Full link list: [`notes/09_next_session.md`](notes/09_next_session.md). Sandbox installers: [`demo_sandboxes/README.md`](demo_sandboxes/README.md). Later smokes: [`notes/04_test_plan.md`](notes/04_test_plan.md).

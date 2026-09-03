@@ -1,0 +1,1 @@
+`minecraft_sample.png` is a tiny color placeholder so the notebook has a frame on a fresh box. Replace it with a real Minecraft screenshot (or upload one in the notebook) before trusting a mouth verdict.
