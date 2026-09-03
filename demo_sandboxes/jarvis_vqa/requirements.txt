@@ -9,6 +9,7 @@ numpy==1.26.4
 pillow==10.4.0
 tokenizers==0.21.0
 huggingface-hub==0.28.1
+pyarrow
 sentencepiece==0.2.0
 qwen-vl-utils
 accelerate

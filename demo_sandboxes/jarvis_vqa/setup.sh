@@ -151,7 +151,8 @@ PY
 fi
 
 python -m ipykernel install --user --name jarvis-vqa --display-name "jarvis-vqa"
+python download_screenshots.py
 printf 'torch=%s\ntransformers=%s\n' "$TORCH_RUNG" "$TF_RUNG" > .rung
 echo "JARVIS-VQA setup done. Rung:"
 cat .rung
-echo "Open demo.ipynb with kernel jarvis-vqa."
+echo "Open demo.ipynb with kernel jarvis-vqa. Pick a frame from screenshot/."

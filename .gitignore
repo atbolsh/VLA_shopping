@@ -10,3 +10,4 @@ demo_sandboxes/**/.venv/
 demo_sandboxes/**/.venv-lerobot/
 demo_sandboxes/**/.rung
 demo_sandboxes/**/.ipynb_checkpoints/
+demo_sandboxes/**/screenshot/

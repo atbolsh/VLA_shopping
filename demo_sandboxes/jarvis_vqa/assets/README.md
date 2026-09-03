@@ -1,1 +1,1 @@
-`minecraft_sample.png` is a tiny color placeholder so the notebook has a frame on a fresh box. Replace it with a real Minecraft screenshot (or upload one in the notebook) before trusting a mouth verdict.
+`minecraft_sample.png` is a leftover color placeholder. Real frames live in `../screenshot/`, filled by `download_screenshots.py` from CraftJarvis/minecraft-vla-sft **valid** (not the 106 GB train split).

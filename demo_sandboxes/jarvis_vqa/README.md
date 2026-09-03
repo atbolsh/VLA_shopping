@@ -11,6 +11,7 @@ Sibling first smoke from [`notes/09_next_session.md`](../../notes/09_next_sessio
 ## Official sources
 
 - Weights: https://huggingface.co/CraftJarvis/JarvisVLA-Qwen2-VL-7B
+- Frames: https://huggingface.co/datasets/CraftJarvis/minecraft-vla-sft (`valid` only; `download_screenshots.py`)
 - Chat path: Qwen2-VL `apply_chat_template` + `qwen_vl_utils.process_vision_info` on **these** weights (Qwen’s snippet, not a Gemma wrapper).
 - Pins recorded in [`requirements.txt`](requirements.txt). Torch/transformers rungs live in [`setup.sh`](setup.sh).
 
@@ -23,7 +24,14 @@ bash setup.sh
 # Jupyter: pick kernel "jarvis-vqa"
 ```
 
-Open `demo.ipynb`. Load `assets/minecraft_sample.png` or upload a real screenshot. Ask “what are you looking at?”
+If `setup.sh` already finished, pull frames now (official `minecraft-vla-sft` **valid** split only):
+
+```bash
+source .venv/bin/activate
+python download_screenshots.py
+```
+
+Open `demo.ipynb`. Pick a frame from the **screenshot** dropdown. Ask “what are you looking at?”
 
 Success: leftover English **or** a logged “SFT ate the mouth” (`empty` / `garbage`). Write the verdict back to [`notes/10_sibling_list.md`](../../notes/10_sibling_list.md) after you have run it.
 
