@@ -10,7 +10,7 @@ The hosted InternNav Gradio ([InternRobotics/InternNav-Eval-Demo](https://huggin
 - Default: **1× RTX 5090**, ~80 GB disk (weights are ~15–25 GB *per* sandbox you install).
 - `internvla_n1` only: **2× RTX 5090** (DualVLN on `cuda:0`, System-2 chat on `cuda:1`).
 
-Put `HF_TOKEN=...` in the **repo-root** `.env` (copy [`.env.example`](../.env.example)). Each `setup.sh` symlinks it. The token is optional for these public cards; it only avoids Hub rate limits.
+Put `export HF_TOKEN=...` in the **repo-root** `.env` (copy [`.env.example`](../.env.example)). Each `setup.sh` symlinks it. The token is optional for these public cards; it only avoids Hub rate limits.
 
 Every `setup.sh` aborts unless `nvidia-smi` reports an RTX 5090, or you set `FORCE_SETUP=1` on purpose.
 

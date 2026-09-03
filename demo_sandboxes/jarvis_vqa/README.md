@@ -17,7 +17,7 @@ Sibling first smoke from [`notes/09_next_session.md`](../../notes/09_next_sessio
 ## On the box
 
 ```bash
-# repo-root .env already has HF_TOKEN=...
+# repo-root .env already has export HF_TOKEN=...
 cd demo_sandboxes/jarvis_vqa
 bash setup.sh
 # Jupyter: pick kernel "jarvis-vqa"
