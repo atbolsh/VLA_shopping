@@ -26,4 +26,6 @@ bash setup.sh
 # kernel: molmoact2
 ```
 
+`setup.sh` clones with `GIT_LFS_SKIP_SMUDGE=1`. A few LeRobot test PNGs in that repo 404 on LFS; we do not need them. If a previous clone left `vendor/molmoact2` half-checked-out, just re-run `setup.sh`.
+
 Open `demo.ipynb`.

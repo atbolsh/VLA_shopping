@@ -58,8 +58,19 @@ source .venv/bin/activate
 python -m pip install -U pip wheel
 
 mkdir -p vendor
+# allenai/molmoact2 points a few test PNGs at Git LFS objects that 404.
+# We need the Python, not the camera fixtures. Skip smudge always.
+export GIT_LFS_SKIP_SMUDGE=1
 if [[ ! -d vendor/molmoact2/.git ]]; then
   _try git clone --depth 1 https://github.com/allenai/molmoact2.git vendor/molmoact2
+fi
+if [[ ! -f vendor/molmoact2/pyproject.toml ]]; then
+  echo "vendor/molmoact2 checkout incomplete (usually a dead LFS pointer). Restoring without LFS."
+  _try git -C vendor/molmoact2 checkout -f HEAD
+fi
+if [[ ! -f vendor/molmoact2/pyproject.toml ]]; then
+  echo "vendor/molmoact2 still missing pyproject.toml after restore." >&2
+  exit 1
 fi
 
 CU128="https://download.pytorch.org/whl/cu128"
