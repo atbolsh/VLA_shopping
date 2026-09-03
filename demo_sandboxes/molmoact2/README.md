@@ -28,4 +28,13 @@ bash setup.sh
 
 `setup.sh` clones with `GIT_LFS_SKIP_SMUDGE=1`. A few LeRobot test PNGs in that repo 404 on LFS; we do not need them. If a previous clone left `vendor/molmoact2` half-checked-out, just re-run `setup.sh`.
 
-Open `demo.ipynb`.
+Open `demo.ipynb`. Frames come from the Think-LIBERO card (`screenshot/sample_*_rgb.png`), not the orange/blue placeholders.
+
+If `setup.sh` already finished:
+
+```bash
+source .venv/bin/activate
+python download_frames.py
+```
+
+Then **restart the `molmoact2` kernel** so it picks up `src/think_act.py` (processor list→dict shim + `AutoModelForImageTextToText`).

@@ -119,6 +119,7 @@ snapshot_download("allenai/Molmo2-ER", local_dir="weights/Molmo2-ER", local_dir_
 print("downloaded Think-LIBERO + Molmo2-ER")
 PY
 
+python download_frames.py
 python -m ipykernel install --user --name molmoact2 --display-name "molmoact2"
 
 LEROBOT=0

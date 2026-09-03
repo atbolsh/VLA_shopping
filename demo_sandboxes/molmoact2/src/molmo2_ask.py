@@ -12,7 +12,9 @@ from typing import Any
 
 import torch
 from PIL import Image
-from transformers import AutoModelForImageTextToText, AutoProcessor
+from transformers import AutoModelForImageTextToText
+
+from hf_load import load_processor
 
 ROOT = Path(__file__).resolve().parents[1]
 WEIGHTS = ROOT / "weights" / "Molmo2-ER"
@@ -32,9 +34,8 @@ def append_log(record: dict[str, Any]) -> Path:
 
 class Molmo2Ask:
     def __init__(self, weights: Path | str = WEIGHTS):
-        self.processor = AutoProcessor.from_pretrained(
-            str(weights),
-            trust_remote_code=True,
+        self.processor = load_processor(
+            weights,
             padding_side="left",
         )
         self.model = AutoModelForImageTextToText.from_pretrained(
