@@ -1,7 +1,8 @@
 """Leftover-mouth smoke for CraftJarvis/JarvisVLA-Qwen2-VL-7B.
 
-Official path is Qwen2-VL's own chat template + qwen_vl_utils, on the
-JarvisVLA weights — not a Gemma-style system prompt.
+Prompt layout matches the official SFT / VLLM_AGENT turn: instruction text,
+then ``\\nobservation: \\n``, then the image. Decode keeps specials (action
+tokens). If a token has no unicode string, the id is shown as ``<id:N>``.
 """
 
 from __future__ import annotations
@@ -22,10 +23,48 @@ DEFAULT_WEIGHTS = ROOT / "weights" / "JarvisVLA-Qwen2-VL-7B"
 LOG_DIR = ROOT / "logs"
 
 _WORD = re.compile(r"[A-Za-z]{2,}")
+_ACTIONISH = re.compile(r"<\|reserved_special_token_\d+\|>|<id:\d+>")
+
+
+def _maps_to_unicode(s: str | None) -> bool:
+    if not s:
+        return False
+    return not all(ch == "\ufffd" for ch in s)
+
+
+def decode_keep_specials(tokenizer, ids) -> str:
+    """Decode generated ids. Named specials stay as the tokenizer wrote them.
+
+    Only tokens that decode to empty / U+FFFD become ``<id:N>``.
+    """
+    pieces: list[str] = []
+    for tid in ids:
+        tid = int(tid)
+        chunk = tokenizer.decode(
+            [tid], skip_special_tokens=False, clean_up_tokenization_spaces=False
+        )
+        if _maps_to_unicode(chunk):
+            pieces.append(chunk)
+            continue
+        name = tokenizer.convert_ids_to_tokens(tid)
+        if isinstance(name, bytes):
+            try:
+                name = name.decode("utf-8")
+            except UnicodeDecodeError:
+                name = ""
+        if _maps_to_unicode(name):
+            pieces.append(name)
+        else:
+            pieces.append(f"<id:{tid}>")
+    return "".join(pieces)
 
 
 def mouth_verdict(text: str) -> str:
-    words = _WORD.findall(text or "")
+    reserved = _ACTIONISH.findall(text or "")
+    leftover = _ACTIONISH.sub(" ", text or "")
+    words = _WORD.findall(leftover)
+    if len(reserved) >= 3 and len(words) < 3:
+        return "action_tokens"
     if len(words) >= 3:
         return "usable"
     if (text or "").strip():
@@ -61,12 +100,14 @@ class JarvisQwenMouth:
     def ask(self, image: Image.Image | Path | str, question: str, max_new_tokens: int = 256) -> dict[str, Any]:
         if not isinstance(image, Image.Image):
             image = Image.open(image).convert("RGB")
+        # Official SFT / VLLM_AGENT order: text, then image. Not Qwen's image-first snippet.
+        prompt = f"{question}\nobservation: \n"
         messages = [
             {
                 "role": "user",
                 "content": [
+                    {"type": "text", "text": prompt},
                     {"type": "image", "image": image},
-                    {"type": "text", "text": question},
                 ],
             }
         ]
@@ -87,9 +128,8 @@ class JarvisQwenMouth:
         trimmed = [
             out[len(inp) :] for inp, out in zip(inputs.input_ids, generated)
         ]
-        reply = self.processor.batch_decode(
-            trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
-        )[0]
+        tokenizer = self.processor.tokenizer
+        reply = decode_keep_specials(tokenizer, trimmed[0].tolist())
         verdict = mouth_verdict(reply)
         frame_path = LOG_DIR / "last_frame.png"
         LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -97,6 +137,7 @@ class JarvisQwenMouth:
         rec = {
             "sandbox": "jarvis_vqa",
             "question": question,
+            "prompt": prompt,
             "reply": reply,
             "think": None,
             "verdict": verdict,

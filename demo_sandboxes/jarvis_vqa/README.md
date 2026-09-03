@@ -33,6 +33,6 @@ python download_screenshots.py
 
 Open `demo.ipynb`. Pick a frame from the **screenshot** dropdown. Ask “what are you looking at?”
 
-Success: leftover English **or** a logged “SFT ate the mouth” (`empty` / `garbage`). Write the verdict back to [`notes/10_sibling_list.md`](../../notes/10_sibling_list.md) after you have run it.
+Success: leftover English **or** a logged “SFT ate the mouth” (`action_tokens` / `empty` / `garbage`). Write the verdict back to [`notes/10_sibling_list.md`](../../notes/10_sibling_list.md) after you have run it.
 
 Rung written to `.rung` (gitignored) so you know which torch/transformers pair landed.
