@@ -2,7 +2,7 @@
 
 Hosted interactive demos are rare. Most "demos" are project-page videos. This list is only things that actually exist.
 
-**Next-session look order:** RynnVLA-001/002 + WorldVLA → MolmoAct2 → InternVLA-N1. Script: [`09_next_session.md`](09_next_session.md).
+**Next-session look order:** JARVIS-VLA → Chameleon/Rynn/WorldVLA → MolmoAct2 → InternVLA-N1. Script: [`09_next_session.md`](09_next_session.md). Sibling scorecard: [`10_sibling_list.md`](10_sibling_list.md).
 
 ## Hosted interactive (browser)
 
@@ -10,6 +10,8 @@ Hosted interactive demos are rare. Most "demos" are project-page videos. This li
 |---|---|---|
 | **InternNav eval (Gradio)** | https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo | InternVLA-N1 — **the one real hosted VLA-nav playground** |
 | Gemini ER + MuJoCo WASM | https://avikde.github.io/vla-pipeline/ | Not a candidate. Slow Gemini planner, classical IK. Useful as a "what Path K feels like" toy. Needs a Gemini key or uses a cached plan. |
+
+JARVIS-VLA / MineStudio is **local**, not hosted. Sibling first-look: [`10_sibling_list.md`](10_sibling_list.md).
 
 RynnVLA / WorldVLA / MolmoAct2 have **no** hosted net. Their "interactive" is HF card GIFs plus a later local LIBERO sandbox.
 
@@ -40,7 +42,8 @@ RynnVLA / WorldVLA / MolmoAct2 have **no** hosted net. Their "interactive" is HF
 | Playground | URL | Notes |
 |---|---|---|
 | InternNav | https://github.com/InternRobotics/InternNav | Habitat / Isaac; official N1 loop |
-| WorldVLA / RynnVLA-002 LIBERO | https://github.com/alibaba-damo-academy/WorldVLA | Decoder-family sandbox after the look |
+| JARVIS-VLA + MineStudio | https://github.com/CraftJarvis/JarvisVLA | Sibling first sandbox. JDK 8 + vLLM; leftover chat, then kbd/mouse |
+| WorldVLA / RynnVLA-002 LIBERO | https://github.com/alibaba-damo-academy/WorldVLA | Chameleon look #2. Decoder + leftover-English harness hack |
 | NaVILA-Bench | https://github.com/yang-zj1026/NaVILA-Bench | Isaac Lab VLN |
 | LIBERO via LeRobot | `lerobot-eval --env.type=libero ...` | π0.5, MolmoAct2, GR00T |
 | CALVIN | http://calvin.cs.uni-freiburg.de/ | OpenHelix, RoboDual |

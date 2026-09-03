@@ -74,6 +74,6 @@ Best 2026 **open + cheap-robot + spatial reasoning** VLA. Dual purity is only "n
 
 ## First pull
 
-Second in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)): watch the [blog](https://allenai.org/blog/molmoact2) after RynnVLA, before InternVLA-N1 Gradio. Then `allenai/MolmoAct2-Think-LIBERO` as sandbox B. Read the adaptive-depth cache API; that is the bit that maps onto the sibling problem. SO-101 later.
+Third in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)): watch the [blog](https://allenai.org/blog/molmoact2) after JARVIS-VLA and Chameleon/Rynn/WorldVLA, before InternVLA-N1 Gradio. Then `allenai/MolmoAct2-Think-LIBERO` as sandbox B. Read the adaptive-depth cache API; that is the bit that maps onto the sibling problem. SO-101 later.
 
 ## Pull log

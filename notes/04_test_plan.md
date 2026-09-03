@@ -1,24 +1,26 @@
 # Test plan
 
-**Next window starts at [`09_next_session.md`](09_next_session.md).** Look first (RynnVLA-001/002 + WorldVLA → MolmoAct2 → InternVLA-N1), then one small sandbox at a time. Do not download the twelve-card zoo.
+**Next window starts at [`09_next_session.md`](09_next_session.md).** Look first (JARVIS-VLA → Chameleon/Rynn/WorldVLA → MolmoAct2 → InternVLA-N1), then one small sandbox at a time. Do not download the twelve-card zoo.
 
 The rest of this file is the later pull-day smokes, after those looks.
 
 ## Look order (next session)
 
-1. **RynnVLA-001 / 002 + WorldVLA** — videos, HF GIFs, GitHub. No hosted playground. Watch the vision decoder / next-frame path.
-2. **MolmoAct2** — [blog](https://allenai.org/blog/molmoact2). Think + SO-10x. No hosted net.
-3. **InternVLA-N1** — [Gradio](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo) + [homepage](https://internrobotics.github.io/internvla-n1.github.io/).
+1. **JARVIS-VLA** — sibling first. Screenshot VQA, then MineStudio. [`10_sibling_list.md`](10_sibling_list.md).
+2. **RynnVLA-001 / 002 + WorldVLA** — videos, HF GIFs, GitHub. Vision decoder / next-frame path. Then hack a harness for leftover English.
+3. **MolmoAct2** — [blog](https://allenai.org/blog/molmoact2). Think + SO-10x. No hosted net.
+4. **InternVLA-N1** — [Gradio](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo) + [homepage](https://internrobotics.github.io/internvla-n1.github.io/).
 
 Links live in [`09_next_session.md`](09_next_session.md) and [`05_demos.md`](05_demos.md).
 
-## Sandboxes (after the three looks)
+## Sandboxes (after the looks)
 
 | Order | Install | Success looks like |
 |---|---|---|
-| A | InternNav Gradio (already in look 3) | Agent follows a language instruction in a house for >30 s without a human clicking actions. |
+| S | JARVIS-VLA screenshot VQA + one MineStudio rollout | Leftover mouth still answers, or you log that SFT ate it; agent uses kbd/mouse. |
+| A | InternNav Gradio (already in look 4) | Agent follows a language instruction in a house for >30 s without a human clicking actions. |
 | B | MolmoAct2-Think-LIBERO or `lerobot-eval` on the LeRobot MolmoAct2/LIBERO card | Cube/object task completes. |
-| C | WorldVLA or RynnVLA-002 LIBERO from their GitHub | One LIBERO suite; optionally one action-conditioned next-frame sample. |
+| C | WorldVLA or RynnVLA-002 LIBERO from their GitHub | One LIBERO suite, one action-conditioned next-frame sample, one leftover-English harness attempt. |
 
 Habitat / Isaac / SO-101 wait until A/B/C have a winner.
 
