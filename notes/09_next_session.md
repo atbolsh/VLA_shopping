@@ -27,7 +27,7 @@ Ask while looking: does a screenshot still get an English answer? If action SFT 
 
 ### 2. RynnVLA-001 / 002 + WorldVLA (Chameleon)
 
-Same DAMO family. You like the vision decoder. Official loop emits actions / next frames, not chat. **Goal:** after the look, torture a harness for leftover English (mask to text tokens, prompt the VLA weights as a VLM) and log whether that is usable. Base Meta Chameleon can emit text; do not confuse that with this checkpoint.
+Same DAMO family. You like the vision decoder. Official loop emits actions / next frames, not chat. **Note-goal (not a Cursor official goal):** leftover English from the VLA weights, decoder kept. Spec: [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md). No code this window. Base Meta Chameleon can emit text; do not confuse that with this checkpoint.
 
 Watch for: next-frame generation, action-conditioned video, wrist-cam generation (002), ego-human-video pretrain (001). There is **no hosted playground**. Videos and HF GIFs are the look.
 

@@ -13,7 +13,7 @@ The parseable score table is below. The canvas mirrors it; do not invent a secon
 Same list as [`09_next_session.md`](09_next_session.md). Do not start this in the window that only wrote the note.
 
 1. **JARVIS-VLA** — only open 7B that is still a VLM, has a chat template, and has a documented MineStudio / vLLM loop. 5.5 FPS is hitchy, not paused-on-purpose. Attaching a custom S1 later is the same job as Path K on Gemma 4 12B.
-2. **Chameleon family (RynnVLA-001/002 + WorldVLA)** — vision decoder you actually want. Official harness does not talk; **goal is to hack one until leftover English shows up, or log that it will not.** Overnight pixels stay first-class either way.
+2. **Chameleon family (RynnVLA-001/002 + WorldVLA)** — vision decoder you actually want. Official harness does not talk. **Note-goal:** leftover English or a logged miss; decoder stays first-class. Spec (no code yet): [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md).
 3. **MolmoAct2** — shopping Path R look. Molmo2-ER can VQA if you ask; Think mode is depth tokens.
 4. **InternVLA-N1** — shopping Path N look. Hosted Gradio. True dual; product loop is mute.
 
@@ -59,10 +59,10 @@ Meta [Chameleon](https://arxiv.org/abs/2405.09818) (the *base* 7B) is a mixed-mo
 
 **WorldVLA / RynnVLA are not that checkpoint in a chat UI.** The official harness tokenizes the frame and asks for action tokens and/or image tokens. No chat template, no “assistant:” turn, no trained dialogue after action SFT.
 
-You still want the decoder, so a harness hack is a listed goal (not a weekend you were talked out of):
+You still want the decoder. That harness hack is a **note-goal** in [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md) — not a Cursor official goal, and not code this window:
 
-- Force-decode only leftover text-token ids from the **VLA** weights (not `RynnVLA-001-7B-Base`, not stock Meta Chameleon).
-- Prompt the same weights as if they were still a VLM.
+- Later: force-decode leftover BPE from the **VLA** weights (not `RynnVLA-001-7B-Base`, not stock Meta Chameleon).
+- Later: prompt the same weights as if they were still a VLM.
 - Keep one action → next-frame sample so the decoder look is not lost if the mouth is dead.
 
 Log usable English vs “SFT ate it.” Do not confuse a caption from the *base* Chameleon with this policy talking.
@@ -100,7 +100,7 @@ Success is “it answered in English *or* it moved,” not a new shopping total.
 | Order | What | Success |
 |---|---|---|
 | S | JARVIS-VLA: screenshot → VQA, then one MineStudio rollout (`vLLM` + official rollout script) | Leftover mouth still answers; agent takes kbd/mouse in-game. |
-| C | Chameleon: one WorldVLA / RynnVLA-002 LIBERO task, one action → next-frame sample, **and** one talk-harness attempt | Decoder visible. Leftover English usable, or a logged miss. |
+| C | Chameleon: one WorldVLA / RynnVLA-002 LIBERO task and one action → next-frame sample. Talk-harness is the note-goal in [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md), not this window’s code. | Decoder visible. Leftover English later, or a logged miss. |
 | K | Only if S’s mouth is dead: Gemma 4 12B + STEVE-1 dummy handoff | 12B talks; STEVE-1 walks for N ticks. |
 
 Habitat / SO-101 / the twelve-card zoo stay on the shopping path.
