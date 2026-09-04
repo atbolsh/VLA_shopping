@@ -88,13 +88,68 @@ def _is_flash_attn_error(exc: BaseException) -> bool:
     return "flash" in blob and "depth_anything" not in blob
 
 
+def verify_s1_weights(model, model_dir: Path) -> str:
+    """Prove the S1 modules hold the checkpoint's weights, not init garbage.
+
+    build_depthanythingv2 does load_state_dict(torch.load(.pth)) inside
+    __init__. Under from_pretrained(device_map=...) the module is on the
+    meta device, so that copy is a no-op (the warning wall). It does not
+    matter *iff* the DualVLN shards carry model.rgb_model.* themselves —
+    they do (175 keys) — and iff those actually landed. Check elementwise
+    against the shard files, one probe per S1 module.
+    """
+    import torch
+    from safetensors import safe_open
+
+    meta = [n for n, p in model.named_parameters() if p.is_meta]
+    if meta:
+        raise RuntimeError(f"{len(meta)} parameters still on meta device, e.g. {meta[:3]}")
+    index_path = Path(model_dir) / "model.safetensors.index.json"
+    weight_map = json.loads(index_path.read_text())["weight_map"]
+    prefixes = [
+        "model.rgb_model.",
+        "model.traj_dit.",
+        "model.memory_encoder.",
+        "model.rgb_resampler.",
+        "model.cond_projector.",
+        "model.latent_queries",
+        "model.action_encoder.",
+    ]
+    probes = []
+    for pref in prefixes:
+        hit = next((k for k in sorted(weight_map) if k.startswith(pref)), None)
+        if hit:
+            probes.append(hit)
+    live = dict(model.named_parameters())
+    live.update(dict(model.named_buffers()))
+    for key in probes:
+        with safe_open(str(Path(model_dir) / weight_map[key]), framework="pt", device="cpu") as f:
+            saved = f.get_tensor(key)
+        param = live[key].detach().to("cpu")
+        if not torch.equal(param, saved.to(param.dtype)):
+            raise RuntimeError(f"S1 weight mismatch vs shard: {key}")
+    return (
+        f"S1 weights verified vs shards: {len(probes)}/{len(probes)} probes equal "
+        f"({', '.join(p.removeprefix('model.').split('.')[0] for p in probes)})"
+    )
+
+
 def _make_agent(args: Args):
     _on_path()
+    import warnings
+
     from patch_internnav import ensure_depth_anything
 
     ensure_depth_anything()
     InternVLAN1AsyncAgent = _import_realworld_agent()
 
+    # Benign under from_pretrained(device_map=...): the in-__init__
+    # DepthAnything .pth load hits meta parameters and no-ops; the real
+    # rgb_model weights come from the DualVLN shards (verified after load).
+    warnings.filterwarnings(
+        "ignore",
+        message=".*copying from a non-meta parameter in the checkpoint to a meta parameter.*",
+    )
     try:
         return InternVLAN1AsyncAgent(args)
     except Exception as first:
@@ -117,7 +172,9 @@ class DualVlnPlay:
     def __init__(self, model_path: Path | str = WEIGHTS):
         self.args = Args(str(model_path))
         self.agent = _make_agent(self.args)
+        print(verify_s1_weights(self.agent.model, Path(self.args.model_path)))
         self.agent.reset()
+        print("warmup: one step on a black dummy frame (its S2 output is throwaway)")
         dummy_rgb = np.zeros((480, 640, 3), dtype=np.uint8)
         dummy_depth = np.zeros((480, 640), dtype=np.float32)
         dummy_pose = np.eye(4)
@@ -126,6 +183,7 @@ class DualVlnPlay:
         )
         self.agent.reset()
         self.agent.last_s2_idx = -100
+        print("warmup done; agent state reset")
 
     def step(
         self,
