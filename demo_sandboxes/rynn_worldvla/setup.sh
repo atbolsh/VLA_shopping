@@ -144,12 +144,36 @@ snapshot_download(
     local_dir="weights/RynnVLA-002",
     local_dir_use_symlinks=False,
 )
+# Official ItemProcessor tokenizer. Not the 7B weights — json/config only.
+try:
+    snapshot_download(
+        "Alpha-VLLM/Lumina-mGPT-7B-768",
+        allow_patterns=[
+            "tokenizer.json",
+            "tokenizer_config.json",
+            "special_tokens_map.json",
+            "tokenizer.model",
+        ],
+        local_dir="weights/Lumina-mGPT-7B-768",
+        local_dir_use_symlinks=False,
+    )
+except Exception as exc:
+    print("WARNING: Lumina tokenizer download skipped:", exc)
 print("weights present")
-for p in Path("weights").rglob("*"):
-    if p.is_file():
-        pass
 print("done download")
 PY
+
+# ItemProcessor hardcodes ../ckpts/chameleon/tokenizer from rynnvla-002.
+mkdir -p vendor/WorldVLA/ckpts vendor/WorldVLA/rynnvla-002/ckpts
+if [[ -d weights/WorldVLA/chameleon ]]; then
+  ln -sfn "${HERE}/weights/WorldVLA/chameleon" vendor/WorldVLA/ckpts/chameleon
+  ln -sfn "${HERE}/weights/WorldVLA/chameleon" vendor/WorldVLA/rynnvla-002/ckpts/chameleon
+fi
+if [[ -f weights/Lumina-mGPT-7B-768/tokenizer.json ]]; then
+  snap_dir="vendor/WorldVLA/ckpts/models--Alpha-VLLM--Lumina-mGPT-7B-768/snapshots/9624463a82ea5ce814af9b561dcd08a31082c3af"
+  mkdir -p "$(dirname "$snap_dir")"
+  ln -sfn "${HERE}/weights/Lumina-mGPT-7B-768" "$snap_dir"
+fi
 
 python download_frames.py
 python -m ipykernel install --user --name rynn-worldvla --display-name "rynn-worldvla"

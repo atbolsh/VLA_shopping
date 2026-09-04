@@ -54,4 +54,21 @@ source .venv/bin/activate
 python download_frames.py
 ```
 
-The Chameleon tokenizer is `text_tokenizer.json` loaded with `LlamaTokenizerFast(tokenizer_file=...)` — it is **not** an HF `from_pretrained` folder.
+## Official load (do not skip)
+
+`VLA_model_256/libero_goal` `config.json` is `ChameleonXLLMXForConditionalGeneration_ck_action_head`, not the base xllmx class. Official discrete eval (`evals_libero/eval_libero_goal_his_2_third_view_wrist_w_state_5_256_abiw_discrete.sh`) does:
+
+```python
+from model import ChameleonXLLMXForConditionalGeneration_ck_action_head
+model = ChameleonXLLMXForConditionalGeneration_ck_action_head.from_pretrained(
+    ckpt, torch_dtype=torch.bfloat16, mask_image_logits=False,
+    action_dim=7, time_horizon=5, device_map="cpu",
+)
+# then ItemProcessor(target_size=256) + model.generate_dis_ma
+```
+
+WorldVLA `requirements.txt` pins **transformers==4.43.0** (same as `setup.sh`). The published VLA `config.json` lists `transformers_version: 4.48.0`; that is the saver, not the pin. Keep 4.43.0.
+
+The `model.vqmodel.encoder.*` “newly initialized” warning is **expected**. Those weights are not in the three LM shards. Images are encoded by Meta `vqgan.ckpt` via `ItemProcessor` (`chameleon_vae_ori.ImageTokenizer`). Do not treat that warning as a failed load.
+
+The Chameleon tokenizer is `text_tokenizer.json`. Talk still loads it with `LlamaTokenizerFast(tokenizer_file=...)`. Act/dream use the official Lumina-mGPT-7B-768 tokenizer files (setup downloads those jsons only) plus `vqgan.yaml` / `vqgan.ckpt`.
