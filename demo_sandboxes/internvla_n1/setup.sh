@@ -93,26 +93,8 @@ if [[ ! -d vendor/InternNav/.git ]]; then
   _try git clone --depth 1 https://github.com/InternRobotics/InternNav.git vendor/InternNav
 fi
 (cd vendor/InternNav && git submodule update --init --recursive)
-# Their setup.py says python_requires='>=3.8, <=3.12'. PEP 440 treats
-# <=3.12 as <=3.12.0, so vast.ai 3.12.14 is rejected even though they
-# list (3, 12) in SUPPORTED_PYTHON_VERSIONS. Widen to <3.13.
-python - <<'PY'
-import re
-from pathlib import Path
-p = Path("vendor/InternNav/setup.py")
-text = p.read_text()
-new, n = re.subn(
-    r"python_requires\s*=\s*['\"]>=3\.8,\s*<=3\.12['\"]",
-    "python_requires='>=3.8,<3.13'",
-    text,
-)
-if n:
-    p.write_text(new)
-    print("patched InternNav python_requires for 3.12.x")
-else:
-    print("InternNav python_requires already patched or changed; pip will ignore-requires-python")
-PY
-_try python -m pip install --ignore-requires-python -e vendor/InternNav
+export PIP_IGNORE_REQUIRES_PYTHON=1
+_try python src/patch_internnav.py
 
 # Official sample RGB stream (no Habitat).
 if [[ -f vendor/InternNav/assets/realworld_sample_data.tar.gz ]]; then

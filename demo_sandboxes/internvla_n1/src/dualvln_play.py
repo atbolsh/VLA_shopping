@@ -16,12 +16,16 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 VENDOR = ROOT / "vendor" / "InternNav"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 WEIGHTS = ROOT / "weights" / "InternVLA-N1-DualVLN"
 LOG_DIR = ROOT / "logs"
 DEVICE = "cuda:0"
 
 
 def _on_path() -> None:
+    from patch_internnav import ensure_internnav
+
+    ensure_internnav()
     for p in (VENDOR, VENDOR / "src" / "diffusion-policy"):
         s = str(p)
         if p.exists() and s not in sys.path:
