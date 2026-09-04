@@ -788,7 +788,6 @@ class RynnSession:
                 return_dict_in_generate=True,
             )
         new_ids = res["sequences"][0, input_ids.shape[1]:].detach().cpu().tolist()
-        blocks = _extract_image_blocks(new_ids)
         # 2026-09-04: both 7B cards resident + this KV cache left ~32 MiB free;
         # block-1 VQ decode OOMed. Drop generation state before decoding.
         del res
@@ -797,37 +796,22 @@ class RynnSession:
             torch.cuda.empty_cache()
 
         decoded: list[tuple[str, Image.Image]] = []
-        block_errors: list[str] = []
         names = ("dream_next_third.png", "dream_next_wrist.png")
-        for i, block in enumerate(blocks[:2]):
-            for attempt in (0, 1):
-                try:
-                    img = proc.decode_image(list(block))
-                    out = LOG_DIR / names[i]
-                    img.save(out)
-                    decoded.append((str(out), img))
-                    break
-                except torch.cuda.OutOfMemoryError as exc:
-                    if attempt == 0 and torch.cuda.is_available():
-                        torch.cuda.empty_cache()
-                        continue
-                    block_errors.append(f"block {i} (len {len(block)}): OOM {exc}")
-                    break
-                except Exception as exc:  # noqa: BLE001
-                    block_errors.append(
-                        f"block {i} (len {len(block)}): {type(exc).__name__} {exc}"
-                    )
-                    break
+        imgs, meta = decode_generated_images(proc, new_ids, WORLD_RESOLUTION, n_want=2)
+        block_errors = list(meta["errors"])
+        for i, img in enumerate(imgs):
+            out = LOG_DIR / names[i]
+            img.save(out)
+            decoded.append((str(out), img))
         g_front_path = decoded[0][0] if len(decoded) >= 1 else None
         g_wrist_path = decoded[1][0] if len(decoded) >= 2 else None
 
-        n_img_range = sum(1 for i in new_ids if IMG_LO <= i <= IMG_HI)
         rec = {
             "sandbox": "rynn_worldvla",
             "turn": "dream",
             "reply": (
-                f"decoded {len(decoded)} of {len(blocks)} image block(s); "
-                f"{n_img_range} image-range tokens of {len(new_ids)} generated"
+                f"decoded {len(decoded)} of {len(meta['block_lens'])} image block(s); "
+                f"{meta['n_img_range']} image-range tokens of {meta['n_new']} generated"
                 + (f"; decode errors: {block_errors}" if block_errors else "")
             ),
             "think": {
@@ -836,9 +820,10 @@ class RynnSession:
                 "action_note": action_note,
                 "action_env": action.tolist(),
                 "n_prompt_tokens": len(tokens),
-                "n_new_tokens": len(new_ids),
-                "n_img_range_tokens": n_img_range,
-                "block_lens": [len(b) for b in blocks],
+                "n_new_tokens": meta["n_new"],
+                "n_img_range_tokens": meta["n_img_range"],
+                "block_lens": meta["block_lens"],
+                "chosen_lens": meta["chosen_lens"],
                 "block_errors": block_errors,
                 "unused_action_ids": (action_ids or [])[:16],
             },
@@ -852,18 +837,265 @@ class RynnSession:
         return rec
 
 
+IMG_START_ID = 8197
+IMG_END_ID = 8196
+NEWLINE_ID = 8803  # <reserved08799>
+GRID_BASE_ID = 8804  # <reserved08800> ; n_grids token = 8804 + n
+
+
 def _extract_image_blocks(ids: list[int]) -> list[list[int]]:
     """Complete ``8197 … 8196`` spans, inclusive, in generation order."""
-    IMG_START, IMG_END = 8197, 8196
     blocks: list[list[int]] = []
     start = None
     for i, t in enumerate(ids):
-        if t == IMG_START:
+        if t == IMG_START_ID:
             start = i
-        elif t == IMG_END and start is not None:
+        elif t == IMG_END_ID and start is not None:
             blocks.append(ids[start : i + 1])
             start = None
     return blocks
+
+
+def _expected_block_len(target_size: int) -> int:
+    """start + 2 grid toks + H_lat * (W_lat + 1) + end for a square ``target_size``."""
+    lat = (target_size // 16)
+    return 4 + lat * (lat + 1)
+
+
+def _strip_img_wrappers(block: list[int]) -> list[int]:
+    toks = list(block)
+    if toks and toks[0] == IMG_START_ID:
+        toks = toks[1:]
+    if toks and toks[-1] == IMG_END_ID:
+        toks = toks[:-1]
+    return toks
+
+
+def _claimed_grids(toks: list[int]) -> tuple[int, int] | None:
+    if len(toks) < 2:
+        return None
+    h, w = int(toks[0]) - GRID_BASE_ID, int(toks[1]) - GRID_BASE_ID
+    if 1 <= h <= 40 and 1 <= w <= 40:
+        return h, w
+    return None
+
+
+def _grid_candidates(proc, claimed: tuple[int, int] | None) -> list[tuple[int, int, int]]:
+    """(h_grids, w_grids, n_vq_codes) from the processor crop list."""
+    out: list[tuple[int, int, int]] = []
+    seen: set[tuple[int, int]] = set()
+    if claimed:
+        hg, wg = claimed
+        out.append((hg, wg, (hg * 2) * (wg * 2)))
+        seen.add((hg, wg))
+    crops = getattr(proc, "crop_size_list", None) or [(512, 512), (256, 256)]
+    ps = int(getattr(proc, "patch_size", 32))
+    for w, h in crops:
+        wg, hg = w // ps, h // ps
+        if (hg, wg) in seen:
+            continue
+        seen.add((hg, wg))
+        out.append((hg, wg, (hg * 2) * (wg * 2)))
+    return out
+
+
+def _target_size_of(proc) -> int:
+    """Largest square the processor was built for (512 or 256), not max crop edge."""
+    ps = int(getattr(proc, "patch_size", 32))
+    crops = getattr(proc, "crop_size_list", None) or [(512, 512)]
+    n_patches = max((w // ps) * (h // ps) for w, h in crops)
+    return int(round(n_patches ** 0.5)) * ps
+
+
+def _map_bpe(proc, tok: int) -> int:
+    table = proc.chameleon_ori_translation.bpe2img
+    if tok in table:
+        return int(table[tok])
+    raise KeyError(tok)
+
+
+def _pil_from_codes(proc, codes: list[int], h_lat: int, w_lat: int) -> Image.Image:
+    need = h_lat * w_lat
+    if len(codes) < need:
+        codes = codes + [0] * (need - len(codes))
+    codes = codes[:need]
+    tok = proc.chameleon_ori_image_tokenizer
+    device = next(tok._vq_model.parameters()).device
+    t = torch.tensor(codes, dtype=torch.int64, device=device)
+    return tok.pil_from_img_toks(t, h_lat, w_lat)
+
+
+def _decode_with_newlines(proc, hg: int, wg: int, body: list[int]) -> Image.Image:
+    h_lat, w_lat = hg * 2, wg * 2
+    row = w_lat + 1
+    need = h_lat * row
+    body = list(body)
+    if len(body) < need:
+        body = body + [NEWLINE_ID] * (need - len(body))
+    body = body[:need]
+    mapped: list[int] = []
+    for i, t in enumerate(body):
+        t = int(t)
+        if (i + 1) % row != 0:
+            if t == NEWLINE_ID:
+                mapped.append(0)
+            else:
+                try:
+                    mapped.append(_map_bpe(proc, t))
+                except KeyError:
+                    mapped.append(0)
+        else:
+            mapped.append(t)
+    codes = torch.tensor(mapped, dtype=torch.int64).view(h_lat, row)[:, :-1].flatten().tolist()
+    return _pil_from_codes(proc, codes, h_lat, w_lat)
+
+
+def _decode_flat_vq(proc, hg: int, wg: int, body: list[int]) -> Image.Image:
+    h_lat, w_lat = hg * 2, wg * 2
+    vq = [int(t) for t in body if IMG_LO <= int(t) <= IMG_HI]
+    codes = []
+    for t in vq:
+        try:
+            codes.append(_map_bpe(proc, t))
+        except KeyError:
+            continue
+    return _pil_from_codes(proc, codes, h_lat, w_lat)
+
+
+def decode_vq_block(proc, block: list[int]) -> Image.Image:
+    """Official ``decode_image`` plus recovery for near-miss generations.
+
+    The trained 512² block is 1060 tokens (start, two grid toks, 32×33 with
+    a newline per row, end). The 002 world card often emits 1028 (no
+    newlines) or 1059 (one short), or extra tiny ``8197…8196`` spans.
+    Official ``assert len == H*(W+1)`` then ``bpe2img[newline]`` is why
+    Rung 2 printed bare AssertionError / KeyError 8803.
+    """
+    toks = _strip_img_wrappers(block)
+    if len(toks) < 4:
+        raise ValueError(f"image block too short ({len(block)} tokens)")
+    claimed = _claimed_grids(toks)
+    body = toks[2:] if claimed else toks
+    errors: list[str] = []
+    if claimed:
+        hg, wg = claimed
+        h_lat, w_lat = hg * 2, wg * 2
+        need_nl = h_lat * (w_lat + 1)
+        n_vq = sum(1 for t in body if IMG_LO <= t <= IMG_HI)
+        # 1024 flat codes is *also* 32 short of 1056 — do not pad 32
+        # trailing newlines and then drop every 33rd real token.
+        has_nl = NEWLINE_ID in body
+        if len(body) == need_nl or (has_nl and abs(len(body) - need_nl) <= w_lat + 1):
+            try:
+                return _decode_with_newlines(proc, hg, wg, body)
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"nl/{hg}x{wg}: {exc}")
+        if abs(n_vq - h_lat * w_lat) <= w_lat:
+            try:
+                return _decode_flat_vq(proc, hg, wg, body)
+            except Exception as exc:  # noqa: BLE001
+                errors.append(f"flat/{hg}x{wg}: {exc}")
+    src = body if claimed else toks
+    n_vq = sum(1 for t in src if IMG_LO <= t <= IMG_HI)
+    tgt = _target_size_of(proc)
+    tg = max(1, tgt // int(getattr(proc, "patch_size", 32)))
+    n_tgt = (tg * 2) * (tg * 2)
+    # Truncated full-frame (Rung 2 push_left 486): pad to the trained square
+    # rather than picking a skinny crop from crop_size_list.
+    if n_vq >= int(n_tgt * 0.35):
+        try:
+            return _decode_flat_vq(proc, tg, tg, src)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"pad/{tg}x{tg}: {exc}")
+    cands = _grid_candidates(proc, claimed)
+    exact = [c for c in cands if c[2] == n_vq]
+    pool = exact or sorted(cands, key=lambda c: (abs(c[2] - n_vq), abs(c[0] - c[1])))
+    for hg, wg, n_need in pool[:8]:
+        if n_need == 0 or abs(n_need - n_vq) > max(n_need * 0.15, 64):
+            continue
+        try:
+            return _decode_flat_vq(proc, hg, wg, src)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"infer/{hg}x{wg}: {exc}")
+    raise ValueError(
+        f"could not decode block len={len(block)} n_vq={n_vq} claimed={claimed}: {errors[:4]}"
+    )
+
+
+def select_image_blocks(blocks: list[list[int]], target_size: int, n: int = 2) -> list[list[int]]:
+    """Prefer full-frame spans; skip the extra 4–90 token ``8197…8196`` glitches."""
+    if not blocks:
+        return []
+    expect = _expected_block_len(target_size)
+    scored = sorted(
+        enumerate(blocks),
+        key=lambda ib: (abs(len(ib[1]) - expect), -len(ib[1])),
+    )
+    picked: list[tuple[int, list[int]]] = []
+    for i, b in scored:
+        if len(b) < max(40, expect // 4):
+            continue
+        picked.append((i, b))
+        if len(picked) == n:
+            break
+    picked.sort(key=lambda ib: ib[0])
+    return [b for _, b in picked]
+
+
+def _decode_from_token_stream(proc, ids: list[int], target_size: int, n_want: int) -> list[Image.Image]:
+    """When 8196 closes the span too early, the VQ tokens are still in ``ids``."""
+    vq = [int(t) for t in ids if IMG_LO <= int(t) <= IMG_HI]
+    tg = max(1, target_size // int(getattr(proc, "patch_size", 32)))
+    n_need = (tg * 2) * (tg * 2)
+    imgs: list[Image.Image] = []
+    offset = 0
+    while len(imgs) < n_want and offset + int(n_need * 0.7) <= len(vq):
+        imgs.append(_decode_flat_vq(proc, tg, tg, vq[offset : offset + n_need]))
+        offset += n_need
+    return imgs
+
+
+def decode_generated_images(
+    proc,
+    ids: list[int],
+    target_size: int,
+    n_want: int = 2,
+) -> tuple[list[Image.Image], dict[str, Any]]:
+    blocks = _extract_image_blocks(ids)
+    chosen = select_image_blocks(blocks, target_size, n=n_want)
+    imgs: list[Image.Image] = []
+    errs: list[str] = []
+    for i, b in enumerate(chosen):
+        for attempt in (0, 1):
+            try:
+                imgs.append(decode_vq_block(proc, b))
+                break
+            except torch.cuda.OutOfMemoryError as exc:
+                if attempt == 0 and torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+                    continue
+                errs.append(f"block {i} len {len(b)}: OOM {exc}")
+            except Exception as exc:  # noqa: BLE001
+                errs.append(f"block {i} len {len(b)}: {type(exc).__name__} {exc}")
+                break
+    notes: list[str] = []
+    if len(imgs) < n_want:
+        try:
+            extra = _decode_from_token_stream(proc, ids, target_size, n_want - len(imgs))
+            imgs.extend(extra)
+            if extra:
+                notes.append(f"stream fallback filled {len(extra)} frame(s)")
+        except Exception as exc:  # noqa: BLE001
+            errs.append(f"stream fallback: {type(exc).__name__} {exc}")
+    n_img = sum(1 for t in ids if IMG_LO <= t <= IMG_HI)
+    return imgs, {
+        "n_new": len(ids),
+        "n_img_range": n_img,
+        "block_lens": [len(b) for b in blocks],
+        "chosen_lens": [len(b) for b in chosen],
+        "errors": errs,
+        "notes": notes,
+    }
 
 
 def _generate_dis_ma(model, input_ids, generation_config):
