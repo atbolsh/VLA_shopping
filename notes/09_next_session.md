@@ -45,6 +45,8 @@ Watch for: next-frame generation, action-conditioned video, wrist-cam generation
 
 Ask while watching: can this thing show you *what happens if I take this action* as pixels? That is why it is entry 2, not a footnote.
 
+**Killed 2026-09-04** (`demo_sandboxes/rynn_worldvla`): not a usable option. Act works on the official discrete railroad. Talk is **garbage**. Dream / decoder look failed (malformed blocks; recovered decode still not usable). Do **not** spend more harness rounds. Details: [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04). Next box is InternVLA-N1.
+
 ### 3. MolmoAct2
 
 | What | URL |
@@ -80,8 +82,8 @@ After the looks. Success is “it answered or it moved,” not a new scorecard.
 | S | JARVIS-VLA screenshot VQA (`jarvis_vqa`). MineStudio skipped. | **Done 2026-09-03:** SFT ate the mouth (`action_tokens`). |
 | A | InternNav official inference-only notebook (`demo_sandboxes/internvla_n1`) — hosted Gradio is down | Follow one English instruction on their sample RGB stream; see pixel-goal + S2 text. |
 | B | MolmoAct2-Think-LIBERO + Molmo2-ER Ask (`molmoact2`) | **Done 2026-09-03:** Ask talks; Think stays a mute policy. Inject failed. |
-| C | WorldVLA or RynnVLA-002 **LIBERO** from their GitHub | **Partly done 2026-09-04:** act emits clean discrete chunks (weights verified 593/593); talk = **garbage** (echo + 2-token loop); dream generation on-distribution after fixing the vendor's stale prompt, PNG decode pending (OOM fixed in harness — re-run). Log: [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04). |
+| C | WorldVLA or RynnVLA-002 **LIBERO** from their GitHub | **Killed 2026-09-04:** not a usable option. Act railroad is real; mouth **garbage**; dream/decoder not usable. Do not keep hacking the harness. Log: [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04). |
 
-Do **not** install Habitat, Isaac, or an SO-101 until a sandbox has a winner you still care about. Next box: [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) on **2×5090**. Official walk loop will show S2 `llm_output` (mid-level English) + pixel-goal; it will **not** interview you. Free-form talk is `system2_ask` on `cuda:1`. Rynn GIFs can wait on the notes machine. Gemma+STEVE-1 remains smoke K.
+Do **not** install Habitat, Isaac, or an SO-101 until a sandbox has a winner you still care about. **Next box:** [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) on **2×5090**. Official walk loop will show S2 `llm_output` (mid-level English) + pixel-goal; it will **not** interview you. Free-form talk is `system2_ask` on `cuda:1`. Do not reopen Rynn. Gemma+STEVE-1 remains smoke K.
 
 Smoke-0 reasoning prompts and the older three-path deep dives stay in [`04_test_plan.md`](04_test_plan.md). Run those only after a sandbox you like.

@@ -1,17 +1,15 @@
-# Goal (note only): leftover English from the Chameleon VLA
+# Goal (closed): leftover English from the Chameleon VLA
 
-**Not a Cursor official goal.** Parked here so the next window can pick it up. Do not start code in the window that only wrote this. Do not download weights from here.
+**Closed 2026-09-04. Do not pick this up next.** RynnVLA-002 / WorldVLA is **not a usable option**. Token map below is kept so you do not re-derive it.
 
-This is look #2 on [`09_next_session.md`](09_next_session.md). You like the vision decoder. Official WorldVLA / RynnVLA loops emit action tokens and/or next-frame tokens. The question is whether the **same VLA checkpoint** still has a leftover BPE mouth if you refuse to let it speak image or action ids.
+Look #2 on [`09_next_session.md`](09_next_session.md). Official loops emit action tokens and/or next-frame tokens. The question was whether the **same VLA checkpoint** still has a leftover BPE mouth if you refuse to let it speak image or action ids.
 
-A draft Python harness was started and **deleted**. Write code later, not now.
+## What was proved
 
-## What you are proving (later)
+Same **VLA** weights, two queries (ran 2026-09-04 in `demo_sandboxes/rynn_worldvla`):
 
-Same **VLA** weights, two queries:
-
-1. **Talk.** Ban image + reserved/action ids. Whatever comes out of BPE (`>= 16384`) is leftover Chameleon English, or SFT ate it.
-2. **Dream.** Official world-model prompt (action + frame → next frame). That is why this family is in the four-look list. A dead mouth does not demote the decoder.
+1. **Talk.** Ban image + reserved/action ids. BPE (`>= 16384`) leftover was **garbage** (SFT ate the mouth).
+2. **Dream.** Trained world-model prompt (action + frames → next frames). Generation was messy; decode was not usable. A dead mouth did **not** leave a keeper decoder.
 
 A caption from Meta Chameleon or `RynnVLA-001-7B-Base` does **not** count. Those already talk; they are not the policy.
 
@@ -26,15 +24,19 @@ A caption from Meta Chameleon or `RynnVLA-001-7B-Base` does **not** count. Those
 
 Official VLA prompts ask for `<|action|>` / `<|image|>`. Talk means: allow only BPE + `</s>` / `<s>`.
 
-WorldVLA cards are Lumina/xllmx, not a vanilla HF causal LM. When you do write a harness, clone [WorldVLA](https://github.com/alibaba-damo-academy/WorldVLA) and stay in that env. Dream PNG: `rynnvla-002/exps_libero_world_model/eval_world_model_goal.sh` on the **same** ckpt.
+WorldVLA cards are Lumina/xllmx, not a vanilla HF causal LM. Harness lives in `demo_sandboxes/rynn_worldvla` (do not extend it). Official dream script: `rynnvla-002/exps_libero_world_model/eval_world_model_goal.sh`.
 
-## Verdict (when you actually run it)
+## Verdict (2026-09-04)
 
-Write it back into [`10_sibling_list.md`](10_sibling_list.md) and sandbox C in [`09_next_session.md`](09_next_session.md).
+Logged in [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04) and sandbox C in [`09_next_session.md`](09_next_session.md).
 
-| leftover_english | Meaning |
-|---|---|
-| `usable` | ≥3 real English words after stripping `IMGIMG*` / angle-bracket specials |
-| `garbage` | Tokens decoded, not a sentence |
-| `empty` | Mouth is gone |
-| `unverified` | Never loaded — not a miss yet |
+| leftover_english | Meaning | This run |
+|---|---|---|
+| `usable` | ≥3 distinct real English words, no short cycle | — |
+| `garbage` | Tokens decoded, not a sentence | **this** — prompt echo (` Use only commonality`) then `speaking`×∞ |
+| `empty` | Mouth is gone | — |
+| `unverified` | Never loaded — not a miss yet | — |
+
+Dream/decoder: not usable. Official `decode_image` needs a perfect 1060-token 512² span; generations were junk short `8197…8196` pairs, 1028 (no newlines), 1059 (`KeyError 8803`), or `max_new_tokens` fragments. Recoveries did not yield a usable next-frame look. Owner declined more harness work.
+
+**Do not** treat a caption from Meta Chameleon or `RynnVLA-001-7B-Base` as this policy talking. **Next box:** InternVLA-N1 on 2×5090.

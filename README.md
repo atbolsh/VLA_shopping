@@ -59,10 +59,10 @@ AGENTS.md        how a later agent should edit this
 
 Scorecard pull numbers are shopping rank, not the next window. Next window:
 
-1. **JARVIS-VLA** (sibling: leftover chat + MineStudio). Scorecard: [`notes/10_sibling_list.md`](notes/10_sibling_list.md).
-2. **RynnVLA-001 / 002 + WorldVLA** (vision decoder; then hack a harness for leftover English).
-3. **MolmoAct2** ([blog](https://allenai.org/blog/molmoact2)).
-4. **InternVLA-N1** (homepage videos; Gradio Space is down — use [`demo_sandboxes/internvla_n1`](demo_sandboxes/internvla_n1/README.md)).
+1. **JARVIS-VLA** — done 2026-09-03; mouth dead. Scorecard: [`notes/10_sibling_list.md`](notes/10_sibling_list.md).
+2. **RynnVLA-001 / 002 + WorldVLA** — **killed 2026-09-04**; not a usable option.
+3. **MolmoAct2** — done 2026-09-03; Ask talks, Think does not.
+4. **InternVLA-N1** — **next, 2×5090** ([`demo_sandboxes/internvla_n1`](demo_sandboxes/internvla_n1/README.md); Gradio Space is down).
 
 Then one small sandbox at a time on a rented 5090. Habitat / SO-101 wait. **Do not run `setup.sh` on this notes machine.**
 

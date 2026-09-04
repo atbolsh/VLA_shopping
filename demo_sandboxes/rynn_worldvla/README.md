@@ -1,5 +1,7 @@
 # RynnVLA-002 / WorldVLA — act, dream, leftover BPE
 
+**Killed 2026-09-04. Not a usable option.** Mouth is garbage; dream/decoder look failed. Do **not** extend the harness or re-run ablations. Log: [`../../notes/10_sibling_list.md`](../../notes/10_sibling_list.md#rynn-worldvla-2026-09-04). Next box is [`../internvla_n1`](../internvla_n1/README.md) on **2×5090**.
+
 **Run only on a rented 5090 box. Do not execute `setup.sh` on the notes machine.**
 
 Official loops emit action tokens and/or next-frame tokens, **not** chat. This folder stays in Lumina/xllmx. Do not load these weights as a vanilla HF causal LM. A caption from Meta Chameleon or `RynnVLA-001-7B-Base` does **not** count.

@@ -4,7 +4,7 @@ Scores are 1–5. Rubric lives in `../AGENTS.md`. Totals are an unweighted sum (
 
 **Do not treat the total as "buy this."** InternVLA-N1 wins navigation+dual+reasoning. MolmoAct2 / GR00T / π0.5 win "I want a robot on the desk this month." OpenHelix wins "I want to swap my Gemma in as S2."
 
-The `pull` column is shopping rank. **Next window is a look order**, not this table: JARVIS-VLA → Chameleon/Rynn/WorldVLA → MolmoAct2 → InternVLA-N1 → small sandboxes. [`09_next_session.md`](09_next_session.md). Sibling scorecard (weights-only): [`10_sibling_list.md`](10_sibling_list.md).
+The `pull` column is shopping rank. Looks 1–3 are done; Rynn/WorldVLA **killed 2026-09-04**. **Next box:** InternVLA-N1 on 2×5090. [`09_next_session.md`](09_next_session.md). Sibling scorecard (weights-only): [`10_sibling_list.md`](10_sibling_list.md). This table is unchanged.
 
 | id | name | params | dual class | dual | reason | size | env | robot | night | open | total | pull |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|

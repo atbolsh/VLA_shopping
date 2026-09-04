@@ -71,7 +71,7 @@ Best **off-the-shelf** match to "navigate a detailed 3D world with a slow planne
 
 ## First pull
 
-Fourth in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)). Gradio is down (401). Next box is [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) on **2×5090**.
+Looks 1–3 are done; Rynn/WorldVLA killed. **This is the next box** ([`09_next_session.md`](../notes/09_next_session.md)). Gradio is down (401). Run [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) on **2×5090**.
 
 1. DualVLN `step` on their sample RGB: watch S2 `llm_output` + pixel-goal. Do not expect follow-up questions.
 2. Optional: `system2_ask` on `InternVLA-N1-System2` / `cuda:1` (Qwen chat, not the walk loop).

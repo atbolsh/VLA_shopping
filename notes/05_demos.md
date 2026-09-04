@@ -2,7 +2,7 @@
 
 Hosted interactive demos are rare. Most "demos" are project-page videos. This list is only things that actually exist.
 
-**Next-session look order:** JARVIS-VLA → Chameleon/Rynn/WorldVLA → MolmoAct2 → InternVLA-N1. Script: [`09_next_session.md`](09_next_session.md). Sibling scorecard: [`10_sibling_list.md`](10_sibling_list.md).
+**Next-session look order:** JARVIS-VLA (done) → Chameleon/Rynn/WorldVLA (**killed 2026-09-04**) → MolmoAct2 (done) → InternVLA-N1 (**next, 2×5090**). Script: [`09_next_session.md`](09_next_session.md). Sibling scorecard: [`10_sibling_list.md`](10_sibling_list.md).
 
 ## Hosted interactive (browser)
 
@@ -43,7 +43,7 @@ RynnVLA / WorldVLA / MolmoAct2 have **no** hosted net. Their "interactive" is HF
 |---|---|---|
 | InternNav | https://github.com/InternRobotics/InternNav | Habitat / Isaac; official N1 loop |
 | JARVIS-VLA + MineStudio | https://github.com/CraftJarvis/JarvisVLA | Sibling first sandbox. JDK 8 + vLLM; leftover chat, then kbd/mouse |
-| WorldVLA / RynnVLA-002 LIBERO | https://github.com/alibaba-damo-academy/WorldVLA | Chameleon look #2. Decoder + leftover-English harness hack |
+| WorldVLA / RynnVLA-002 LIBERO | https://github.com/alibaba-damo-academy/WorldVLA | **Killed 2026-09-04.** Not a usable option. Do not reopen the harness. |
 | NaVILA-Bench | https://github.com/yang-zj1026/NaVILA-Bench | Isaac Lab VLN |
 | LIBERO via LeRobot | `lerobot-eval --env.type=libero ...` | π0.5, MolmoAct2, GR00T |
 | CALVIN | http://calvin.cs.uni-freiburg.de/ | OpenHelix, RoboDual |

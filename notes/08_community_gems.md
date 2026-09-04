@@ -106,8 +106,8 @@ OpenHelix would call this closer to **true** than π0 (S1 has its own encoder). 
 
 ## If you want to give a little guy a *real* shot
 
-Next window is **look, not pull**, four entries: JARVIS-VLA, then RynnVLA/WorldVLA (vision decoder + harness-talk goal), then MolmoAct2, then InternVLA-N1, then small sandboxes. Script: [`09_next_session.md`](09_next_session.md). Sibling scorecard: [`10_sibling_list.md`](10_sibling_list.md).
+Looks 1–3 are done. RynnVLA / WorldVLA was **killed 2026-09-04** (not a usable option; do not keep hacking the harness). **Next:** InternVLA-N1 on 2×5090. Script: [`09_next_session.md`](09_next_session.md). Sibling scorecard: [`10_sibling_list.md`](10_sibling_list.md).
 
-Do not clone a random `*molmoact2*ft*` repo. RynnVLA / WorldVLA is the unofficial line that changes the *robot* design space (vision decoder is first-class). StarVLA/VLAct and InternVLA-M1 stay on this honorable list; they are not in the next look queue.
+Do not clone a random `*molmoact2*ft*` repo. StarVLA/VLAct and InternVLA-M1 stay on this honorable list; they are not in the next look queue.
 
 Everything else on this page is either official-small, official-closed, or a Hub training dump.

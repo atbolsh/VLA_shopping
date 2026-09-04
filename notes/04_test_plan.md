@@ -7,9 +7,9 @@ The rest of this file is the later pull-day smokes, after those looks.
 ## Look order (next session)
 
 1. **JARVIS-VLA** — **done 2026-09-03.** Mouth dead (`action_tokens`). Skip MineStudio. [`10_sibling_list.md`](10_sibling_list.md#pull-log).
-2. **RynnVLA-001 / 002 + WorldVLA** — videos, HF GIFs, GitHub. Vision decoder / next-frame path. Then hack a harness for leftover English.
+2. **RynnVLA-001 / 002 + WorldVLA** — **killed 2026-09-04.** Not a usable option. Mouth garbage; dream/decoder not usable. Do not keep hacking the harness. [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04).
 3. **MolmoAct2** — **done 2026-09-03.** Ask talks; Think-LIBERO inject failed. [`10_sibling_list.md`](10_sibling_list.md#pull-log).
-4. **InternVLA-N1** — next: 2×5090 sandbox (`internvla_n1`). Gradio still 401. Expect mute `step` + readable S2 `llm_output`; chat is `system2_ask`.
+4. **InternVLA-N1** — **next:** 2×5090 sandbox (`internvla_n1`). Gradio still 401. Expect mute `step` + readable S2 `llm_output`; chat is `system2_ask`.
 
 Links live in [`09_next_session.md`](09_next_session.md) and [`05_demos.md`](05_demos.md).
 
@@ -20,9 +20,9 @@ Links live in [`09_next_session.md`](09_next_session.md) and [`05_demos.md`](05_
 | S | JARVIS-VLA screenshot VQA (`jarvis_vqa`). MineStudio skipped. | **Done 2026-09-03:** `action_tokens` only. |
 | A | InternNav Gradio (already in look 4) | Agent follows a language instruction in a house for >30 s without a human clicking actions. |
 | B | MolmoAct2 Think-LIBERO + Molmo2-ER Ask | **Done 2026-09-03:** Ask English; Think action chunk; inject did not gate. |
-| C | WorldVLA or RynnVLA-002 LIBERO from their GitHub | One LIBERO suite, one action-conditioned next-frame sample, one leftover-English harness attempt. |
+| C | WorldVLA or RynnVLA-002 LIBERO from their GitHub | **Killed 2026-09-04:** not a usable option. Do not reopen. |
 
-Habitat / Isaac / SO-101 wait until A/B/C have a winner.
+Habitat / Isaac / SO-101 wait until InternVLA-N1 (A) has a winner you still care about. B and C are closed.
 
 ## Smoke 0 — reasoning only (no robot)
 
