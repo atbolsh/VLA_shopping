@@ -69,6 +69,10 @@ model = ChameleonXLLMXForConditionalGeneration_ck_action_head.from_pretrained(
 
 WorldVLA `requirements.txt` pins **transformers==4.43.0** (same as `setup.sh`). The published VLA `config.json` lists `transformers_version: 4.48.0`; that is the saver, not the pin. Keep 4.43.0.
 
-Load is **not** `from_pretrained`. The harness reads every safetensors key, merges Meta `vqgan.ckpt` onto `model.vqmodel.*` (encoder/quantizer only; HF has no decoder), `load_state_dict(..., assign=True)`, then compares each live tensor to the file. A skipped shard key or a still-random Parameter is a hard error. Wait for `load verified … tensors N`.
+Load is **not** `from_pretrained`. The harness reads every safetensors key, merges Meta `vqgan.ckpt` onto `model.vqmodel.*` (encoder/quantizer only; HF has no decoder; `custom_layer.*` extras are dropped, same as official convert), `load_state_dict(..., assign=True)`, then compares each live tensor to the file. A skipped shard key or a still-random Parameter is a hard error. Wait for `load verified … tensors N`.
+
+Saved names match the module names exactly — verified 593/593 Parameters elementwise on 2026-09-04. No re-save or key translator is needed. The two historical gaps were: wrong class (base xllmx instead of `_ck_action_head`) and `model.vqmodel.*` absent from the shards (filled from `vqgan.ckpt`).
+
+**Dream prompt:** the 002 world-model cards were trained on `Generate the next image based on the provided sequence of historical images and corresponding actions.<|image|><|image|><|action|>` (`data/dataset.py`, `world_model_bi_views_conv_generation.py`). The vendor helper `get_action_Chameleon_dis_awm_g_video_wrist` carries the older WorldVLA-era prompt and produced malformed image blocks on this card; the harness builds the trained conversation itself.
 
 The Chameleon tokenizer is `text_tokenizer.json`. Talk still loads it with `LlamaTokenizerFast(tokenizer_file=...)`. Act/dream use the official Lumina-mGPT-7B-768 tokenizer files (setup downloads those jsons only) plus `vqgan.yaml` / `vqgan.ckpt`.

@@ -680,10 +680,21 @@ class RynnSession:
         action_ids: list[int] | None = None,
         actions_env: list | None = None,
     ) -> dict[str, Any]:
-        """Official world-model query: current third+wrist + action → next frames.
+        """002 world-model query: current third+wrist + action → next frames.
 
-        ``get_action_Chameleon_dis_awm_g_video_wrist`` then
-        ``item_processor.decode_image`` (Meta VQGAN).
+        Trained prompt (``data/dataset.py`` task_type='world', with_wrist, and
+        ``data/world_model_bi_views_conv_generation.py``, his=1):
+
+            "Generate the next image based on the provided sequence of
+            historical images and corresponding actions.<|image|><|image|><|action|>"
+
+        with gpt = ``<|image|><|image|>``. The older vendor helper
+        ``get_action_Chameleon_dis_awm_g_video_wrist`` uses a *different*
+        WorldVLA-era prompt ("Generate the image based on the current image
+        and the action.") — off-distribution for the RynnVLA-002 cards, and it
+        produced malformed image blocks here. We build the trained conversation
+        and call ``generate`` the way vendor ``generate_img`` does
+        (``att_mask=None``, eos 8710), then decode each 8197…8196 block.
         """
         if wrist is None:
             raise ValueError("world-model eval is bi-view; pass the wrist frame")
@@ -698,8 +709,6 @@ class RynnSession:
             action = np.zeros(7, dtype=np.float64)
             action_note = "dummy zeros(7); pass actions_env from act()"
 
-        from libero_util.Chameleon_utils import get_action_Chameleon_dis_awm_g_video_wrist
-
         torch.manual_seed(0)
         np.random.seed(0)
         LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -707,55 +716,116 @@ class RynnSession:
         wrist_path = LOG_DIR / "dream_input_wrist.png"
         third.save(third_path)
         wrist.save(wrist_path)
-        next_front = LOG_DIR / "dream_next_third.png"
-        next_wrist = LOG_DIR / "dream_next_wrist.png"
-        try:
-            g_front, g_wrist = get_action_Chameleon_dis_awm_g_video_wrist(
+
+        conv = {
+            "conversations": [
+                {
+                    "from": "human",
+                    "value": (
+                        "Generate the next image based on the provided sequence "
+                        "of historical images and corresponding actions."
+                        "<|image|><|image|><|action|>"
+                    ),
+                },
+            ],
+            "image": [third, wrist],
+            "action": [action],
+        }
+        tokens = proc.process_item(conv, training_mode=False)
+        generation_config = GenerationConfig(
+            max_new_tokens=3000,
+            max_length=model.config.max_position_embeddings,
+            temperature=1,
+            top_k=None,
+            do_sample=False,
+            eos_token_id=[SEP_ID],
+            pad_token_id=PAD,
+        )
+        from model.chameleon import ChameleonForConditionalGeneration
+
+        # prepare_inputs_for_generation drops training/att_mask kwargs, so
+        # forward always runs its eval branch: generate_att_mask_3 over the
+        # accumulated init_input_ids. Resetting the accumulator is mandatory
+        # (vendor generate_img forgets to; generate_dis_ma resets it).
+        model.init_input_ids = None
+        input_ids = torch.tensor(tokens, dtype=torch.int64, device=model.device).unsqueeze(0)
+        with torch.inference_mode():
+            res = ChameleonForConditionalGeneration.generate(
                 model,
-                "",
-                proc,
-                [third],
-                [wrist],
-                [action],
-                "1a2i",
+                input_ids=input_ids,
+                attention_mask=torch.ones_like(input_ids),
+                generation_config=generation_config,
+                return_dict_in_generate=True,
             )
-            if g_front is not None:
-                g_front.save(next_front)
-            if g_wrist is not None:
-                g_wrist.save(next_wrist)
-            next_path = str(next_front) if g_front is not None else "no IMG start/end pair"
-        except Exception as exc:  # noqa: BLE001
-            next_path = f"vq-decode-failed: {exc}"
-            g_front = None
+        new_ids = res["sequences"][0, input_ids.shape[1]:].detach().cpu().tolist()
+        blocks = _extract_image_blocks(new_ids)
+
+        decoded: list[tuple[str, Image.Image]] = []
+        block_errors: list[str] = []
+        names = ("dream_next_third.png", "dream_next_wrist.png")
+        for i, block in enumerate(blocks[:2]):
+            try:
+                img = proc.decode_image(list(block))
+                out = LOG_DIR / names[i]
+                img.save(out)
+                decoded.append((str(out), img))
+            except Exception as exc:  # noqa: BLE001
+                block_errors.append(f"block {i} (len {len(block)}): {exc}")
+        g_front_path = decoded[0][0] if len(decoded) >= 1 else None
+        g_wrist_path = decoded[1][0] if len(decoded) >= 2 else None
+
+        n_img_range = sum(1 for i in new_ids if IMG_LO <= i <= IMG_HI)
         rec = {
             "sandbox": "rynn_worldvla",
             "turn": "dream",
             "reply": (
-                "decoded next third+wrist PNGs"
-                if g_front is not None
-                else f"no decoded PNG ({next_path})"
+                f"decoded {len(decoded)} of {len(blocks)} image block(s); "
+                f"{n_img_range} image-range tokens of {len(new_ids)} generated"
+                + (f"; decode errors: {block_errors}" if block_errors else "")
             ),
             "think": {
                 "class": "ChameleonXLLMXForConditionalGeneration_ck_action_head",
+                "prompt": "Generate the next image based on the provided sequence of historical images and corresponding actions.",
                 "action_note": action_note,
                 "action_env": action.tolist(),
+                "n_prompt_tokens": len(tokens),
+                "n_new_tokens": len(new_ids),
+                "n_img_range_tokens": n_img_range,
+                "block_lens": [len(b) for b in blocks],
+                "block_errors": block_errors,
                 "unused_action_ids": (action_ids or [])[:16],
             },
             "input_frame": str(third_path),
             "input_wrist": str(wrist_path),
-            "next_frame": next_path,
-            "next_wrist": str(next_wrist) if g_wrist is not None else None,
+            "next_frame": g_front_path or "no decodable front block",
+            "next_wrist": g_wrist_path,
             "official_script": "vendor/WorldVLA/rynnvla-002/exps_libero_world_model/eval_world_model_goal.sh",
         }
         append_log(rec)
         return rec
 
 
+def _extract_image_blocks(ids: list[int]) -> list[list[int]]:
+    """Complete ``8197 … 8196`` spans, inclusive, in generation order."""
+    IMG_START, IMG_END = 8197, 8196
+    blocks: list[list[int]] = []
+    start = None
+    for i, t in enumerate(ids):
+        if t == IMG_START:
+            start = i
+        elif t == IMG_END and start is not None:
+            blocks.append(ids[start : i + 1])
+            start = None
+    return blocks
+
+
 def _generate_dis_ma(model, input_ids, generation_config):
     """Official ``generate_dis_ma`` plus the raw new-token ids.
 
     Vendor helper drops the ids after decoding bin centers and can raise
-    ``UnboundLocalError`` if no ``10004`` is emitted.
+    ``UnboundLocalError`` if no ``10004`` is emitted. ``init_input_ids``
+    must be reset: forward's eval branch accumulates it for
+    ``generate_att_mask_3`` on every step.
     """
     from model.chameleon import ChameleonForConditionalGeneration
 
