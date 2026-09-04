@@ -35,4 +35,12 @@ Open `demo.ipynb`. Pick a frame from the **screenshot** dropdown. Ask “what ar
 
 **Verdict 2026-09-03:** `action_tokens` only. No leftover English. Logged on [`notes/10_sibling_list.md`](../../notes/10_sibling_list.md#pull-log). Skip [`../jarvis_minestudio`](../jarvis_minestudio/README.md).
 
+**`mouth_inject.ipynb`** — five drift probes on the **same** 7B, leaving the official railroad. Vendor facts from `vendor/JarvisVLA` (gitignored clone of [CraftJarvis/JarvisVLA](https://github.com/CraftJarvis/JarvisVLA)): the product loop is `{instruction}\nobservation: ` then image; there is no forced assistant prefix. Probe 1 stays on that layout. 2–3 keep it and add a `[START ACTION]` sentinel (English first / clarify-or-go). 4 drops `observation:` (plain VQA). 5 is text-only “hello there”. Raw decode first; formatted after.
+
+If you want the optional action-token map in the formatted pane:
+
+```bash
+GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/CraftJarvis/JarvisVLA vendor/JarvisVLA
+```
+
 Rung written to `.rung` (gitignored) so you know which torch/transformers pair landed.

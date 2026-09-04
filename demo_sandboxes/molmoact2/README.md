@@ -32,7 +32,7 @@ bash setup.sh
 
 Frames come from the Think-LIBERO card (`screenshot/sample_agentview_rgb.png`, `sample_wrist_rgb.png`), not the orange/blue placeholders.
 
-- **`think_inject.ipynb`** — caution sentence in the official `task=` slot; full `generated_token_ids` decode; `█` over depth/action payload tokens; then depth bins + action vectors. One model (Think-LIBERO).
+- **`think_inject.ipynb`** — caution sentence in the official `task=` slot; full `generated_token_ids` decode; `█` over depth/action payload tokens; then depth bins + action vectors. One model (Think-LIBERO). Now also **five drift probes**, none through `predict_action`: 1–3 rebuild the vendor's exact robot prompt with the forced `<depth_output><action_output>` trigger stripped (free continuation; `[START ACTION]` sentinel contract where the harness re-attaches the trigger after the model talks); 4–5 are plain chat `generate` on the Think weights (image, then text-only "hello there"). Each probe prints the **raw decode first**, with space between the before-sentinel and after-sentinel panes; formatted boxed/residue after. Vendor source is cloned to `vendor/molmoact2` (gitignored) as the reference template — the probes call `_build_robot_text` from the model's own runtime module, so prompt shape is never guessed.
 - **`demo.ipynb`** — older two-surface notebook (Think + Molmo2-ER). Do not load both on one 5090.
 
 If `setup.sh` already finished:
