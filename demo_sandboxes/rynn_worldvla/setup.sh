@@ -49,8 +49,11 @@ source "${HERE}/.env"
 set +a
 
 PY=""
-for c in python3.10 python3; do command -v "$c" >/dev/null 2>&1 && PY="$c" && break; done
-[[ -n "$PY" ]] || { echo "Need python3.10"; exit 1; }
+for c in python3.12 python3.11 python3.10 python3; do
+  command -v "$c" >/dev/null 2>&1 && PY="$c" && break
+done
+[[ -n "$PY" ]] || { echo "Need python3.10+"; exit 1; }
+echo "Using $($PY --version)"
 [[ -d .venv ]] || "$PY" -m venv .venv
 # shellcheck disable=SC1091
 source .venv/bin/activate
