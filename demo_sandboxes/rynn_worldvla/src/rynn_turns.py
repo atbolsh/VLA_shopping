@@ -32,7 +32,8 @@ _WORD = re.compile(r"[A-Za-z]{3,}")
 
 
 def _on_path() -> None:
-    for p in (VENDOR, VENDOR / "rynnvla-002", ROOT / "src"):
+    # rynnvla-002 first: official ``from model import ChameleonXLLMX…``.
+    for p in (VENDOR / "rynnvla-002", VENDOR, ROOT / "src"):
         s = str(p)
         if p.exists() and s not in sys.path:
             sys.path.insert(0, s)
@@ -99,25 +100,42 @@ class _BanNonBpe(torch.nn.Module):
 
 
 def _load_xllmx(ckpt: Path):
-    """Official Lumina/xllmx class — never AutoModelForCausalLM."""
+    """Official WorldVLA class — ``rynnvla-002/model``, never AutoModelForCausalLM.
+
+    Eval scripts (``eval_solver_libero_g_video_512_third_wrist.py``) do
+    ``from model import ChameleonXLLMXForConditionalGeneration`` then
+    ``from_pretrained(ckpt, torch_dtype=bfloat16)``. The ``_ck`` /
+    ``_ck_action_head`` variants are the same family if the base class
+    rejects the checkpoint.
+    """
     _on_path()
+    if not (VENDOR / "rynnvla-002" / "model" / "__init__.py").is_file():
+        raise ImportError(
+            f"vendor WorldVLA missing at {VENDOR}. "
+            "In the rynn-worldvla venv: bash setup.sh"
+        )
     errors = []
-    for mod, cls in (
-        ("lumina_mgpt.model", "ChameleonXLLMXForConditionalGeneration"),
-        ("xllmx.model", "ChameleonXLLMXForConditionalGeneration"),
+    for cls in (
+        "ChameleonXLLMXForConditionalGeneration",
+        "ChameleonXLLMXForConditionalGeneration_ck",
+        "ChameleonXLLMXForConditionalGeneration_ck_action_head",
     ):
         try:
-            m = __import__(mod, fromlist=[cls])
+            m = __import__("model", fromlist=[cls])
             K = getattr(m, cls)
-            model = K.from_pretrained(str(ckpt), torch_dtype=torch.bfloat16)
+            model = K.from_pretrained(
+                str(ckpt),
+                torch_dtype=torch.bfloat16,
+                max_position_embeddings=4096,
+            )
             model.eval()
             if torch.cuda.is_available():
                 model.cuda()
             return model
         except Exception as exc:  # noqa: BLE001
-            errors.append(f"{mod}.{cls}: {exc}")
+            errors.append(f"model.{cls}: {exc}")
     raise ImportError(
-        "Could not load an xllmx/Lumina class. Stay in vendor/WorldVLA. Tried:\n"
+        "Could not load official rynnvla-002 ChameleonXLLMX class. Tried:\n"
         + "\n".join(errors)
     )
 
