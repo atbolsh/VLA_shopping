@@ -48,9 +48,9 @@ source "${HERE}/.env"
 set +a
 
 PY=""
-for c in python3.10 python3; do command -v "$c" >/dev/null 2>&1 && PY="$c" && break; done
-[[ -n "$PY" ]] || { echo "Need python3.10 (not 3.9 — their flash-attn wheel is cu124)."; exit 1; }
-echo "Using $($PY --version) — official notebook was 3.9; we stay on 3.10 for cu128 wheels."
+for c in python3.10 python3.12 python3; do command -v "$c" >/dev/null 2>&1 && PY="$c" && break; done
+[[ -n "$PY" ]] || { echo "Need python3.10 or 3.12 (not 3.9 — their flash-attn wheel is cu124)."; exit 1; }
+echo "Using $($PY --version) — official notebook was 3.9; 3.10 or 3.12.x is fine for cu128 wheels."
 
 [[ -d .venv ]] || "$PY" -m venv .venv
 # shellcheck disable=SC1091
@@ -93,7 +93,26 @@ if [[ ! -d vendor/InternNav/.git ]]; then
   _try git clone --depth 1 https://github.com/InternRobotics/InternNav.git vendor/InternNav
 fi
 (cd vendor/InternNav && git submodule update --init --recursive)
-_try python -m pip install -e vendor/InternNav
+# Their setup.py says python_requires='>=3.8, <=3.12'. PEP 440 treats
+# <=3.12 as <=3.12.0, so vast.ai 3.12.14 is rejected even though they
+# list (3, 12) in SUPPORTED_PYTHON_VERSIONS. Widen to <3.13.
+python - <<'PY'
+import re
+from pathlib import Path
+p = Path("vendor/InternNav/setup.py")
+text = p.read_text()
+new, n = re.subn(
+    r"python_requires\s*=\s*['\"]>=3\.8,\s*<=3\.12['\"]",
+    "python_requires='>=3.8,<3.13'",
+    text,
+)
+if n:
+    p.write_text(new)
+    print("patched InternNav python_requires for 3.12.x")
+else:
+    print("InternNav python_requires already patched or changed; pip will ignore-requires-python")
+PY
+_try python -m pip install --ignore-requires-python -e vendor/InternNav
 
 # Official sample RGB stream (no Habitat).
 if [[ -f vendor/InternNav/assets/realworld_sample_data.tar.gz ]]; then

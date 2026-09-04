@@ -7,7 +7,7 @@ The hosted Gradio ([InternRobotics/InternNav-Eval-Demo](https://huggingface.co/s
 - Box: **2× RTX 5090**, CUDA 12.8.
 - GPU split (hardcoded): DualVLN agent on `cuda:0`, System-2 Qwen chat on `cuda:1`.
 - Disk: ~16 GB DualVLN + ~16 GB System2 + DepthAnything-Small + their sample tarball.
-- Frozen library pins: `transformers==4.51.0`, `diffusers==0.31.0`, `accelerate==1.10.1`. Torch starts at **2.7.0+cu128** (nearest sm_120 to their 2.6+cu124), then 2.8.0. Do not use Molmo’s 2.11 / 4.57 here. Do **not** install Python 3.9 or their `flash_attn ... cp39 ... torch2.6` wheel.
+- Frozen library pins: `transformers==4.51.0`, `diffusers==0.31.0`, `accelerate==1.10.1`. Torch starts at **2.7.0+cu128** (nearest sm_120 to their 2.6+cu124), then 2.8.0. Do not use Molmo’s 2.11 / 4.57 here. Do **not** install Python 3.9 or their `flash_attn ... cp39 ... torch2.6` wheel. Vast.ai **3.12.14** is fine; InternNav’s `<=3.12` is a PEP 440 trap (`<=3.12.0`). `setup.sh` patches it.
 
 ## Official sources
 
