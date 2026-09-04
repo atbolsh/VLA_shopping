@@ -10,8 +10,8 @@ Installability matters more than leaderboard points. This is the playable set th
 - Docs: https://internrobotics.github.io/user_guide/internnav/
 - What you get: VLN-CE in Habitat, Isaac Sim scenes, InternData-N1 (~3k scenes, 830k VLN trajectories), InternVLA-N1 agents.
 - Pain: Habitat-sim + Isaac Sim is a real install (conda `habitat-sim`, NVIDIA Isaac). Not a one-pip toy.
-- Hosted taste: [InternNav-Eval-Demo](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo) (Gradio).
-- Matches the gold game better than any tabletop benchmark.
+- Hosted taste: [InternNav-Eval-Demo](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo) (Gradio) — was 401. DualVLN **rejected 2026-09-04**. Do not reopen as the next box.
+- Matches the gold game better than any tabletop benchmark **if** you still want nav after the English-while-acting crop.
 
 ### NaVILA-Bench (Isaac Lab) + Habitat VLN-CE
 

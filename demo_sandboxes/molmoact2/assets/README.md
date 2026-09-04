@@ -1,1 +1,0 @@
-`libero_third.png` / `libero_wrist.png` are leftover color placeholders. Real cameras live in `../screenshot/`, filled by `download_frames.py` from `allenai/MolmoAct2-Think-LIBERO` `assets/sample_agentview_rgb.png` and `sample_wrist_rgb.png` (libero_10 / episode 0 / frame 0).

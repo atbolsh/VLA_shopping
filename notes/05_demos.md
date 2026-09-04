@@ -2,13 +2,13 @@
 
 Hosted interactive demos are rare. Most "demos" are project-page videos. This list is only things that actually exist.
 
-**Next-session look order:** JARVIS-VLA (done) → Chameleon/Rynn/WorldVLA (**killed 2026-09-04**) → MolmoAct2 (done) → InternVLA-N1 (**next, 2×5090**). Script: [`09_next_session.md`](09_next_session.md). Sibling scorecard: [`10_sibling_list.md`](10_sibling_list.md).
+**Next-session order:** EO-1 → ChatVLA → WALL-OSS → ECoT-OpenVLA. First crop **rejected 2026-09-04**. InternVLA-N1 is never the next box. Script: [`09_next_session.md`](09_next_session.md). Sibling log: [`10_sibling_list.md`](10_sibling_list.md).
 
 ## Hosted interactive (browser)
 
 | What | URL | Tied to |
 |---|---|---|
-| **InternNav eval (Gradio)** | https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo | InternVLA-N1 — **the one real hosted VLA-nav playground** |
+| **InternNav eval (Gradio)** | https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo | InternVLA-N1 — hosted space was 401; DualVLN **rejected 2026-09-04**. Do not hunt clones. |
 | Gemini ER + MuJoCo WASM | https://avikde.github.io/vla-pipeline/ | Not a candidate. Slow Gemini planner, classical IK. Useful as a "what Path K feels like" toy. Needs a Gemini key or uses a cached plan. |
 
 JARVIS-VLA / MineStudio is **local**, not hosted. Sibling first-look: [`10_sibling_list.md`](10_sibling_list.md).
@@ -41,9 +41,13 @@ RynnVLA / WorldVLA / MolmoAct2 have **no** hosted net. Their "interactive" is HF
 
 | Playground | URL | Notes |
 |---|---|---|
-| InternNav | https://github.com/InternRobotics/InternNav | Habitat / Isaac; official N1 loop |
-| JARVIS-VLA + MineStudio | https://github.com/CraftJarvis/JarvisVLA | Sibling first sandbox. JDK 8 + vLLM; leftover chat, then kbd/mouse |
-| WorldVLA / RynnVLA-002 LIBERO | https://github.com/alibaba-damo-academy/WorldVLA | **Killed 2026-09-04.** Not a usable option. Do not reopen the harness. |
+| InternNav | https://github.com/InternRobotics/InternNav | DualVLN **rejected 2026-09-04** (`→→→→`). Do not reopen. |
+| EO-1 official generate | https://github.com/EO-Robotics/EO1 | Next crop. Text + action from `IPEC-COMMUNITY/EO-1-3B`. |
+| ChatVLA `evaluate_robot.py` | https://github.com/midea-ai/ChatVLA_public | Next crop. v1 weights only (`zzymeow/ChatVLA`). |
+| WALL-OSS / wall-x | https://github.com/X-Square-Robot/wall-x | Next crop. Uni-CoT claim; official scripts are action-first. |
+| ECoT-OpenVLA | https://github.com/MichalZawalski/embodied-CoT | Next crop. TASK/PLAN/SUBTASK then action. |
+| JARVIS-VLA + MineStudio | https://github.com/CraftJarvis/JarvisVLA | **Rejected 2026-09-03.** Mouth dead. Sandbox deleted. |
+| WorldVLA / RynnVLA-002 LIBERO | https://github.com/alibaba-damo-academy/WorldVLA | **Rejected 2026-09-04.** Sandbox deleted. |
 | NaVILA-Bench | https://github.com/yang-zj1026/NaVILA-Bench | Isaac Lab VLN |
 | LIBERO via LeRobot | `lerobot-eval --env.type=libero ...` | π0.5, MolmoAct2, GR00T |
 | CALVIN | http://calvin.cs.uni-freiburg.de/ | OpenHelix, RoboDual |

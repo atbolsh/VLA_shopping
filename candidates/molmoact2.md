@@ -74,7 +74,7 @@ Best 2026 **open + cheap-robot + spatial reasoning** VLA. Dual purity is only "n
 
 ## First pull
 
-Third in the next-session **look** queue ([`09_next_session.md`](../notes/09_next_session.md)): watch the [blog](https://allenai.org/blog/molmoact2) after JARVIS-VLA and Chameleon/Rynn/WorldVLA, before InternVLA-N1 Gradio. Then `allenai/MolmoAct2-Think-LIBERO` as sandbox B. Read the adaptive-depth cache API; that is the bit that maps onto the sibling problem. SO-101 later.
+**Rejected 2026-09-03** as a talk-while-acting policy. Think-LIBERO is mute (depth + action). Molmo2-ER talks because it is a different net. Crop closed. SO-101 stays a later Path R hardware question, not this window.
 
 ## Pull log
 

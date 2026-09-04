@@ -2,7 +2,7 @@
 
 Survey date: 2026-09-02.
 
-You already finetune **Gemma 4 12B** on a navigation-style game (fine `CLOCK` / `ANTICLOCK` / `FORWARD` ticks). That model reasons well enough and has **no** quick-twitch loop. Sibling writeup: [`../stateful_realtime_thinking`](../../stateful_realtime_thinking/README.md). Open-weight game-player shortlist (SIMA 2 excluded): [`10_sibling_list.md`](10_sibling_list.md). JARVIS / Molmo / Rynn looks are done; Rynn **killed 2026-09-04**. Next install is InternVLA-N1 on 2×5090.
+You already finetune **Gemma 4 12B** on a navigation-style game (fine `CLOCK` / `ANTICLOCK` / `FORWARD` ticks). That model reasons well enough and has **no** quick-twitch loop. Sibling writeup: [`../stateful_realtime_thinking`](../../stateful_realtime_thinking/README.md). Open-weight game-player shortlist (SIMA 2 excluded): [`10_sibling_list.md`](10_sibling_list.md). First crop **rejected 2026-09-04** (JARVIS, Molmo-Think, Rynn, InternVLA-N1 DualVLN). InternVLA-N1 is never the next box. Next window: **start with EO-1**, then ChatVLA → WALL-OSS → ECoT. Same weights must talk **and** act. None of these four are interruptible. EO-1 and ECoT stills are on-distribution; ChatVLA and WALL-OSS are stand-ins.
 
 You want an off-the-shelf or minimally-finetuned **LVA** (your word; literature name is **VLA**, Vision-Language-Action) that can later sit in a loop that:
 

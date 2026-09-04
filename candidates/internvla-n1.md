@@ -71,17 +71,15 @@ Best **off-the-shelf** match to "navigate a detailed 3D world with a slow planne
 
 ## First pull
 
-Looks 1–3 are done; Rynn/WorldVLA killed. **This is the next box** ([`09_next_session.md`](../notes/09_next_session.md)). Gradio is down (401). Run [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) on **2×5090**.
-
-1. DualVLN `step` on their sample RGB: watch S2 `llm_output` + pixel-goal. Do not expect follow-up questions.
-2. Optional: `system2_ask` on `InternVLA-N1-System2` / `cuda:1` (Qwen chat, not the walk loop).
-3. Habitat / Isaac stay later.
+**Rejected 2026-09-04.** Not the next box. Never again. Sandbox deleted.
 
 ## Pull log
 
-Not pulled yet. Expectation before the 2026-09-04 2×5090 box (do not inflate this into a score):
-
-- Official `InternVLAN1AsyncAgent.step` is **mute toward you**. You should see S2 `llm_output` (mid-level English) + a pixel-goal. That is internal language, not a follow-up interview.
-- DualVLN (S1) does not chat.
-- `system2_ask` on `InternVLA-N1-System2` / `cuda:1` is the Qwen2.5-VL mouth — same *kind* of surface as Molmo2-ER Ask, not the walk loop.
-- Product loop will not SIMA-2-ask unless you add a gate (and likely finetune).
+```text
+pulled: 2026-09-04
+gpu: 2x RTX 5090
+vram_gb: DualVLN on cuda:0; System2 on cuda:1 (separate card)
+reasoning_smoke: not_run
+env_smoke: not_tried (sample RGB stream only)
+notes: Official DualVLN step S2 llm_output was '→→→→' (arrow tokens), pixel_goal None on the logged step. That is not English intermediate goals. system2_ask is a separate InternVLA-N1-System2 Qwen that cannot act — disembodied planner, same class as Molmo2-ER. S1 weights verified vs shards; warmup was a black dummy. Rejected. Do not reopen. Never the next box.
+```

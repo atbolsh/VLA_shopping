@@ -95,9 +95,11 @@ OpenHelix would call this closer to **true** than π0 (S1 has its own encoder). 
 | **StarVLA / VLAct** | Qwen3-VL-**4B** + FAST / OFT / π / GR00T heads | near_expert (GR00T head is the interesting one) | Lego codebase. Continued pretrain on DROID + InternData-A1 + RoboCoin + **MolmoAct**. Many LIBERO / RoboTwin / VLA-Arena finetunes. [`StarVLA/VLAct_Qwen3_Pretrain`](https://huggingface.co/StarVLA/VLAct_Qwen3_Pretrain), [collection](https://huggingface.co/collections/StarVLA/vlact-6a903c2e0c176179da425c96), [code](https://github.com/starVLA/VLAct) | 4B planner. `Qwen3-VL-4B-Instruct-Action` is **tokenizer-only** (2048 action tokens, no extra training). |
 | **UniVLA** [`qwbu/univla-7b`](https://huggingface.co/qwbu/univla-7b), [BAAI code](https://github.com/baaivision/UniVLA) | Emu3 tokenizer (vision decode) + world-model pretrain | single + generative prior | Another 7B with a real image tokenizer/decoder. CALVIN / LIBERO / R2R finetunes. | Older than RynnVLA-002; less turnkey. |
 | **StreamVLN** [`mengwei0427/StreamVLN_Video_qwen_1_5_…`](https://huggingface.co/mengwei0427/StreamVLN_Video_qwen_1_5_r2r_rxr_envdrop_scalevln) | ~8B LLaVA-Video | slow-fast **KV**, not dual S1 | Path N also-ran with public weights. Sliding-window KV + pruned memory. [arXiv:2507.05240](https://arxiv.org/abs/2507.05240) | No separate pixel-seeing S1. Weaker than InternVLA-N1 on ABot's tables. |
-| **Embodied-CoT** [`Embodied-CoT/ecot-openvla-7b-bridge`](https://huggingface.co/Embodied-CoT/ecot-openvla-7b-bridge) | OpenVLA-7B that writes spatial CoT | behavioral_switch | "Think then act" on the old stack. Empty model card. | Llama-2. OpenHelix / OneTwoVLA already cover this idea. |
+| **EO-1** [`IPEC-COMMUNITY/EO-1-3B`](https://huggingface.co/IPEC-COMMUNITY/EO-1-3B) | Qwen2.5-VL-**3B** + flow head | interleaved AR + flow | Official `processor.generate` claims **text and actions**. Next-crop #1. [arXiv:2508.21112](https://arxiv.org/abs/2508.21112) | 3B. Below the 12B bar. |
+| **ChatVLA-1** [`zzymeow/ChatVLA`](https://huggingface.co/zzymeow/ChatVLA) | Qwen2-VL-**2B** + MoE control expert | behavioral_switch-ish | Official `evaluate_robot.py`. Next-crop #2. ChatVLA-2 paper has **no robot weights**. | 2B. |
+| **ECoT-OpenVLA** [`Embodied-CoT/ecot-openvla-7b-bridge`](https://huggingface.co/Embodied-CoT/ecot-openvla-7b-bridge) | OpenVLA-7B that writes TASK/PLAN/SUBTASK/MOVE | behavioral_switch | Next-crop #4. Official `predict_action` decodes the English chain. | Llama-2 (`below_reject`). |
 | **X-VLA** [`2toINF/X-VLA-Pt`](https://huggingface.co/2toINF/X-VLA-Pt), `lerobot/xvla-*` | **0.9B** Florence-2 + soft prompts | single | In LeRobot. Embodiment via soft prompts, including `so101_bimanual`. | Not a reasoner. |
-| **WALL-OSS-0.5** [`x-square-robot/wall-oss-0.5`](https://huggingface.co/x-square-robot/wall-oss-0.5) | Qwen2.5-VL-**3B** + MoT action expert ~4B | near_expert | In LeRobot. Community SO-ish finetunes exist. [arXiv:2605.30877](https://arxiv.org/html/2605.30877v2) | 3B VL expert. |
+| **WALL-OSS** [`x-square-robot/wall-oss-flow`](https://huggingface.co/x-square-robot/wall-oss-flow) / [`wall-oss-0.5`](https://huggingface.co/x-square-robot/wall-oss-0.5) | Qwen2.5-VL-**3B** + MoT ~4B | near_expert | Uni-CoT paper claim. Next-crop #3. Official scripts are action-first. [arXiv:2509.11766](https://arxiv.org/abs/2509.11766) | 3B VL expert. |
 | **Evo-1** `MINT-SJTU/Evo1_*`, `lerobot` docs | InternVL3-**1B** + DiT | near_expert | In LeRobot. LIBERO / MetaWorld / RoboTwin cards. | Tiny. |
 | **ServoVLA-SO101** [`ServoVLA/ServoVLA-SO101`](https://huggingface.co/ServoVLA/ServoVLA-SO101) | DINOv3 + Qwen3.5-**0.8B** | single | Honest cheap-arm specialist, documented cameras/chunk. | Not your planner. |
 | **LingBot-VA** `lerobot/lingbot_va_*` | ~5B, community SO-101 inits | ? | LeRobot world-model-adjacent policy. | Thin cards; 2B–5B zone. |
@@ -106,8 +108,8 @@ OpenHelix would call this closer to **true** than π0 (S1 has its own encoder). 
 
 ## If you want to give a little guy a *real* shot
 
-Looks 1–3 are done. RynnVLA / WorldVLA was **killed 2026-09-04** (not a usable option; do not keep hacking the harness). **Next:** InternVLA-N1 on 2×5090. Script: [`09_next_session.md`](09_next_session.md). Sibling scorecard: [`10_sibling_list.md`](10_sibling_list.md).
+First crop **rejected 2026-09-04** (JARVIS, Molmo-Think, Rynn, InternVLA-N1 DualVLN). InternVLA-N1 is **never** the next box. **Next:** EO-1, ChatVLA, WALL-OSS, ECoT-OpenVLA. Script: [`09_next_session.md`](09_next_session.md).
 
-Do not clone a random `*molmoact2*ft*` repo. StarVLA/VLAct and InternVLA-M1 stay on this honorable list; they are not in the next look queue.
+Do not clone a random `*molmoact2*ft*` repo. Do not pull RoboBrain / Pelican-VL / other planner-only VLMs. StarVLA/VLAct and InternVLA-M1 stay on this honorable list; they are not in the next queue.
 
 Everything else on this page is either official-small, official-closed, or a Hub training dump.

@@ -4,7 +4,7 @@ Scores are 1–5. Rubric lives in `../AGENTS.md`. Totals are an unweighted sum (
 
 **Do not treat the total as "buy this."** InternVLA-N1 wins navigation+dual+reasoning. MolmoAct2 / GR00T / π0.5 win "I want a robot on the desk this month." OpenHelix wins "I want to swap my Gemma in as S2."
 
-The `pull` column is shopping rank. Looks 1–3 are done; Rynn/WorldVLA **killed 2026-09-04**. **Next box:** InternVLA-N1 on 2×5090. [`09_next_session.md`](09_next_session.md). Sibling scorecard (weights-only): [`10_sibling_list.md`](10_sibling_list.md). This table is unchanged.
+The `pull` column is **shopping-architecture rank**, not the next box. InternVLA-N1 DualVLN was pulled 2026-09-04 and **rejected** (S2 printed `→→→→`, not English goals). Do not treat pull=1 as “install this.” Next window is EO-1 / ChatVLA / WALL-OSS / ECoT only: [`09_next_session.md`](09_next_session.md). Sibling log: [`10_sibling_list.md`](10_sibling_list.md). Architecture numbers in this table are unchanged.
 
 | id | name | params | dual class | dual | reason | size | env | robot | night | open | total | pull |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -27,7 +27,7 @@ The `pull` column is shopping rank. Looks 1–3 are done; Rynn/WorldVLA **killed
 
 ### Path N — navigation first
 
-**InternVLA-N1** in InternNav (Habitat + Isaac). True dual, Qwen2.5-VL-7B System 2, hosted Gradio eval, 3k-scene dataset. Closest off-the-shelf analog to "look at a room, plan, twitch toward the goal."
+**InternVLA-N1** was the Path N buy on paper. **Tried 2026-09-04 and rejected** for the actual ask (English intermediate goals while acting): DualVLN `llm_output` was `→→→→`. Do not reopen. NaVILA stays the paper backup if you ever want language macros on a Go2; that is not this window.
 
 Backup: **NaVILA** if you want a Unitree Go2 and language macros (`forward 75cm`) rather than a learned nav diffusion policy.
 

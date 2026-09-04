@@ -1,0 +1,17 @@
+# setup.sh installs torch from the cu128 index first.
+# Do not pip-install this file as a torch source.
+accelerate
+safetensors
+huggingface-hub
+pillow
+numpy
+einops
+sentencepiece
+protobuf
+qwen-vl-utils
+ipykernel
+ipywidgets
+jupyter
+python-dotenv
+requests
+transformers>=4.49,<4.58

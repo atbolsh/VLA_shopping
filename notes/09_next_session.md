@@ -1,89 +1,109 @@
-# Next session (look, then small sandboxes)
+# Next session (English while acting)
 
-Decided 2026-09-02; same-evening revision after the sibling/game-player pass. Do **not** start this in the window that wrote the note. The next agent (or you) starts here.
+Decided 2026-09-04 after the first crop failed. Do **not** start this in the window that wrote the note. **Next time: start with EO-1**, then ChatVLA → WALL-OSS → ECoT. One sandbox at a time.
 
-This is a **look-then-sandbox** order, not a rewrite of the twelve-card scorecard. InternVLA-N1 is still the Path N buy. JARVIS-VLA is **not** a shopping card; it is the sibling (talk + 3D game) first look.
+**InternVLA-N1 is not the next box. Never again.** DualVLN is rejected. Do not reopen it, do not “just try System-2 chat,” do not rent 2×5090 for it.
 
-**Do not download the twelve-card zoo.** Watch, then one small install at a time.
+The first crop (JARVIS-VLA, MolmoAct2-Think, RynnVLA-002 / WorldVLA, InternVLA-N1 DualVLN) is **closed**. Those sandboxes were deleted. Logs stay below and in [`10_sibling_list.md`](10_sibling_list.md).
 
-Sibling scorecard + Doom/closed zoo: [`10_sibling_list.md`](10_sibling_list.md).
+## What you are actually testing
 
-## Look (this order)
+SIMA 2 sets **intermediate goals in plain English while it acts**. That is the bar.
 
-### 1. JARVIS-VLA (sibling first)
+Success is: the **same policy weights** print a readable English plan / subtask / “I will now …” **and** an action, on one forward path. Fail is: action tokens only, arrows, depth bins, a second VLM that cannot move, or a leftover mouth that is garbage.
 
-Open 7B Minecraft VLA. `single`, hitchy (~5.5 FPS), leftover Qwen chat. Custom S1 later is the same job as Path K.
+**Do not** pull disembodied planner brains (RoboBrain, Pelican-VL, InternVLA-N1-System2, Molmo2-ER). Those talk. They do not act. That was the last crop’s mistake.
 
-| What | URL |
-|---|---|
-| Weights | https://huggingface.co/CraftJarvis/JarvisVLA-Qwen2-VL-7B |
-| Code / rollout | https://github.com/CraftJarvis/JarvisVLA |
-| Env | https://github.com/CraftJarvis/MineStudio |
-| Project | https://craftjarvis.github.io/JarvisVLA/ |
-| Paper | https://arxiv.org/abs/2503.16365 |
-| Sibling card | [`10_sibling_list.md`](10_sibling_list.md) |
+These four are **below** the Gemma 4 12B reasoning bar (3B, 2B, ~3B+MoT, Llama-2-7B). That is stated up front. This window is not Path N and it is not a 12-card rewrite. It is “does any open VLA actually talk while it moves?”
 
-Ask while looking: does a screenshot still get an English answer? If action SFT ate the mouth, you know before a weekend of JDK 8.
+**None of them are interruptible.** No true-async dual, no high-rate S1 that keeps seeing fresh pixels, no trained “something unexpected happened — stop and re-plan.” EO-1 interleaves text and flow in one generate. ChatVLA re-queries every *N* steps. WALL-OSS’s Uni-CoT paper can skip or interleave CoT, still one net. ECoT runs the full TASK/PLAN/SUBTASK/MOVE chain, then one action. OneTwoVLA is the surprise-flip paper; it has no weights. Fine for this window.
 
-**Done 2026-09-03** (`demo_sandboxes/jarvis_vqa`): `action_tokens` only — no English. Skip MineStudio. Details: [`10_sibling_list.md`](10_sibling_list.md#pull-log).
+**On-distribution stills (this smoke):** EO-1 uses their official `demo_data` frames (reasoning demo, not LIBERO). ECoT uses official Bridge `test_obs.png` + `unnorm_key=bridge_orig`. ChatVLA and WALL-OSS have no public observation PNGs / no installable training env in-folder — those two are stand-in stills and said so. Closed-loop LIBERO/SimplerEnv waits until a mouth works.
 
-### 2. RynnVLA-001 / 002 + WorldVLA (Chameleon)
+## Closed crop (do not reopen)
 
-Same DAMO family. You like the vision decoder. Official loop emits actions / next frames, not chat. **Note-goal (not a Cursor official goal):** leftover English from the VLA weights, decoder kept. Spec: [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md). No code this window. Base Meta Chameleon can emit text; do not confuse that with this checkpoint.
+| Model | Date | What happened | Next? |
+|---|---|---|---|
+| JARVIS-VLA 7B | 2026-09-03 | Official railroad = `action_tokens` only. No English. | Never. |
+| MolmoAct2-Think-LIBERO | 2026-09-03 | Depth bins + action chunk. Caution inject ignored. Molmo2-ER talks because it is a **different** net. | Never as a mouth. |
+| RynnVLA-002 / WorldVLA | 2026-09-04 | Act railroad works. Leftover BPE **garbage**. Dream/decoder not usable. | Never. |
+| InternVLA-N1 DualVLN | 2026-09-04 | Official `step` S2 `llm_output` was **`→→→→`** (arrow tokens), not English goals. `pixel_goal` None on the logged step. `system2_ask` is a separate Qwen that cannot act. | **Never.** |
 
-Watch for: next-frame generation, action-conditioned video, wrist-cam generation (002), ego-human-video pretrain (001). There is **no hosted playground**. Videos and HF GIFs are the look.
+## Look, then one sandbox (this order)
 
-| What | URL |
-|---|---|
-| RynnVLA-001 blog (videos in-page) | https://huggingface.co/blog/Alibaba-DAMO-Academy/rynnvla-001 |
-| RynnVLA-001 GitHub (YouTube + Bilibili badges) | https://github.com/alibaba-damo-academy/RynnVLA-001 |
-| RynnVLA-001 weights | https://huggingface.co/Alibaba-DAMO-Academy/RynnVLA-001-7B-Trajectory |
-| WorldVLA HF (action GIFs + world-model GIFs) | https://huggingface.co/Alibaba-DAMO-Academy/WorldVLA |
-| WorldVLA / RynnVLA-002 code | https://github.com/alibaba-damo-academy/WorldVLA |
-| RynnVLA-002 HF (LIBERO VLA + world-model tables) | https://huggingface.co/Alibaba-DAMO-Academy/RynnVLA-002 |
-| Papers | [001](https://arxiv.org/abs/2509.15212), [WorldVLA](https://arxiv.org/abs/2506.21539), [002](https://arxiv.org/abs/2511.17502) |
+### 1. EO-1
 
-Ask while watching: can this thing show you *what happens if I take this action* as pixels? That is why it is entry 2, not a footnote.
-
-**Killed 2026-09-04** (`demo_sandboxes/rynn_worldvla`): not a usable option. Act works on the official discrete railroad. Talk is **garbage**. Dream / decoder look failed (malformed blocks; recovered decode still not usable). Do **not** spend more harness rounds. Details: [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04). Next box is InternVLA-N1.
-
-### 3. MolmoAct2
+Closest official claim: one decoder, interleaved vision-text-action, `processor.generate` returns **text and actions**.
 
 | What | URL |
 |---|---|
-| Blog / videos | https://allenai.org/blog/molmoact2 |
-| Think-LIBERO card | https://huggingface.co/allenai/MolmoAct2-Think-LIBERO |
-| SO-100/101 card | https://huggingface.co/allenai/MolmoAct2-SO100_101 |
-| Code | https://github.com/allenai/molmoact2 |
-| Card in this repo | [`../candidates/molmoact2.md`](../candidates/molmoact2.md) |
+| Weights | https://huggingface.co/IPEC-COMMUNITY/EO-1-3B |
+| Code | https://github.com/EO-Robotics/EO1 (moving to [SHAILAB-IPEC/EO1](https://github.com/SHAILAB-IPEC/EO1)) |
+| Paper | https://arxiv.org/abs/2508.21112 |
+| Sandbox | [`../demo_sandboxes/eo1`](../demo_sandboxes/eo1/README.md) |
 
-No hosted net. Watch Think / traces / SO-10x. Compare to Rynn: MolmoAct2 reasons in depth tokens; it does **not** decode a future RGB frame. Unlike JARVIS-VLA / Rynn, the Molmo2-ER backbone *can* do VQA if you ask.
+3B Qwen2.5-VL. Official HF snippet: `output = processor.generate(model, batch)` → `output.text` + `output.action`. Also `select_action` (act only) and `model.generate` (reason only). Use the **unified** generate. Sample frames: their `demo_data/example1.jpg` / `example2.png`.
 
-**Done 2026-09-03:** Ask talks. Think-LIBERO does not; caution-sentence inject failed. Details: [`10_sibling_list.md`](10_sibling_list.md#pull-log).
+Ask on the box: did the **same** 3B emit a readable English intermediate goal **and** an action vector?
 
-### 4. InternVLA-N1
+### 2. ChatVLA (v1 weights)
+
+MoE so robot SFT does not wipe VQA. ChatVLA-2 (math / open-world paper) has **no public robot weights**. You pull ChatVLA-1.
 
 | What | URL |
 |---|---|
-| **Hosted Gradio** (down as of 2026-09-03: 401 / remote backend) | https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo — do not hunt clones. Local sandbox: [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) |
-| Project page / videos | https://internrobotics.github.io/internvla-n1.github.io/ |
-| S2 card | https://huggingface.co/InternRobotics/InternVLA-N1-System2 |
-| DualVLN (recommended whole system) | https://huggingface.co/InternRobotics/InternVLA-N1-DualVLN |
-| Card in this repo | [`../candidates/internvla-n1.md`](../candidates/internvla-n1.md) |
+| Weights | https://huggingface.co/zzymeow/ChatVLA |
+| Code | https://github.com/midea-ai/ChatVLA_public (same as [tutujingyugang1/ChatVLA_public](https://github.com/tutujingyugang1/ChatVLA_public)) |
+| Paper (v1) | https://arxiv.org/abs/2502.14420 |
+| Paper (v2, no robot ckpt) | https://arxiv.org/abs/2505.21906 |
+| Sandbox | [`../demo_sandboxes/chatvla`](../demo_sandboxes/chatvla/README.md) |
 
-S1 **does** get fresh RGB (DualVLN) or RGB-D (NavDP*). Pixel-goal is the S2→S1 *handoff*, not S1’s only input. Product loop is mute **toward you**. You should still see S2 `llm_output` (mid-level English) when S2 runs. Free-form talk is `system2_ask` on `cuda:1`, not DualVLN. See [`08_community_gems.md`](08_community_gems.md) only for the M1 contrast; do not re-open that.
+Qwen2-VL-2B + control expert. Official robot loop: `policy.evaluate(**batch)` in their `evaluate/evaluate_robot.py` (`eval_in_vqa` is a flag on **these** weights, not a second card). Need their `preprocessor_config.json` / `chat_template.json` from Qwen2-VL-2B-Instruct if the Hub dump is incomplete.
+
+Ask on the box: does `evaluate` print English in `outputs`, or only an action chunk? VQA on the **same** checkpoint is a second cell, not a substitute for talk-while-acting.
+
+### 3. WALL-OSS
+
+Paper claim is Uni-CoT: instruction → reasoning / subtask → continuous action in one net.
+
+| What | URL |
+|---|---|
+| Weights (CoT paper) | https://huggingface.co/x-square-robot/wall-oss-flow |
+| Newer deploy ckpt | https://huggingface.co/x-square-robot/wall-oss-0.5 |
+| Code | https://github.com/X-Square-Robot/wall-x |
+| Paper | https://arxiv.org/abs/2509.11766 |
+| Sandbox | [`../demo_sandboxes/wall_oss`](../demo_sandboxes/wall_oss/README.md) |
+
+Qwen2.5-VL-3B + MoT ~4B. Official scripts (`scripts/fake_inference.py`, `generate_flow_action`) are **action-first**. The sandbox must also try text / CoT on the **same** `wall-oss-flow` weights. If the official railroad is mute, log that. Do not swap in a chat Qwen.
+
+### 4. ECoT-OpenVLA
+
+Oldest honest “English then act” open VLA. Fixed chain: TASK / PLAN / SUBTASK / MOVE, then action tokens.
+
+| What | URL |
+|---|---|
+| Weights | https://huggingface.co/Embodied-CoT/ecot-openvla-7b-bridge |
+| Code / Colab | https://github.com/MichalZawalski/embodied-CoT |
+| Paper | https://arxiv.org/abs/2407.08693 |
+| Sandbox | [`../demo_sandboxes/ecot_openvla`](../demo_sandboxes/ecot_openvla/README.md) |
+
+Llama-2-7B (`below_reject` on the shopping rubric). Official prompt ends `ASSISTANT: TASK:`. `predict_action(..., unnorm_key="bridge_orig")` returns `(action, generated_ids)`. Decode the ids. Frame: their `test_obs.png`.
+
+Ask on the box: do TASK / PLAN / SUBTASK come out as real English, or did this dump collapse to action tokens too?
 
 ## Then: small sandboxes (one at a time)
 
-After the looks. Success is “it answered or it moved,” not a new scorecard.
+Success is “readable English intermediate goal **and** an action from the same weights.” Not a new scorecard.
 
-| Order | Sandbox | Success |
-|---|---|---|
-| S | JARVIS-VLA screenshot VQA (`jarvis_vqa`). MineStudio skipped. | **Done 2026-09-03:** SFT ate the mouth (`action_tokens`). |
-| A | InternNav official inference-only notebook (`demo_sandboxes/internvla_n1`) — hosted Gradio is down | Follow one English instruction on their sample RGB stream; see pixel-goal + S2 text. |
-| B | MolmoAct2-Think-LIBERO + Molmo2-ER Ask (`molmoact2`) | **Done 2026-09-03:** Ask talks; Think stays a mute policy. Inject failed. |
-| C | WorldVLA or RynnVLA-002 **LIBERO** from their GitHub | **Killed 2026-09-04:** not a usable option. Act railroad is real; mouth **garbage**; dream/decoder not usable. Do not keep hacking the harness. Log: [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04). |
+| Order | Sandbox | Disk (rough) | Success |
+|---|---|---|---|
+| 1 | [`eo1`](../demo_sandboxes/eo1/README.md) | ~8 GB | `processor.generate` text is English (not empty / not tokens) **and** an action array. |
+| 2 | [`chatvla`](../demo_sandboxes/chatvla/README.md) | ~6 GB | Official `evaluate` `outputs` contain English **or** log that v1 is mute-while-acting. |
+| 3 | [`wall_oss`](../demo_sandboxes/wall_oss/README.md) | ~8 GB | CoT / subtask English on `wall-oss-flow`, not only `predict_action`. |
+| 4 | [`ecot_openvla`](../demo_sandboxes/ecot_openvla/README.md) | ~14 GB | TASK/PLAN/SUBTASK English + Bridge action. |
 
-Do **not** install Habitat, Isaac, or an SO-101 until a sandbox has a winner you still care about. **Next box:** [`../demo_sandboxes/internvla_n1`](../demo_sandboxes/internvla_n1/README.md) on **2×5090**. Official walk loop will show S2 `llm_output` (mid-level English) + pixel-goal; it will **not** interview you. Free-form talk is `system2_ask` on `cuda:1`. Do not reopen Rynn. Gemma+STEVE-1 remains smoke K.
+**1× RTX 5090** for each. Do **not** install Habitat, Isaac, or an SO-101. Do **not** run `setup.sh` on the notes machine.
 
-Smoke-0 reasoning prompts and the older three-path deep dives stay in [`04_test_plan.md`](04_test_plan.md). Run those only after a sandbox you like.
+OneTwoVLA is the paper you wanted (reason ↔ act in one net). **No policy weights.** Do not build a fifth sandbox for it.
+
+Gemma 4 12B + STEVE-1 remains Path K if this crop is also mute. That is not this window.

@@ -1,5 +1,7 @@
 # Path N: InternVLA-N1 vs NaVILA (and why GR00T is not in this path)
 
+**InternVLA-N1 DualVLN was tried 2026-09-04 and rejected.** Official `step` S2 `llm_output` was `→→→→`, not English intermediate goals. That sandbox is gone. InternVLA-N1 is **never** the next box. This note stays as architecture history, not a shopping ticket.
+
 Both are **vision-and-language navigation** stacks with a slow planner and a fast body. They are not the same product.
 
 ## Same job
@@ -24,7 +26,7 @@ You give an English instruction (“go to the kitchen / the red chair”). A Sys
 
 InternVLA-N1 is the better **planner + house-scale VLN product**. NaVILA is the better **“S2 talks, S1 walks on real legs”** picture, and the only Path N stack with a robot you can actually buy.
 
-If you want to shop Path N in software this week: InternVLA-N1 (Gradio, then InternNav). If you already want a dog in the loop: NaVILA.
+Do **not** shop Path N this week. Next window is EO-1 / ChatVLA / WALL-OSS / ECoT ([`09_next_session.md`](09_next_session.md)). If you ever want a dog in the loop later: NaVILA.
 
 ## GR00T does not do this job
 

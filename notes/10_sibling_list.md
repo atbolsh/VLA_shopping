@@ -8,16 +8,18 @@ The sibling writeup ([`../../stateful_realtime_thinking`](../../stateful_realtim
 
 The parseable score table is below. The canvas mirrors it; do not invent a second ranking.
 
-## To test (four entries)
+## First crop: rejected (2026-09-03 / 04)
 
-Same list as [`09_next_session.md`](09_next_session.md). Do not start this in the window that only wrote the note.
+This was the sibling four. All four failed the actual ask (English intermediate goals **while acting**). Sandboxes deleted. **InternVLA-N1 is never the next box.**
 
-1. **JARVIS-VLA** — **done 2026-09-03.** Mouth is dead (`action_tokens` only). Skip MineStudio. Custom S1 later is Path K (Gemma 4 12B + STEVE-1), not this 7B.
-2. **Chameleon family (RynnVLA-001/002 + WorldVLA)** — **killed 2026-09-04.** Not a usable option. Mouth **garbage**. Dream/decoder look failed; do not keep hacking the harness. See [pull log](#rynn-worldvla-2026-09-04).
-3. **MolmoAct2** — **done 2026-09-03.** Molmo2-ER Ask answers English. Think-LIBERO `predict_action` does not: inject (“ask a follow-up; keep the arm still”) was ignored; output stayed depth + a 10-step action chunk. See [pull log](#pull-log).
-4. **InternVLA-N1** — **next (2×5090).** True dual. Official walk loop is mute toward you; S2 `llm_output` is mid-level English you can read. Free-form talk is the separate System-2 Qwen card (`system2_ask`), not DualVLN.
+1. **JARVIS-VLA** — **rejected 2026-09-03.** Mouth dead (`action_tokens` only).
+2. **Chameleon family (RynnVLA-001/002 + WorldVLA)** — **rejected 2026-09-04.** Mouth **garbage**. Dream/decoder not usable.
+3. **MolmoAct2-Think** — **rejected 2026-09-03.** Think is depth + action. Molmo2-ER talks because it is a **different** net.
+4. **InternVLA-N1 DualVLN** — **rejected 2026-09-04.** Official `step` S2 `llm_output` was **`→→→→`**, not English. `system2_ask` is a separate Qwen that cannot act.
 
-Later, not in the four: OmniJARVIS (gated card + GROOT decoder); Gemma 4 12B + STEVE-1 if JARVIS-VLA’s mouth is dead.
+Next window is **not** another sibling game-player. It is EO-1 / ChatVLA / WALL-OSS / ECoT-OpenVLA: [`09_next_session.md`](09_next_session.md).
+
+Later, not this window: OmniJARVIS (gated); Gemma 4 12B + STEVE-1 (Path K).
 
 ### Mouth status (2026-09-03)
 
@@ -28,11 +30,11 @@ None of the **product** loops are a companion. Separate VLM cards still answer i
 | JARVIS-VLA 7B | No | No. Action tokens only. |
 | MolmoAct2-Think-LIBERO `predict_action` | No. Caution inject failed. | Depth codes + `generated_token_ids`, not English. |
 | Molmo2-ER Ask | **Yes** (seen). Separate net; cannot act. | Ordinary VQA. |
-| InternVLA-N1 DualVLN `step` (next: 2×5090) | **No** — will not interview you. | **Yes:** S2 `llm_output` (mid-level English) + pixel-goal, only every `plan_step_gap`. |
-| InternVLA-N1 System2 `system2_ask` | **Yes**, if you use that cell. Same *kind* as Molmo2-ER. | Ordinary Qwen generate. |
+| InternVLA-N1 DualVLN `step` | **No.** Rejected 2026-09-04. | **No.** Printed `→→→→`, not English. |
+| InternVLA-N1 System2 `system2_ask` | Yes, and **irrelevant.** Separate Qwen; cannot act. | Ordinary Qwen generate. Disembodied planner — do not pull again. |
 | RynnVLA-002 VLA (libero_goal) talk probe | **No** — 2026-09-04: banned-id greedy gave a prompt echo (` Use only commonality`) then a 2-token loop (`speaking`×∞). leftover_english = **garbage**. | Same weights act on the official railroad. Dream/decoder **not usable**. Family killed; do not reopen. |
 
-**Finetune:** a talking **gate** (Molmo2-ER or Gemma 4 12B) in front of Think / DualVLN is plausible. Light SFT or more prompt text on `predict_action` / official `step` is unlikely to grow SIMA-2 clarifiers. Path K is the mouth by construction.
+**Finetune:** do not spend another weekend growing a mouth on these four. Path K (Gemma 4 12B + STEVE-1) is the mouth by construction. Next GPU hours are EO-1 / ChatVLA / WALL-OSS / ECoT, not a DualVLN gate.
 
 ## Scorecard (weights available)
 
@@ -104,19 +106,18 @@ Closed brain, API-only player, or a benchmark that *uses* APIs. Links so you can
 
 There is still **no** open-weight, chatty, true-async Doom (or generic FPS) player. The intersection of SIMA-2-chatty × Helix-dual × weights × 3D is empty. Minecraft via MineStudio is the only open 3D env with downloadable players.
 
-## Sibling smoke (after the look)
+## Sibling smoke (closed)
 
-Success is “it answered in English *or* it moved,” not a new shopping total.
+Success was supposed to be “it answered in English *or* it moved.” All four product loops failed the English-while-acting bar. Folders deleted.
 
 | Order | What | Success |
 |---|---|---|
-| S | JARVIS-VLA screenshot VQA (`demo_sandboxes/jarvis_vqa`) | **Done 2026-09-03.** `action_tokens` only. MineStudio skipped. |
-| B | MolmoAct2 Think-LIBERO + Molmo2-ER Ask (`demo_sandboxes/molmoact2`) | **Done 2026-09-03.** Ask talks. Think does not; task inject failed. |
-| C | Chameleon: WorldVLA / RynnVLA-002 LIBERO + leftover BPE + dream | **Killed 2026-09-04.** Not a usable option. Do not keep hacking the harness. |
-| A | InternVLA-N1 (`demo_sandboxes/internvla_n1`), **2×5090** | **Next.** S2 `llm_output` + pixel-goal on the sample RGB stream; optional System-2 chat. |
-| K | Gemma 4 12B + STEVE-1 dummy handoff | 12B talks; STEVE-1 walks for N ticks. Unlocked; not the next GPU hour. |
-
-Habitat / SO-101 / the twelve-card zoo stay on the shopping path.
+| S | JARVIS-VLA screenshot VQA | **Rejected 2026-09-03.** `action_tokens` only. |
+| B | MolmoAct2 Think-LIBERO + Molmo2-ER Ask | **Rejected 2026-09-03.** Ask talks (other net). Think mute. |
+| C | WorldVLA / RynnVLA-002 | **Rejected 2026-09-04.** Mouth garbage; dream not usable. |
+| A | InternVLA-N1 DualVLN | **Rejected 2026-09-04.** `llm_output` = `→→→→`. Never next. |
+| — | EO-1 / ChatVLA / WALL-OSS / ECoT | **Next window.** Same weights must talk and act. [`09_next_session.md`](09_next_session.md). |
+| K | Gemma 4 12B + STEVE-1 dummy handoff | Unlocked; not this window. |
 
 ## Pull log
 
@@ -136,7 +137,7 @@ Habitat / SO-101 / the twelve-card zoo stay on the shopping path.
 - **Think (`allenai/MolmoAct2-Think-LIBERO`):** official `predict_action` on the card’s libero_10 / ep0 / t0 cameras + EEF. Returned a 10×7 continuous action chunk (and depth bins). Internal “think” is `<depth_start>` … depth codes … `<depth_end>`, then the flow expert — not a `<think>` chat span.
 - **Inject (`think_inject.ipynb`):** spliced “if an instruction is unclear, ask a follow-up before committing; keep the arm still until you are certain” into the official `The task is to {task}` slot (`normalize_language=False`). **Did not** get follow-ups or a still arm. Policy still committed actions. Prompt-inject will not grow a mouth on this SFT.
 - **Finetune:** plausible on **Molmo2-ER (or Gemma 4 12B) as a gate**, then call Think only on a clean task. Low confidence that further SFT on `predict_action` will make Think interview you; that head is trained to emit depth then move.
-- **Decision:** Path R still stands as an arm policy. Sibling “talk while acting” is not this checkpoint. Next look: InternVLA-N1 on **2×5090**.
+- **Decision:** Path R still stands as an arm policy. Sibling “talk while acting” is not this checkpoint. Crop closed.
 
 ### rynn-worldvla (2026-09-04)
 
@@ -145,4 +146,13 @@ Habitat / SO-101 / the twelve-card zoo stay on the shopping path.
 - **Act:** official ItemProcessor railroad (`What action…?<|state|><|image|><|image|>`, zeros(8) state for the GIF frame) + `generate_dis_ma` → five clean `10004…15004` chunks ending `8710`; smooth monotone dim-0 trajectory. Deterministic across boxes. The policy acts.
 - **Mouth:** banned-id greedy (only BPE ≥16384 allowed) → ` Use only commonality` + `sound` + `speaking`×30 (ids `54812, 17017` looping). **leftover_english = garbage.** Prompt-echo + degenerate cycle, not English. First run said `usable` — false positive in the old ≥3-words verdict; fixed to require distinct words and no short cycle.
 - **Dream:** vendor eval helper carries the *older WorldVLA* prompt (“Generate the image based on the current image and the action.”) — off-distribution for 002 cards, produced malformed blocks. The 002 cards were trained on “Generate the next image based on the provided sequence of historical images and corresponding actions.” + `<|image|><|image|><|action|>`. With that prompt, generation can be on-distribution (one run: 2017/2088 image-range tokens, one canonical 1060-token 512² block). Official `decode_image` still dies on anything but a perfect `8197` + 2 grid toks + 32×33 (newline `8803` every 33rd) + `8196` span. Ablation Rung 2: `push_left` junk short spans; `push_right` hit `max_new_tokens=3000` with fragmented `8197…8196` pairs; `grip_close` 1028 (no newlines) + 1059 (`KeyError 8803`). Harness recoveries (skip junk spans, flat 1024-body, pad-one-short, stream-stitch) did not produce a usable action-conditioned next-frame look. Owner: do **not** fine-tune the harness further.
-- **Decision:** **not a usable option.** Mouth dead like JARVIS / Molmo-Think. Decoder/dream look closed. Do not reopen `dream_ablations.ipynb` or [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md) as a next task. Act-on-railroad is real and not enough. **Next box:** InternVLA-N1 on **2×5090**.
+- **Decision:** **not a usable option.** Mouth dead like JARVIS / Molmo-Think. Decoder/dream look closed. Do not reopen. Act-on-railroad is real and not enough. Crop closed. Next window is EO-1 / ChatVLA / WALL-OSS / ECoT — not InternVLA-N1.
+
+### internvla-n1 DualVLN (2026-09-04)
+
+- **Box:** 2× RTX 5090, `demo_sandboxes/internvla_n1` (deleted).
+- **Load:** DualVLN shards on `cuda:0`. S1 module weights verified elementwise vs safetensors (7/7 probes). Warmup was one step on a **black dummy** frame (throwaway).
+- **Walk loop:** official `InternVLAN1AsyncAgent.step` on their sample RGB stream (“Turn around and walk out of this office…”).
+- **Mouth:** S2 `llm_output` on the logged step was **`→→→→`** (arrow tokens). `pixel_goal` was `None`. That is not English intermediate goals and not a SIMA-2 clarifier.
+- **Ask cell:** `system2_ask` on `InternVLA-N1-System2` / `cuda:1` is a **separate** Qwen that cannot act. Same class of mistake as Molmo2-ER. Disembodied planner — ignore.
+- **Decision:** **rejected.** Not a usable option for the ask. Sandbox deleted. **Never the next box.** Do not reopen DualVLN, System-2 chat, Habitat, or “maybe the arrows mean something.”

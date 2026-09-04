@@ -1,28 +1,26 @@
 # Test plan
 
-**Next window starts at [`09_next_session.md`](09_next_session.md).** Look first (JARVIS-VLA → Chameleon/Rynn/WorldVLA → MolmoAct2 → InternVLA-N1), then one small sandbox at a time. Do not download the twelve-card zoo.
+**Next window starts at [`09_next_session.md`](09_next_session.md).** **Start with EO-1**, then ChatVLA → WALL-OSS → ECoT. None interruptible. EO-1 and ECoT stills are on-distribution. The 2026-09-03/04 crop is **rejected**. InternVLA-N1 is **never** the next box.
 
-The rest of this file is the later pull-day smokes, after those looks.
+The rest of this file is later pull-day smokes, after a sandbox you still like.
 
-## Look order (next session)
+## Closed crop (do not rerun)
 
-1. **JARVIS-VLA** — **done 2026-09-03.** Mouth dead (`action_tokens`). Skip MineStudio. [`10_sibling_list.md`](10_sibling_list.md#pull-log).
-2. **RynnVLA-001 / 002 + WorldVLA** — **killed 2026-09-04.** Not a usable option. Mouth garbage; dream/decoder not usable. Do not keep hacking the harness. [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04).
-3. **MolmoAct2** — **done 2026-09-03.** Ask talks; Think-LIBERO inject failed. [`10_sibling_list.md`](10_sibling_list.md#pull-log).
-4. **InternVLA-N1** — **next:** 2×5090 sandbox (`internvla_n1`). Gradio still 401. Expect mute `step` + readable S2 `llm_output`; chat is `system2_ask`.
+1. **JARVIS-VLA** — **rejected 2026-09-03.** Mouth dead (`action_tokens`). [`10_sibling_list.md`](10_sibling_list.md#pull-log).
+2. **RynnVLA-001 / 002 + WorldVLA** — **rejected 2026-09-04.** Mouth garbage; dream not usable.
+3. **MolmoAct2-Think** — **rejected 2026-09-03.** Think is a mute policy. Molmo2-ER is a different net.
+4. **InternVLA-N1 DualVLN** — **rejected 2026-09-04.** S2 `llm_output` was `→→→→`. Do not reopen.
 
-Links live in [`09_next_session.md`](09_next_session.md) and [`05_demos.md`](05_demos.md).
-
-## Sandboxes (after the looks)
+## Sandboxes (this window)
 
 | Order | Install | Success looks like |
 |---|---|---|
-| S | JARVIS-VLA screenshot VQA (`jarvis_vqa`). MineStudio skipped. | **Done 2026-09-03:** `action_tokens` only. |
-| A | InternNav Gradio (already in look 4) | Agent follows a language instruction in a house for >30 s without a human clicking actions. |
-| B | MolmoAct2 Think-LIBERO + Molmo2-ER Ask | **Done 2026-09-03:** Ask English; Think action chunk; inject did not gate. |
-| C | WorldVLA or RynnVLA-002 LIBERO from their GitHub | **Killed 2026-09-04:** not a usable option. Do not reopen. |
+| 1 | EO-1 (`demo_sandboxes/eo1`) | Same 3B: English text **and** an action. |
+| 2 | ChatVLA-1 (`demo_sandboxes/chatvla`) | Official `evaluate` prints English in `outputs`, or log mute. |
+| 3 | WALL-OSS (`demo_sandboxes/wall_oss`) | CoT / subtask English on `wall-oss-flow`, not only flow actions. |
+| 4 | ECoT-OpenVLA (`demo_sandboxes/ecot_openvla`) | TASK/PLAN/SUBTASK English + Bridge action. |
 
-Habitat / Isaac / SO-101 wait until InternVLA-N1 (A) has a winner you still care about. B and C are closed.
+Habitat / Isaac / SO-101 wait. Disembodied planners are out.
 
 ## Smoke 0 — reasoning only (no robot)
 

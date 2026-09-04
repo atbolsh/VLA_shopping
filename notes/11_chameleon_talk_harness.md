@@ -24,7 +24,7 @@ A caption from Meta Chameleon or `RynnVLA-001-7B-Base` does **not** count. Those
 
 Official VLA prompts ask for `<|action|>` / `<|image|>`. Talk means: allow only BPE + `</s>` / `<s>`.
 
-WorldVLA cards are Lumina/xllmx, not a vanilla HF causal LM. Harness lives in `demo_sandboxes/rynn_worldvla` (do not extend it). Official dream script: `rynnvla-002/exps_libero_world_model/eval_world_model_goal.sh`.
+WorldVLA cards are Lumina/xllmx, not a vanilla HF causal LM. The `rynn_worldvla` sandbox was **deleted** with the rest of the first crop. Official dream script (upstream only): `rynnvla-002/exps_libero_world_model/eval_world_model_goal.sh`.
 
 ## Verdict (2026-09-04)
 
@@ -39,4 +39,4 @@ Logged in [`10_sibling_list.md`](10_sibling_list.md#rynn-worldvla-2026-09-04) an
 
 Dream/decoder: not usable. Official `decode_image` needs a perfect 1060-token 512² span; generations were junk short `8197…8196` pairs, 1028 (no newlines), 1059 (`KeyError 8803`), or `max_new_tokens` fragments. Recoveries did not yield a usable next-frame look. Owner declined more harness work.
 
-**Do not** treat a caption from Meta Chameleon or `RynnVLA-001-7B-Base` as this policy talking. **Next box:** InternVLA-N1 on 2×5090.
+**Do not** treat a caption from Meta Chameleon or `RynnVLA-001-7B-Base` as this policy talking. Crop closed. Next window is EO-1 / ChatVLA / WALL-OSS / ECoT — not InternVLA-N1.

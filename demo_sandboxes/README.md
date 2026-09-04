@@ -1,14 +1,17 @@
 # Demo sandboxes (vast.ai 5090 only)
 
-Five independent projects. Each has its own `setup.sh`, `requirements.txt`, harness, and notebook. **Do not run any of these on the notes machine** (`LVA_shopping` workstation). Rent a box, copy the repo (or just this directory plus the repo-root `.env`), run `setup.sh` there.
+Four independent projects. Each has its own `setup.sh`, `requirements.txt`, harness, and notebook. **Do not run any of these on the notes machine** (`LVA_shopping` workstation). Rent a box, copy the repo (or just this directory plus the repo-root `.env`), run `setup.sh` there.
 
-The hosted InternNav Gradio ([InternRobotics/InternNav-Eval-Demo](https://huggingface.co/spaces/InternRobotics/InternNav-Eval-Demo)) is down as of 2026-09-03 (401; thin UI over a remote backend). Do not use the unofficial sleeping clone. InternVLA-N1 is the official inference-only notebook in `internvla_n1/`.
+The 2026-09-03/04 crop (JARVIS, Molmo, Rynn, InternVLA-N1) was **rejected** and **deleted**. InternVLA-N1 is never the next box.
+
+Success is: the **same policy weights** print a readable English intermediate goal **and** an action. No second VLM. No RoboBrain / Pelican-VL / System-2-only chat.
+
+None of these four are interruptible (no async S1). **Start with EO-1.** EO-1 and ECoT stills are on-distribution (official demo / Bridge). ChatVLA and WALL-OSS use labelled stand-in frames.
 
 ## Box
 
 - Template: Vast **Blackwell / CUDA 12.8** ([RTX 5 series](https://docs.vast.ai/rtx-5-series)).
-- Default: **1× RTX 5090**, ~80 GB disk (weights are ~15–25 GB *per* sandbox you install).
-- `internvla_n1` only: **2× RTX 5090** (DualVLN on `cuda:0`, System-2 chat on `cuda:1`).
+- Default: **1× RTX 5090**, ~80 GB disk (weights are ~6–16 GB *per* sandbox you install).
 
 Put `export HF_TOKEN=...` in the **repo-root** `.env` (copy [`.env.example`](../.env.example)). Each `setup.sh` symlinks it. The token is optional for these public cards; it only avoids Hub rate limits.
 
@@ -18,12 +21,11 @@ Every `setup.sh` aborts unless `nvidia-smi` reports an RTX 5090, or you set `FOR
 
 | Order | Folder | Disk (weights, rough) | What you learn |
 |---|---|---|---|
-| 1 | [`jarvis_vqa`](jarvis_vqa/README.md) | ~16 GB | **Done 2026-09-03:** `action_tokens` only. Mouth gone. |
-| 2 | [`molmoact2`](molmoact2/README.md) | ~20 GB Think + ~16 GB Molmo2-ER | **Done 2026-09-03:** Ask talks; Think inject failed. |
-| 3 | [`internvla_n1`](internvla_n1/README.md) | ~16 GB DualVLN + ~16 GB System2 | **Next — 2×5090.** S2 `llm_output` + pixel-goal; chat is a separate card. |
-| 4 | [`rynn_worldvla`](rynn_worldvla/README.md) | ~16–25 GB | **Killed 2026-09-04.** Not a usable option. Do not reopen. |
-| 5 | [`jarvis_minestudio`](jarvis_minestudio/README.md) | same 7B as #1 | **Skip.** Same mute weights + JDK 8. |
+| 1 | [`eo1`](eo1/README.md) | ~8 GB | Official `processor.generate`: text **and** action from `EO-1-3B`. |
+| 2 | [`chatvla`](chatvla/README.md) | ~6 GB | Official `evaluate` on ChatVLA-1. ChatVLA-2 has no robot weights. |
+| 3 | [`wall_oss`](wall_oss/README.md) | ~8 GB | Uni-CoT claim on `wall-oss-flow`. Official scripts are action-first. |
+| 4 | [`ecot_openvla`](ecot_openvla/README.md) | ~14 GB | TASK/PLAN/SUBTASK English + Bridge action. |
 
 Install **one folder at a time**. Do not `pip install` from this README.
 
-After a sandbox works, append a `## Pull log` on the matching candidate card and leftover-English / mouth verdicts on [`notes/10_sibling_list.md`](../notes/10_sibling_list.md).
+After a sandbox works, append leftover-English / mouth verdicts on [`notes/10_sibling_list.md`](../notes/10_sibling_list.md) and the next-session note.

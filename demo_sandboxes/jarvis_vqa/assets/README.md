@@ -1,1 +1,0 @@
-`minecraft_sample.png` is a leftover color placeholder. Real frames live in `../screenshot/`, filled by `download_screenshots.py` from CraftJarvis/minecraft-vla-sft **valid** (not the 106 GB train split).

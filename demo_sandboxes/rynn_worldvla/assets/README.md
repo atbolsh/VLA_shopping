@@ -1,1 +1,0 @@
-`libero_third.png` / `libero_wrist.png` are leftover color placeholders. Real cameras live in `../screenshot/`, filled by `download_frames.py` from the official WorldVLA README GIFs `pickuptheblackbowlandplaceitontheplate_{front,wrist}.gif` (frame 0).

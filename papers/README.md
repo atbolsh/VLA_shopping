@@ -37,3 +37,13 @@ Non-arXiv / HTML:
 PDFs live in `pdfs/` and **are tracked in git** (~240 MB). Re-fetch with `scripts/fetch_papers.sh` if a file is missing (the script sends a user-agent; bare curl gets arXiv 403).
 
 If a download failed, the row stays in this table and the PDF is absent.
+
+Next-crop papers (add the PDF when you fetch; do not block the sandbox on it):
+
+| arXiv | What |
+|---|---|
+| [2508.21112](https://arxiv.org/abs/2508.21112) | EO-1 interleaved vision-text-action |
+| [2502.14420](https://arxiv.org/abs/2502.14420) | ChatVLA-1 (the weights you can pull) |
+| [2505.21906](https://arxiv.org/abs/2505.21906) | ChatVLA-2 (paper only; no robot ckpt) |
+| [2509.11766](https://arxiv.org/abs/2509.11766) | WALL-OSS Uni-CoT |
+| [2407.08693](https://arxiv.org/abs/2407.08693) | ECoT-OpenVLA |

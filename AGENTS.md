@@ -10,7 +10,7 @@ The parseable human source of truth for Network / Action / World / Paper is `not
 2. `candidates/index.yaml` — machine-readable shortlist.
 3. `candidates/*.md` — one card per model. YAML frontmatter must match `schema/candidate.schema.json`.
 4. `notes/02_scorecard.md` — why the scores are what they are.
-5. `notes/09_next_session.md` — four looks then sandboxes. JARVIS mouth dead (`action_tokens`). Molmo2-ER Ask talks; Think-LIBERO will not (inject failed 2026-09-03). Rynn/WorldVLA **killed 2026-09-04** (mouth garbage; dream not usable; do not keep hacking the harness). Next install: `demo_sandboxes/internvla_n1` on **2×5090**. Sibling log: `notes/10_sibling_list.md`.
+5. `notes/09_next_session.md` — English-while-acting crop only. **Start with EO-1**, then ChatVLA → WALL-OSS → ECoT. None interruptible. EO-1 and ECoT stills are on-distribution. First crop **rejected 2026-09-04**. InternVLA-N1 is **never** the next box. Sibling log: `notes/10_sibling_list.md`.
 6. `notes/10_sibling_list.md` — sibling (talk + 3D game) scorecard. Hard filter: policy weights. Not a twelfth shopping card.
 7. `notes/08_community_gems.md` — HF community sweep. Do not promote Hub training dumps to cards.
 8. `papers/README.md` — what was pulled and why.
