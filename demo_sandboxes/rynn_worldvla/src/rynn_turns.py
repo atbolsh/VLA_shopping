@@ -67,10 +67,25 @@ def append_log(record: dict[str, Any]) -> Path:
     return path
 
 
-def leftover_verdict(text: str) -> str:
+def leftover_verdict(text: str, ids: list[int] | None = None) -> str:
+    """``usable`` needs >=3 distinct real words and no degenerate loop.
+
+    2026-09-04 false positive: " Use only commonality" + "speaking"*30 counted
+    as 3 words. Prompt echo + a 2-token cycle is a dead mouth, not English.
+    """
     cleaned = re.sub(r"IMGIMG\S*|</?s>|<\w+>", " ", text or "")
     words = _WORD.findall(cleaned)
-    if len(words) >= 3:
+    distinct = {w.lower() for w in words}
+    looping = bool(re.search(r"(.{3,24}?)\1{4,}", cleaned))
+    if not looping and ids and len(ids) >= 12:
+        tail = ids[-12:]
+        for period in (1, 2, 3, 4):
+            if all(tail[j] == tail[j - period] for j in range(period, len(tail))):
+                looping = True
+                break
+    if looping:
+        return "garbage"
+    if len(words) >= 3 and len(distinct) >= 3:
         return "usable"
     if (text or "").strip():
         return "garbage"
@@ -497,6 +512,21 @@ class RynnSession:
             self.world = _load_xllmx(find_world_ckpt(), force_sdpa=self.force_sdpa)
         return self.world
 
+    def unload_vla(self):
+        """Free the 14 GB VLA before dream if the box is tight.
+
+        act()'s decoded actions persist in ``self.last_act``; talk() will
+        reload on demand.
+        """
+        self.vla = None
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+    def unload_world(self):
+        self.world = None
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
     def _item_processor_vla(self):
         if self._proc_vla is None:
             _on_path()
@@ -550,7 +580,7 @@ class RynnSession:
         # Text-only prompt on purpose: official VLA would ask for <|action|> / <|image|>.
         prompt_ids = self.tokenizer.encode(prompt, add_special_tokens=True)
         ids, text = self._greedy_banned(model, prompt_ids)
-        verdict = leftover_verdict(text)
+        verdict = leftover_verdict(text, ids)
         rec = {
             "sandbox": "rynn_worldvla",
             "turn": "talk",
@@ -759,18 +789,35 @@ class RynnSession:
             )
         new_ids = res["sequences"][0, input_ids.shape[1]:].detach().cpu().tolist()
         blocks = _extract_image_blocks(new_ids)
+        # 2026-09-04: both 7B cards resident + this KV cache left ~32 MiB free;
+        # block-1 VQ decode OOMed. Drop generation state before decoding.
+        del res
+        model.init_input_ids = None
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
         decoded: list[tuple[str, Image.Image]] = []
         block_errors: list[str] = []
         names = ("dream_next_third.png", "dream_next_wrist.png")
         for i, block in enumerate(blocks[:2]):
-            try:
-                img = proc.decode_image(list(block))
-                out = LOG_DIR / names[i]
-                img.save(out)
-                decoded.append((str(out), img))
-            except Exception as exc:  # noqa: BLE001
-                block_errors.append(f"block {i} (len {len(block)}): {exc}")
+            for attempt in (0, 1):
+                try:
+                    img = proc.decode_image(list(block))
+                    out = LOG_DIR / names[i]
+                    img.save(out)
+                    decoded.append((str(out), img))
+                    break
+                except torch.cuda.OutOfMemoryError as exc:
+                    if attempt == 0 and torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+                        continue
+                    block_errors.append(f"block {i} (len {len(block)}): OOM {exc}")
+                    break
+                except Exception as exc:  # noqa: BLE001
+                    block_errors.append(
+                        f"block {i} (len {len(block)}): {type(exc).__name__} {exc}"
+                    )
+                    break
         g_front_path = decoded[0][0] if len(decoded) >= 1 else None
         g_wrist_path = decoded[1][0] if len(decoded) >= 2 else None
 

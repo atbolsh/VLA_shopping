@@ -13,7 +13,7 @@ The parseable score table is below. The canvas mirrors it; do not invent a secon
 Same list as [`09_next_session.md`](09_next_session.md). Do not start this in the window that only wrote the note.
 
 1. **JARVIS-VLA** — **done 2026-09-03.** Mouth is dead (`action_tokens` only). Skip MineStudio. Custom S1 later is Path K (Gemma 4 12B + STEVE-1), not this 7B.
-2. **Chameleon family (RynnVLA-001/002 + WorldVLA)** — vision decoder you actually want. Official harness does not talk. **Note-goal:** leftover English or a logged miss; decoder stays first-class. Spec (no code yet): [`11_chameleon_talk_harness.md`](11_chameleon_talk_harness.md).
+2. **Chameleon family (RynnVLA-001/002 + WorldVLA)** — **talk probed 2026-09-04: garbage** (prompt echo → 2-token loop). Act works on the official discrete railroad. Dream: generation on-distribution after fixing the vendor's stale prompt; PNG decode pending (OOMed at the last step; harness now frees the KV cache first). See [pull log](#pull-log).
 3. **MolmoAct2** — **done 2026-09-03.** Molmo2-ER Ask answers English. Think-LIBERO `predict_action` does not: inject (“ask a follow-up; keep the arm still”) was ignored; output stayed depth + a 10-step action chunk. See [pull log](#pull-log).
 4. **InternVLA-N1** — **next (2×5090).** True dual. Official walk loop is mute toward you; S2 `llm_output` is mid-level English you can read. Free-form talk is the separate System-2 Qwen card (`system2_ask`), not DualVLN.
 
@@ -30,7 +30,7 @@ None of the **product** loops are a companion. Separate VLM cards still answer i
 | Molmo2-ER Ask | **Yes** (seen). Separate net; cannot act. | Ordinary VQA. |
 | InternVLA-N1 DualVLN `step` (tomorrow) | **No** — will not interview you. | **Yes:** S2 `llm_output` (mid-level English) + pixel-goal, only every `plan_step_gap`. |
 | InternVLA-N1 System2 `system2_ask` | **Yes**, if you use that cell. Same *kind* as Molmo2-ER. | Ordinary Qwen generate. |
-| WorldVLA / Rynn official harness | No (later look). | Leftover BPE is a note-goal, not this window. |
+| RynnVLA-002 VLA (libero_goal) talk probe | **No** — 2026-09-04: banned-id greedy gave a prompt echo (` Use only commonality`) then a 2-token loop (`speaking`×∞). leftover_english = **garbage**. | Same weights act fine (5 discrete `10004…15004` chunks, 593/593 params verified vs files). SFT ate the mouth. |
 
 **Finetune:** a talking **gate** (Molmo2-ER or Gemma 4 12B) in front of Think / DualVLN is plausible. Light SFT or more prompt text on `predict_action` / official `step` is unlikely to grow SIMA-2 clarifiers. Path K is the mouth by construction.
 
@@ -41,7 +41,7 @@ Dual-class words are the same as [`../AGENTS.md`](../AGENTS.md). `reasoning_vs_g
 | id | dual class | S1 eyes | chatty | clock | env | vs 12B | test |
 |---|---|---|---|---|---|---|---|
 | **jarvis-vla** | `single` | n/a (the 7B *is* the policy) | **mute** — leftover Qwen mouth is gone. 2026-09-03 VQA: only `<\|reserved_special_token_*\|>`, no English. Skip MineStudio. | hitchy single (~**5.5 FPS** 7B, chunk 1) | Minecraft / [MineStudio](https://github.com/CraftJarvis/MineStudio) | `below_ok` (Qwen2-VL-7B, not Gemma 4) | **1 (done)** |
-| **rynn-worldvla** | `single` (generative prior) | n/a | **mute** in the official harness; **hack goal** for leftover English | robot LIBERO, not a game clock | LIBERO (not a video game) | `below_ok` / unknown; Chameleon-7B ≠ Gemma | **2** |
+| **rynn-worldvla** | `single` (generative prior) | n/a | **mute** — 2026-09-04 leftover-BPE probe: prompt echo → 2-token loop (`garbage`) | robot LIBERO, not a game clock | LIBERO (not a video game) | `below_ok` / unknown; Chameleon-7B ≠ Gemma | **2 (mouth done; dream PNG pending)** |
 | **omnijarvis** | periodic latent dual (not `true_async`) | **yes** — GROOT-style IL decoder \(\pi(a_t \mid o_{1:t}, z)\) | **paper_qa** — CoT + answers, then 5 FSQ behavior tokens | S2 parked; S1 rolls ~32 steps (fig. caption also says 128 = tokenizer trunk) | Minecraft | `below_reject` (LLaVA-1.5-7B) | later |
 | **steve-1** | S1 only | **yes** | **mute** | ~20 FPS | MineRL / MineStudio | n/a | steal-S1 |
 | **vpt** | S1 only | **yes** | **mute** | ~20 FPS | Minecraft (human kbd/mouse) | n/a | steal-S1 |
@@ -141,3 +141,12 @@ Habitat / SO-101 / the twelve-card zoo stay on the shopping path.
 - **Inject (`think_inject.ipynb`):** spliced “if an instruction is unclear, ask a follow-up before committing; keep the arm still until you are certain” into the official `The task is to {task}` slot (`normalize_language=False`). **Did not** get follow-ups or a still arm. Policy still committed actions. Prompt-inject will not grow a mouth on this SFT.
 - **Finetune:** plausible on **Molmo2-ER (or Gemma 4 12B) as a gate**, then call Think only on a clean task. Low confidence that further SFT on `predict_action` will make Think interview you; that head is trained to emit depth then move.
 - **Decision:** Path R still stands as an arm policy. Sibling “talk while acting” is not this checkpoint. Next look: InternVLA-N1 on **2×5090**.
+
+### rynn-worldvla (2026-09-04)
+
+- **Box:** 1× RTX 5090 (32 GB), `demo_sandboxes/rynn_worldvla`, transformers 4.43.0.
+- **Load:** `VLA_model_256/libero_goal` is `ChameleonXLLMXForConditionalGeneration_ck_action_head` (per its `config.json`), **not** the base xllmx class. Harness reads the shards + Meta `vqgan.ckpt` directly and verified **593/593 Parameters elementwise** against the files (`load verified … tensors 593`). Saved names match module names; no translator needed. `vqgan.ckpt` has two extras (`custom_layer.*`) with no HF slot — dropped, same as official convert.
+- **Act:** official ItemProcessor railroad (`What action…?<|state|><|image|><|image|>`, zeros(8) state for the GIF frame) + `generate_dis_ma` → five clean `10004…15004` chunks ending `8710`; smooth monotone dim-0 trajectory. Deterministic across boxes. The policy acts.
+- **Mouth:** banned-id greedy (only BPE ≥16384 allowed) → ` Use only commonality` + `sound` + `speaking`×30 (ids `54812, 17017` looping). **leftover_english = garbage.** Prompt-echo + degenerate cycle, not English. First run said `usable` — false positive in the old ≥3-words verdict; fixed to require distinct words and no short cycle.
+- **Dream:** vendor eval helper carries the *older WorldVLA* prompt (“Generate the image based on the current image and the action.”) — off-distribution for 002 cards, produced malformed blocks. With the trained prompt (“Generate the next image based on the provided sequence of historical images and corresponding actions.” + `<|image|><|image|><|action|>`): 2017/2088 image-range tokens, block 1 exactly canonical 512² shape (1060 tokens). **PNG decode OOMed** at the last 32 MiB — both 7B cards resident + KV cache. Harness now frees generation state before decode; `sess.unload_vla()` if still tight. Block 0 was one latent row short (greedy model error, logged, not a crash).
+- **Decision:** mouth is dead like JARVIS / Molmo-Think — the gate-VLM conclusion stands. Decoder look continues: re-run dream for the two PNGs, then eyeball action-conditioned next-frame quality.
