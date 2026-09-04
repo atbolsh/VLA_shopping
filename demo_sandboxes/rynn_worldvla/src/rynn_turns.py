@@ -196,20 +196,144 @@ class _BanNonBpe(torch.nn.Module):
         return scores
 
 
+def _read_safetensor_shards(ckpt: Path) -> tuple[dict[str, torch.Tensor], dict[str, Any]]:
+    """Read every tensor the index lists. Fail if a shard is a stub or a key is absent."""
+    from safetensors.torch import load_file
+
+    index_path = ckpt / "model.safetensors.index.json"
+    single = ckpt / "model.safetensors"
+    if index_path.is_file():
+        index = json.loads(index_path.read_text(encoding="utf-8"))
+        weight_map: dict[str, str] = index["weight_map"]
+        shards = sorted(set(weight_map.values()))
+        sd: dict[str, torch.Tensor] = {}
+        bytes_on_disk = 0
+        for shard in shards:
+            path = ckpt / shard
+            if not path.is_file():
+                raise FileNotFoundError(path)
+            bytes_on_disk += path.stat().st_size
+            part = load_file(str(path), device="cpu")
+            overlap = set(sd).intersection(part)
+            if overlap:
+                raise RuntimeError(f"duplicate tensor keys across shards: {sorted(overlap)[:8]}")
+            sd.update(part)
+        missing = [k for k in weight_map if k not in sd]
+        extra = [k for k in sd if k not in weight_map]
+        if missing:
+            raise RuntimeError(f"index keys missing from shards: {missing[:12]}")
+        if extra:
+            raise RuntimeError(f"shard keys not in index: {extra[:12]}")
+        expected = int((index.get("metadata") or {}).get("total_size") or 0)
+    elif single.is_file():
+        sd = load_file(str(single), device="cpu")
+        bytes_on_disk = single.stat().st_size
+        expected = bytes_on_disk
+        shards = ["model.safetensors"]
+    else:
+        raise FileNotFoundError(f"no safetensors under {ckpt}")
+    if bytes_on_disk < 8_000_000_000:
+        raise RuntimeError(
+            f"{ckpt} shards are only {bytes_on_disk} bytes (need ~14GB). "
+            "Download is incomplete or an LFS pointer."
+        )
+    return sd, {
+        "n_tensors": len(sd),
+        "n_shards": len(shards),
+        "bytes_on_disk": bytes_on_disk,
+        "index_total_size": expected,
+    }
+
+
+def _vqgan_encoder_tensors() -> tuple[dict[str, torch.Tensor], Path]:
+    """Meta VQGAN encoder/quantizer, keyed as ``model.vqmodel.*``.
+
+    Same map as ``convert_chameleon_weights_to_hf.py``. Decoder keys are not
+    on HF ``ChameleonVQVAE`` (encoder + quantize only). Every non-decoder
+    tensor must land on the live module or we raise.
+    """
+    path = find_chameleon_tokenizer_dir() / "vqgan.ckpt"
+    try:
+        blob = torch.load(path, map_location="cpu", weights_only=True)
+    except TypeError:
+        blob = torch.load(path, map_location="cpu")
+    except Exception:
+        blob = torch.load(path, map_location="cpu", weights_only=False)
+    raw = blob["state_dict"] if isinstance(blob, dict) and "state_dict" in blob else blob
+    mapped = {}
+    for k, v in raw.items():
+        if "decoder" in k or str(k).startswith("loss"):
+            continue
+        if not isinstance(v, torch.Tensor):
+            continue
+        mapped[f"model.vqmodel.{k}"] = v.contiguous()
+    if not mapped:
+        raise RuntimeError(f"no encoder tensors in {path}")
+    return mapped, path
+
+
+def _construct_model(config):
+    from model import ChameleonXLLMXForConditionalGeneration_ck_action_head
+
+    try:
+        from accelerate import init_empty_weights
+
+        with init_empty_weights():
+            return ChameleonXLLMXForConditionalGeneration_ck_action_head(config)
+    except Exception:
+        return ChameleonXLLMXForConditionalGeneration_ck_action_head(config)
+
+
+def _assert_live_matches_source(model, source: dict[str, torch.Tensor]) -> dict[str, Any]:
+    """Every file tensor is on the module; every Parameter came from a file."""
+    live = model.state_dict()
+    skipped = sorted(k for k in source if k not in live)
+    if skipped:
+        raise RuntimeError(
+            f"{len(skipped)} checkpoint tensors were not loaded (skipped): {skipped[:20]}"
+        )
+    param_names = [n for n, _ in model.named_parameters()]
+    unloaded = [n for n in param_names if n not in source]
+    if unloaded:
+        raise RuntimeError(
+            f"{len(unloaded)} Parameters have no file source (still random): {unloaded[:20]}"
+        )
+    meta = [
+        n
+        for n, p in model.named_parameters()
+        if p.device.type == "meta"
+    ]
+    if meta:
+        raise RuntimeError(f"{len(meta)} Parameters still on meta (never assigned): {meta[:20]}")
+    mismatches = []
+    for name, ref in source.items():
+        tensor = live[name]
+        if getattr(tensor, "device", None) is not None and tensor.device.type == "meta":
+            mismatches.append(f"{name} still meta")
+            continue
+        if tuple(tensor.shape) != tuple(ref.shape):
+            mismatches.append(f"{name} shape {tuple(tensor.shape)} != {tuple(ref.shape)}")
+            continue
+        if tensor.data_ptr() == ref.data_ptr() and tensor.device == ref.device:
+            continue
+        a = tensor.detach().float().cpu()
+        b = ref.detach().to(device="cpu", dtype=tensor.dtype).float()
+        if not torch.equal(a, b):
+            delta = float((a - b).abs().max().item())
+            mismatches.append(f"{name} max_abs={delta}")
+    if mismatches:
+        raise RuntimeError(f"{len(mismatches)} live tensors != files: {mismatches[:12]}")
+    return {"n_verified": len(source), "n_parameters": len(param_names)}
+
+
 def _load_xllmx(ckpt: Path, force_sdpa: bool = True):
-    """Official class for every published RynnVLA-002 card we pull.
+    """Load published shards + vqgan.ckpt into the official class, strictly.
 
-    ``VLA_model_256/libero_goal`` ``config.json``:
-
-        architectures: [ChameleonXLLMXForConditionalGeneration_ck_action_head]
-
-    ``evals_libero/eval_libero_goal_his_2_third_view_wrist_w_state_5_256_abiw_discrete.sh``
-    loads that class, then ``ItemProcessor`` + ``generate_dis_ma``. The HF
-    ``model.vqmodel.encoder.*`` warning is expected: image tokens come from
-    Meta ``vqgan.ckpt`` via ``ItemProcessor``, not from the LM's unused VQVAE.
-    The published World / Action-World 512 cards use the same class.
-    Do not override ``max_position_embeddings`` (VLA is 4096; world is 8192).
-    Official WorldVLA ``requirements.txt`` pins ``transformers==4.43.0``.
+    Do not use ``from_pretrained`` here: it leaves ``model.vqmodel.*`` random
+    (those keys are not in the VLA shards) and ``device_map`` can skip assigns.
+    We read the safetensors ourselves, merge Meta ``vqgan.ckpt``, then
+    ``load_state_dict(..., assign=True, strict=True)`` and compare every tensor
+    to the files.
     """
     _on_path()
     if not (VENDOR / "rynnvla-002" / "model" / "__init__.py").is_file():
@@ -217,29 +341,73 @@ def _load_xllmx(ckpt: Path, force_sdpa: bool = True):
             f"vendor WorldVLA missing at {VENDOR}. "
             "In the rynn-worldvla venv: bash setup.sh"
         )
-    from model import ChameleonXLLMXForConditionalGeneration_ck_action_head
+    from model import ChameleonXLLMXConfig
 
-    kwargs: dict[str, Any] = dict(
-        torch_dtype=torch.bfloat16,
-        mask_image_logits=False,
-        dropout=0.05,
-        z_loss_weight=1e-5,
-        action_dim=7,
-        time_horizon=5,
-        device_map="cpu",
-    )
+    shard_sd, shard_info = _read_safetensor_shards(ckpt)
+    vq_sd, vq_path = _vqgan_encoder_tensors()
+    overlap = set(shard_sd).intersection(vq_sd)
+    if overlap:
+        raise RuntimeError(f"VLA shards already contain VQ keys: {sorted(overlap)[:8]}")
+    source = dict(shard_sd)
+    source.update(vq_sd)
+
+    config = ChameleonXLLMXConfig.from_pretrained(str(ckpt))
     if force_sdpa:
-        kwargs["attn_implementation"] = "sdpa"
-    try:
-        model = ChameleonXLLMXForConditionalGeneration_ck_action_head.from_pretrained(
-            str(ckpt), **kwargs
+        config._attn_implementation = "sdpa"
+    model = _construct_model(config)
+    live_names = set(model.state_dict())
+    vq_unmapped = sorted(k for k in vq_sd if k not in live_names)
+    if vq_unmapped:
+        raise RuntimeError(
+            f"vqgan encoder keys do not exist on the module: {vq_unmapped[:20]}"
         )
-    except TypeError:
-        kwargs.pop("attn_implementation", None)
-        model = ChameleonXLLMXForConditionalGeneration_ck_action_head.from_pretrained(
-            str(ckpt), **kwargs
+    shard_unmapped = sorted(k for k in shard_sd if k not in live_names)
+    if shard_unmapped:
+        raise RuntimeError(
+            f"{len(shard_unmapped)} VLA shard tensors have no module slot "
+            f"(would be skipped): {shard_unmapped[:20]}"
         )
+    incompatible = model.load_state_dict(source, assign=True, strict=False)
+    if incompatible.unexpected_keys:
+        raise RuntimeError(
+            f"{len(incompatible.unexpected_keys)} file tensors have no module slot "
+            f"(skipped): {list(incompatible.unexpected_keys)[:20]}"
+        )
+    param_set = {n for n, _ in model.named_parameters()}
+    missing_params = [k for k in incompatible.missing_keys if k in param_set]
+    if missing_params:
+        raise RuntimeError(
+            f"{len(missing_params)} Parameters not in the files: {missing_params[:20]}"
+        )
+    report = _assert_live_matches_source(model, source)
+    if not hasattr(model, "action_head"):
+        raise RuntimeError("loaded class has no action_head")
+    ah = float(model.action_head.action_token_embeddings.weight.float().norm().item())
+    if ah == 0.0:
+        raise RuntimeError("action_head embeddings are all zeros after load")
+    model._rynn_load_report = {
+        "ckpt": str(ckpt),
+        "class": type(model).__name__,
+        "shards": shard_info,
+        "vqgan": str(vq_path),
+        "n_vq_tensors": len(vq_sd),
+        "action_head_emb_norm": ah,
+        **report,
+    }
+    print(
+        "load verified",
+        type(model).__name__,
+        "tensors",
+        report["n_verified"],
+        "shard_bytes",
+        shard_info["bytes_on_disk"],
+        "vq",
+        len(vq_sd),
+        "action_head_norm",
+        f"{ah:.3f}",
+    )
     model.eval()
+    model = model.to(dtype=torch.bfloat16)
     if torch.cuda.is_available():
         model = model.to("cuda")
     return model
@@ -457,6 +625,7 @@ class RynnSession:
             top_k=None,
             do_sample=False,
             eos_token_id=[SEP_ID],
+            pad_token_id=PAD,
         )
         input_ids = torch.tensor(tokens, dtype=torch.int64, device=model.device).unsqueeze(0)
         produced, chunks = _generate_dis_ma(model, input_ids, generation_config)
@@ -484,10 +653,7 @@ class RynnSession:
                 "n_action_bin_tokens": n_act,
                 "n_chunks": len(env_actions),
                 "state_note": state_note,
-                "vq_warning": (
-                    "expected: model.vqmodel.* is unused; "
-                    "ItemProcessor reads vqgan.ckpt"
-                ),
+                "load": getattr(model, "_rynn_load_report", None),
                 "official_fn": "get_action_Chameleon_dis_awm_ck_discrete_action",
             },
             "action_ids": produced,
@@ -586,9 +752,11 @@ def _generate_dis_ma(model, input_ids, generation_config):
     from model.chameleon import ChameleonForConditionalGeneration
 
     model.init_input_ids = None
+    attn = torch.ones_like(input_ids)
     res = ChameleonForConditionalGeneration.generate(
         model,
         input_ids=input_ids,
+        attention_mask=attn,
         generation_config=generation_config,
         output_hidden_states=True,
         training=False,
