@@ -132,7 +132,6 @@ snapshot_download(
     "Alibaba-DAMO-Academy/WorldVLA",
     allow_patterns=["chameleon/tokenizer/**", "chameleon/tokenizer/*"],
     local_dir="weights/WorldVLA",
-    local_dir_use_symlinks=False,
 )
 snapshot_download(
     "Alibaba-DAMO-Academy/RynnVLA-002",
@@ -142,7 +141,6 @@ snapshot_download(
         "Action_World_model_512/libero_goal/**",
     ],
     local_dir="weights/RynnVLA-002",
-    local_dir_use_symlinks=False,
 )
 # Official ItemProcessor tokenizer. Not the 7B weights — json/config only.
 try:
@@ -155,7 +153,6 @@ try:
             "tokenizer.model",
         ],
         local_dir="weights/Lumina-mGPT-7B-768",
-        local_dir_use_symlinks=False,
     )
 except Exception as exc:
     print("WARNING: Lumina tokenizer download skipped:", exc)
