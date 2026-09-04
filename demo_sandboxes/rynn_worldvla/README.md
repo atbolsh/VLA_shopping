@@ -47,6 +47,8 @@ bash setup.sh
 
 Open `demo.ipynb`. Three turns on the same VLA weights: **Act**, **Dream**, **Talk**.
 
+After the demo, `dream_ablations.ipynb` is the five-rung ladder (recon floor, action counterfactuals, rollout ×3, unified-card dream, one fair on-railroad mouth shot). Decoder-first: the mouth is already logged `garbage`; rung 5 is the only mouth rung and the last one.
+
 Frames come from `screenshot/` (first frame of the official WorldVLA LIBERO GIFs), not the orange/blue placeholders. If that folder is empty after an older setup:
 
 ```bash
