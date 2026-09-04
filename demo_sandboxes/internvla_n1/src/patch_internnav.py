@@ -38,22 +38,24 @@ def patch_setup_py(setup_py: Path | None = None) -> Path:
     return setup_py
 
 
-def _agent_importable() -> bool:
+def internnav_importable() -> bool:
+    """Package import only. Do not touch internnav.agent — its __init__
+    pulls Habitat CMA/RDP agents that this inference sandbox does not install.
+    """
     if str(VENDOR) not in sys.path:
         sys.path.insert(0, str(VENDOR))
     try:
-        from internnav.agent.internvla_n1_agent_realworld import (  # noqa: F401
-            InternVLAN1AsyncAgent,
-        )
+        import internnav  # noqa: F401
         return True
-    except Exception:
+    except Exception as exc:  # noqa: BLE001
+        print(f"import internnav failed: {type(exc).__name__} {exc}")
         return False
 
 
 def ensure_internnav(*, force_pip: bool = False) -> None:
     os.environ["PIP_IGNORE_REQUIRES_PYTHON"] = "1"
     patch_setup_py()
-    if not force_pip and _agent_importable():
+    if not force_pip and internnav_importable():
         print("internnav importable")
         return
     cmd = [
@@ -67,7 +69,7 @@ def ensure_internnav(*, force_pip: bool = False) -> None:
     ]
     print("+", " ".join(cmd))
     subprocess.check_call(cmd)
-    if not _agent_importable():
+    if not internnav_importable():
         raise RuntimeError("internnav still not importable after pip install")
 
 

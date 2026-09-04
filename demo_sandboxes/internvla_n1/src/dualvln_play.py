@@ -32,6 +32,26 @@ def _on_path() -> None:
             sys.path.insert(0, s)
 
 
+def _import_realworld_agent():
+    """Load InternVLAN1AsyncAgent without executing internnav.agent.__init__.
+
+    That __init__ imports CMA/RDP/sim InternVLAN1Agent (Habitat). The official
+    inference_only_demo uses the realworld class, which does not need them.
+    """
+    import types
+
+    import internnav  # noqa: F401
+
+    name = "internnav.agent"
+    pkg = types.ModuleType(name)
+    pkg.__path__ = [str(VENDOR / "internnav" / "agent")]
+    pkg.__package__ = name
+    sys.modules[name] = pkg
+    from internnav.agent.internvla_n1_agent_realworld import InternVLAN1AsyncAgent
+
+    return InternVLAN1AsyncAgent
+
+
 def append_log(record: dict[str, Any]) -> Path:
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -65,7 +85,7 @@ class Args:
 
 def _make_agent(args: Args):
     _on_path()
-    from internnav.agent.internvla_n1_agent_realworld import InternVLAN1AsyncAgent
+    InternVLAN1AsyncAgent = _import_realworld_agent()
 
     try:
         return InternVLAN1AsyncAgent(args)
