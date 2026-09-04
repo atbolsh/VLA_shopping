@@ -1,1 +1,1 @@
-`libero_third.png` and `libero_wrist.png` are color placeholders. Replace them with real LIBERO frames (or extract a frame from the official WorldVLA GIFs after `vendor/` is cloned) before trusting act/dream/talk verdicts.
+`libero_third.png` / `libero_wrist.png` are leftover color placeholders. Real cameras live in `../screenshot/`, filled by `download_frames.py` from the official WorldVLA README GIFs `pickuptheblackbowlandplaceitontheplate_{front,wrist}.gif` (frame 0).

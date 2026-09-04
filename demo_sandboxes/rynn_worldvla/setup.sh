@@ -151,6 +151,7 @@ for p in Path("weights").rglob("*"):
 print("done download")
 PY
 
+python download_frames.py
 python -m ipykernel install --user --name rynn-worldvla --display-name "rynn-worldvla"
 {
   echo "torch=$TORCH_RUNG"

@@ -46,3 +46,12 @@ bash setup.sh
 ```
 
 Open `demo.ipynb`. Three turns on the same VLA weights: **Act**, **Dream**, **Talk**.
+
+Frames come from `screenshot/` (first frame of the official WorldVLA LIBERO GIFs), not the orange/blue placeholders. If that folder is empty after an older setup:
+
+```bash
+source .venv/bin/activate
+python download_frames.py
+```
+
+The Chameleon tokenizer is `text_tokenizer.json` loaded with `LlamaTokenizerFast(tokenizer_file=...)` — it is **not** an HF `from_pretrained` folder.

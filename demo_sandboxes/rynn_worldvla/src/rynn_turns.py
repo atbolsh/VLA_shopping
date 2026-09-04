@@ -123,16 +123,40 @@ def _load_xllmx(ckpt: Path):
 
 
 def _load_chameleon_tokenizer():
-    _on_path()
-    tok_dir = find_tokenizer_json().parent
-    try:
-        from transformers import LlamaTokenizer
+    """WorldVLA ships a raw Chameleon ``text_tokenizer.json``, not an HF
+    LlamaTokenizer folder (no tokenizer_config.json / config.json). Official
+    convert script: ``LlamaTokenizerFast(tokenizer_file=..., legacy=False)``
+    in ``rynnvla-002/model/chameleon/convert_chameleon_weights_to_hf.py``.
+    """
+    tok_json = find_tokenizer_json()
+    from transformers import LlamaTokenizerFast
 
-        return LlamaTokenizer.from_pretrained(str(tok_dir), legacy=False)
-    except Exception:
-        from transformers import AutoTokenizer
+    tok = LlamaTokenizerFast(tokenizer_file=str(tok_json), legacy=False)
+    tok.pad_token_id = PAD
+    tok.bos_token_id = BOS
+    tok.eos_token_id = EOS
+    tok.sep_token_id = 8710
+    return tok
 
-        return AutoTokenizer.from_pretrained(str(tok_dir), trust_remote_code=True)
+
+def load_sample_cameras() -> tuple[Image.Image, Image.Image, Path, Path]:
+    """Official first frames, not assets/ orange/blue placeholders."""
+    shot = ROOT / "screenshot"
+    third_p = shot / "sample_third.png"
+    wrist_p = shot / "sample_wrist.png"
+    if not (third_p.is_file() and wrist_p.is_file()):
+        raise FileNotFoundError(
+            "screenshot/ missing official LIBERO frames. "
+            "In the rynn-worldvla venv: python download_frames.py"
+        )
+    third = Image.open(third_p).convert("RGB")
+    wrist = Image.open(wrist_p).convert("RGB")
+    if len(set(third.getdata())) <= 16 or len(set(wrist.getdata())) <= 16:
+        raise FileNotFoundError(
+            "screenshot/ still looks like a solid-color placeholder. "
+            "Re-run: python download_frames.py"
+        )
+    return third, wrist, third_p, wrist_p
 
 
 class RynnSession:
