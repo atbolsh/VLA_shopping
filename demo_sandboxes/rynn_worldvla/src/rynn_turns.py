@@ -246,11 +246,12 @@ def _read_safetensor_shards(ckpt: Path) -> tuple[dict[str, torch.Tensor], dict[s
 
 
 def _vqgan_encoder_tensors() -> tuple[dict[str, torch.Tensor], Path]:
-    """Meta VQGAN encoder/quantizer, keyed as ``model.vqmodel.*``.
+    """Meta VQGAN tensors, keyed as ``model.vqmodel.*``.
 
-    Same map as ``convert_chameleon_weights_to_hf.py``. Decoder keys are not
-    on HF ``ChameleonVQVAE`` (encoder + quantize only). Every non-decoder
-    tensor must land on the live module or we raise.
+    Official convert copies every non-decoder key, then ``strict=False``.
+    This ckpt also has ``custom_layer.*``, which HF ``ChameleonVQVAE`` does
+    not define. Those extras stay out of the live module; every *live*
+    ``model.vqmodel`` Parameter must still come from this file.
     """
     path = find_chameleon_tokenizer_dir() / "vqgan.ckpt"
     try:
@@ -344,23 +345,27 @@ def _load_xllmx(ckpt: Path, force_sdpa: bool = True):
     from model import ChameleonXLLMXConfig
 
     shard_sd, shard_info = _read_safetensor_shards(ckpt)
-    vq_sd, vq_path = _vqgan_encoder_tensors()
-    overlap = set(shard_sd).intersection(vq_sd)
-    if overlap:
-        raise RuntimeError(f"VLA shards already contain VQ keys: {sorted(overlap)[:8]}")
-    source = dict(shard_sd)
-    source.update(vq_sd)
+    vq_all, vq_path = _vqgan_encoder_tensors()
 
     config = ChameleonXLLMXConfig.from_pretrained(str(ckpt))
     if force_sdpa:
         config._attn_implementation = "sdpa"
     model = _construct_model(config)
     live_names = set(model.state_dict())
-    vq_unmapped = sorted(k for k in vq_sd if k not in live_names)
-    if vq_unmapped:
+    vq_sd = {k: v for k, v in vq_all.items() if k in live_names}
+    vq_extra = sorted(k for k in vq_all if k not in live_names)
+    vq_live = [n for n in live_names if n.startswith("model.vqmodel.")]
+    vq_unfilled = sorted(n for n in vq_live if n not in vq_sd)
+    if vq_unfilled:
         raise RuntimeError(
-            f"vqgan encoder keys do not exist on the module: {vq_unmapped[:20]}"
+            f"{len(vq_unfilled)} live model.vqmodel tensors have no vqgan source: "
+            f"{vq_unfilled[:20]}"
         )
+    overlap = set(shard_sd).intersection(vq_sd)
+    if overlap:
+        raise RuntimeError(f"VLA shards already contain VQ keys: {sorted(overlap)[:8]}")
+    source = dict(shard_sd)
+    source.update(vq_sd)
     shard_unmapped = sorted(k for k in shard_sd if k not in live_names)
     if shard_unmapped:
         raise RuntimeError(
@@ -391,6 +396,7 @@ def _load_xllmx(ckpt: Path, force_sdpa: bool = True):
         "shards": shard_info,
         "vqgan": str(vq_path),
         "n_vq_tensors": len(vq_sd),
+        "vq_extra_not_on_module": vq_extra,
         "action_head_emb_norm": ah,
         **report,
     }
@@ -403,6 +409,8 @@ def _load_xllmx(ckpt: Path, force_sdpa: bool = True):
         shard_info["bytes_on_disk"],
         "vq",
         len(vq_sd),
+        "vq_extra",
+        vq_extra,
         "action_head_norm",
         f"{ah:.3f}",
     )
