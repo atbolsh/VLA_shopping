@@ -73,5 +73,58 @@ def ensure_internnav(*, force_pip: bool = False) -> None:
         raise RuntimeError("internnav still not importable after pip install")
 
 
+DA_REPO = "depth-anything/Depth-Anything-V2-Metric-Hypersim-Small"
+DA_NAME = "depth_anything_v2_metric_hypersim_vits.pth"
+
+
+def ensure_depth_anything() -> Path:
+    """Official internvla_n1_arch.py does torch.load('checkpoints/<this>.pth').
+
+    That is CWD-relative, not the HF snapshot dir. Place / point at the file
+    we already download in setup.sh.
+    """
+    dest_dir = ROOT / "checkpoints"
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest = dest_dir / DA_NAME
+    candidates = [
+        dest,
+        ROOT / "weights" / "Depth-Anything-V2-Metric-Hypersim-Small" / DA_NAME,
+        VENDOR / "checkpoints" / DA_NAME,
+        VENDOR / "scripts" / "eval" / "checkpoints" / "checkpoints" / DA_NAME,
+    ]
+    src = next((p.resolve() for p in candidates if p.is_file()), None)
+    if src is None:
+        from huggingface_hub import hf_hub_download
+
+        src = Path(
+            hf_hub_download(
+                DA_REPO,
+                DA_NAME,
+                local_dir=str(ROOT / "weights" / "Depth-Anything-V2-Metric-Hypersim-Small"),
+            )
+        ).resolve()
+    if dest.resolve() != src:
+        if dest.exists() or dest.is_symlink():
+            dest.unlink()
+        dest.symlink_to(src)
+    for extra in (
+        VENDOR / "checkpoints",
+        VENDOR / "scripts" / "eval" / "checkpoints" / "checkpoints",
+    ):
+        extra.mkdir(parents=True, exist_ok=True)
+        link = extra / DA_NAME
+        if not link.exists():
+            link.symlink_to(src)
+    try:
+        import internnav.model.basemodel.internvla_n1.internvla_n1_arch as arch
+
+        arch.MODEL_PATH_TO = str(dest_dir)
+    except Exception as exc:  # noqa: BLE001
+        print("could not set MODEL_PATH_TO yet:", exc)
+    print(f"DepthAnything {src} -> {dest}")
+    return dest
+
+
 if __name__ == "__main__":
     ensure_internnav(force_pip=True)
+    ensure_depth_anything()

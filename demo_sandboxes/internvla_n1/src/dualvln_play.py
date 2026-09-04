@@ -83,13 +83,23 @@ class Args:
         self.plan_step_gap = 4
 
 
+def _is_flash_attn_error(exc: BaseException) -> bool:
+    blob = f"{type(exc).__name__} {exc}".lower()
+    return "flash" in blob and "depth_anything" not in blob
+
+
 def _make_agent(args: Args):
     _on_path()
+    from patch_internnav import ensure_depth_anything
+
+    ensure_depth_anything()
     InternVLAN1AsyncAgent = _import_realworld_agent()
 
     try:
         return InternVLAN1AsyncAgent(args)
     except Exception as first:
+        if not _is_flash_attn_error(first):
+            raise
         print("flash_attention_2 failed, retrying with sdpa (official notebook allows this):", first)
         import internnav.model.basemodel.internvla_n1.internvla_n1 as n1
 

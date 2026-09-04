@@ -109,8 +109,10 @@ if [[ -n "${HF_TOKEN:-}" ]]; then
   export HUGGING_FACE_HUB_TOKEN="$HF_TOKEN"
 fi
 python - <<'PY'
-from huggingface_hub import snapshot_download
+import sys
 from pathlib import Path
+sys.path.insert(0, str(Path("src").resolve()))
+from huggingface_hub import snapshot_download
 snapshot_download("InternRobotics/InternVLA-N1-DualVLN", local_dir="weights/InternVLA-N1-DualVLN", local_dir_use_symlinks=False)
 snapshot_download("InternRobotics/InternVLA-N1-System2", local_dir="weights/InternVLA-N1-System2", local_dir_use_symlinks=False)
 # Official notebook names this DepthAnything card.
@@ -122,9 +124,8 @@ try:
     )
 except Exception as exc:
     print("DepthAnything download skipped:", exc)
-# Their notebook also looks under scripts/eval/checkpoints/checkpoints
-dst = Path("vendor/InternNav/scripts/eval/checkpoints/checkpoints")
-dst.mkdir(parents=True, exist_ok=True)
+from patch_internnav import ensure_depth_anything
+ensure_depth_anything()
 print("downloads done")
 PY
 
