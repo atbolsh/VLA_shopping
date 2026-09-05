@@ -64,6 +64,6 @@ Scorecard pull numbers are shopping rank, **not** the next window. First crop (J
 3. **WALL-OSS** — [`demo_sandboxes/wall_oss`](demo_sandboxes/wall_oss/README.md)
 4. **ECoT-OpenVLA** — [`demo_sandboxes/ecot_openvla`](demo_sandboxes/ecot_openvla/README.md)
 
-Same policy weights must print English intermediate goals **and** an action. No second VLM. One folder at a time on a rented 5090. **Do not run `setup.sh` on this notes machine.**
+Same policy weights must print English intermediate goals **and** an action. No second VLM. One folder at a time on a rented RTX 5090 or RTX 5000. **Do not run `setup.sh` on this notes machine.**
 
 Full link list: [`notes/09_next_session.md`](notes/09_next_session.md). Sandbox installers: [`demo_sandboxes/README.md`](demo_sandboxes/README.md). Later smokes: [`notes/04_test_plan.md`](notes/04_test_plan.md).

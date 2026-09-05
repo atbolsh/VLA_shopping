@@ -102,7 +102,7 @@ Success is “readable English intermediate goal **and** an action from the same
 | 3 | [`wall_oss`](../demo_sandboxes/wall_oss/README.md) | ~8 GB | CoT / subtask English on `wall-oss-flow`, not only `predict_action`. |
 | 4 | [`ecot_openvla`](../demo_sandboxes/ecot_openvla/README.md) | ~14 GB | TASK/PLAN/SUBTASK English + Bridge action. |
 
-**1× RTX 5090** for each. Do **not** install Habitat, Isaac, or an SO-101. Do **not** run `setup.sh` on the notes machine.
+**1× RTX 5090 or RTX 5000** (Blackwell, CUDA 12.8) for each. Do **not** install Habitat, Isaac, or an SO-101. Do **not** run `setup.sh` on the notes machine.
 
 OneTwoVLA is the paper you wanted (reason ↔ act in one net). **No policy weights.** Do not build a fifth sandbox for it.
 

@@ -1,4 +1,4 @@
-# Demo sandboxes (vast.ai 5090 only)
+# Demo sandboxes (vast.ai Blackwell: RTX 5090 or RTX 5000)
 
 Four independent projects. Each has its own `setup.sh`, `requirements.txt`, harness, and notebook. **Do not run any of these on the notes machine** (`LVA_shopping` workstation). Rent a box, copy the repo (or just this directory plus the repo-root `.env`), run `setup.sh` there.
 
@@ -11,11 +11,11 @@ None of these four are interruptible (no async S1). **Start with EO-1.** EO-1 an
 ## Box
 
 - Template: Vast **Blackwell / CUDA 12.8** ([RTX 5 series](https://docs.vast.ai/rtx-5-series)).
-- Default: **1× RTX 5090**, ~80 GB disk (weights are ~6–16 GB *per* sandbox you install).
+- Default: **1× RTX 5090 or RTX 5000** (same CUDA 12.8 / `sm_120`; 5000 has more VRAM), ~80 GB disk (weights are ~6–16 GB *per* sandbox you install).
 
 Put `export HF_TOKEN=...` in the **repo-root** `.env` (copy [`.env.example`](../.env.example)). Each `setup.sh` symlinks it. The token is optional for these public cards; it only avoids Hub rate limits.
 
-Every `setup.sh` aborts unless `nvidia-smi` reports an RTX 5090, or you set `FORCE_SETUP=1` on purpose.
+Every `setup.sh` aborts unless `nvidia-smi` reports an RTX 5090 or RTX 5000 (including RTX PRO 5000), or you set `FORCE_SETUP=1` on purpose. Ada “RTX 5000” cards fail the later `sm_120` check.
 
 ## Try order (on the box)
 

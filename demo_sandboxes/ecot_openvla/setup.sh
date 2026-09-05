@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
-# Run only on the rented 5090 box. Do not execute on the notes machine.
+# Run only on a rented Blackwell box (RTX 5090 or RTX 5000). Not the notes machine.
 set -euo pipefail
 
 echo "============================================================"
 echo " ECoT-OpenVLA setup"
-echo " Run only on the rented 5090 box. Do not execute on the notes machine."
+echo " Run only on a rented Blackwell box (RTX 5090 or RTX 5000). Not the notes machine."
 echo "============================================================"
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$HERE"
 
 if [[ "${FORCE_SETUP:-}" != "1" ]]; then
-  if ! command -v nvidia-smi >/dev/null 2>&1 || ! nvidia-smi --query-gpu=name --format=csv,noheader | grep -qi "5090"; then
-    echo "No RTX 5090. FORCE_SETUP=1 to override." >&2
+  if ! command -v nvidia-smi >/dev/null 2>&1 || ! nvidia-smi --query-gpu=name --format=csv,noheader | grep -qiE '5090|RTX[[:space:]]*(PRO[[:space:]]*)?5000'; then
+    echo "Need RTX 5090 or RTX 5000 (Blackwell). FORCE_SETUP=1 to override." >&2
+    nvidia-smi --query-gpu=name --format=csv,noheader >&2 || true
     exit 1
   fi
 fi
