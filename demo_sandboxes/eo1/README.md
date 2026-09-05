@@ -31,4 +31,7 @@ If pip then warns that `diffusers` wants `huggingface-hub>=1.23`:
 python -m pip install "huggingface-hub>=0.34.2,<1.0" "diffusers>=0.27.2,<0.39"
 ```
 
-Restart the **eo1** kernel. Open `demo.ipynb`. Raw text first, then the action array.
+Restart the **eo1** kernel.
+
+- `demo.ipynb` — first smoke (HF `processor.generate` claim). Already ran.
+- **`chat.ipynb`** — their published chat railroads. Prints messages, prompt, raw continuation, formatted continuation. Start here if you want the mouth.
