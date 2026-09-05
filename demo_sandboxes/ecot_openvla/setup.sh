@@ -71,6 +71,9 @@ fi
 _try python -m pip install "transformers>=4.40,<4.48"
 
 _try python -m pip install -r requirements.txt
+# Hub processing_prismatic.py imports timm. Pin after requirements in case a later
+# dep omitted it; existing venvs: pip install timm  (do not re-run this script).
+_try python -m pip install timm transforms3d
 
 python - <<'PY'
 import torch, sys
@@ -106,4 +109,6 @@ python -m ipykernel install --user --name ecot-openvla --display-name "ecot-open
 } > .rung
 echo "ECoT-OpenVLA setup done. Rung:"
 cat .rung
-echo "Open demo.ipynb with kernel ecot-openvla."
+echo "Open demo.ipynb / play.ipynb with kernel ecot-openvla."
+echo "If ImportError timm: pip install timm  (do not re-run this script)."
+echo "For the WidowX loop: bash setup_simpler.sh (same venv)."

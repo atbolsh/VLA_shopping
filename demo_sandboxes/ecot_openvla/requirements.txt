@@ -15,3 +15,7 @@ jupyter
 python-dotenv
 requests
 transformers>=4.40,<4.48
+# OpenVLA processor (trust_remote_code) imports timm at load time.
+timm
+transforms3d
+gymnasium

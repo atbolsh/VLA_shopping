@@ -21,10 +21,10 @@ Every `setup.sh` aborts unless `nvidia-smi` reports an RTX 5090 or RTX 5000 (inc
 
 | Order | Folder | Disk (weights, rough) | What you learn |
 |---|---|---|---|
-| 1 | [`eo1`](eo1/README.md) | ~8 GB | Official `processor.generate`: text **and** action from `EO-1-3B`. |
+| 1 | [`eo1`](eo1/README.md) | ~8 GB | Official `processor.generate`: text **and** action from `EO-1-3B`. Closed-loop: `play.ipynb` on WidowX / Bridge. |
 | 2 | [`chatvla`](chatvla/README.md) | ~6 GB | Official `evaluate` on ChatVLA-1. ChatVLA-2 has no robot weights. |
 | 3 | [`wall_oss`](wall_oss/README.md) | ~8 GB | Uni-CoT claim on `wall-oss-flow`. Official scripts are action-first. |
-| 4 | [`ecot_openvla`](ecot_openvla/README.md) | ~14 GB | TASK/PLAN/SUBTASK English + Bridge action. |
+| 4 | [`ecot_openvla`](ecot_openvla/README.md) | ~14 GB | TASK/PLAN/SUBTASK English + Bridge action. Closed-loop: `play.ipynb`. |
 
 Install **one folder at a time**. Do not `pip install` from this README.
 

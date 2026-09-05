@@ -131,4 +131,5 @@ python -m ipykernel install --user --name eo1 --display-name "eo1"
 } > .rung
 echo "EO-1 setup done. Rung:"
 cat .rung
-echo "Open demo.ipynb with kernel eo1."
+echo "Open demo.ipynb / chat.ipynb / play.ipynb with kernel eo1."
+echo "For the WidowX loop: bash setup_simpler.sh (same venv)."

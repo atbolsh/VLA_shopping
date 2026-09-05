@@ -16,3 +16,14 @@ cd demo_sandboxes/ecot_openvla
 bash setup.sh
 # kernel: ecot-openvla
 ```
+
+If this venv already exists and the notebook raises `ImportError: ... timm`, do **not** re-run setup. In the ecot-openvla venv:
+
+```bash
+python -m pip install timm
+```
+
+Restart the **ecot-openvla** kernel.
+
+- `demo.ipynb` — official still (`test_obs.png`) + `predict_action`.
+- **`play.ipynb`** — interactive WidowX / SimplerEnv (Bridge). Same weights: English chain **and** a 7-DoF action, then the env steps. Needs `bash setup_simpler.sh` once.

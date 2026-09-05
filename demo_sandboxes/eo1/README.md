@@ -35,3 +35,4 @@ Restart the **eo1** kernel.
 
 - `demo.ipynb` — first smoke (HF `processor.generate` claim). Already ran.
 - **`chat.ipynb`** — their published chat railroads. Prints messages, prompt, raw continuation, formatted continuation. Start here if you want the mouth.
+- **`play.ipynb`** — two-headed wrapper on a **Bridge / WidowX** SimplerEnv (that mix is in the 3B pretrain). Type an instruction, Ask + Act, env steps, new view. Edit the instruction before the next Act. Needs `bash setup_simpler.sh` once.
