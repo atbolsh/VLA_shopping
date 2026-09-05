@@ -21,8 +21,14 @@ bash setup.sh
 If this venv already exists and the notebook raises `ImportError: ... lerobot`, do **not** re-run setup. In the eo1 venv:
 
 ```bash
-python -m pip install "lerobot==0.3.3"
+python -m pip install "lerobot==0.3.3" "huggingface-hub>=0.34.2,<1.0"
 python -m pip install "torch==2.7.0" "torchvision==0.22.0" --index-url https://download.pytorch.org/whl/cu128
+```
+
+If lerobot already landed and pip warned that `transformers` wants `huggingface-hub<1.0`:
+
+```bash
+python -m pip install "huggingface-hub>=0.34.2,<1.0"
 ```
 
 Restart the **eo1** kernel. Open `demo.ipynb`. Raw text first, then the action array.

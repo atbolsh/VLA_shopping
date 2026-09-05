@@ -72,12 +72,15 @@ _try python -m pip install "transformers>=4.49,<4.58"
 
 if ! _try python -m pip install -r requirements.txt; then
   echo "requirements.txt failed (often torchcodec). Installing Hub import-time deps, then lerobot --no-deps."
-  _try python -m pip install accelerate safetensors huggingface-hub pillow numpy einops sentencepiece protobuf \
+  _try python -m pip install accelerate safetensors "huggingface-hub>=0.34.2,<1.0" pillow numpy einops sentencepiece protobuf \
     qwen-vl-utils ipykernel ipywidgets jupyter python-dotenv requests "transformers>=4.49,<4.58" \
     "datasets>=2.19.0,<=3.6.0" "diffusers>=0.27.2" "jsonlines>=4.0.0" "draccus==0.10.0" \
     "opencv-python-headless>=4.9.0" "av>=14.2.0"
   _try python -m pip install "lerobot==0.3.3" --no-deps
 fi
+
+# lerobot floats huggingface-hub to 1.x; transformers 4.57 needs <1.0.
+_try python -m pip install "huggingface-hub>=0.34.2,<1.0"
 
 # lerobot may replace the cu128 wheel with a CPU/cu126 build. Put ours back.
 if [[ "$TORCH_RUNG" == "2.7.0+cu128" ]]; then
@@ -98,6 +101,11 @@ import lerobot
 from lerobot.configs.types import FeatureType, NormalizationMode, PolicyFeature
 from lerobot.policies.normalize import Normalize, Unnormalize
 print("lerobot", getattr(lerobot, "__version__", "?"))
+import huggingface_hub
+from packaging.version import Version
+print("huggingface_hub", huggingface_hub.__version__)
+if Version(huggingface_hub.__version__) >= Version("1.0"):
+    sys.exit("FAIL: huggingface-hub>=1.0 breaks transformers 4.57")
 PY
 
 mkdir -p vendor weights logs screenshot

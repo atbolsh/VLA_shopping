@@ -2,7 +2,9 @@
 # Do not pip-install this file as a torch source.
 accelerate
 safetensors
-huggingface-hub
+# transformers 4.5x is huggingface-hub<1. lerobot 0.3.3 has no upper bound and will
+# otherwise pull hub 1.x and break AutoProcessor.
+huggingface-hub>=0.34.2,<1.0
 pillow
 numpy
 einops
