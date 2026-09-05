@@ -58,17 +58,23 @@ class EO1Play:
             torch_dtype=torch.bfloat16,
         ).eval().to(device)
 
-    def generate(self, image, wrist, task: str | None = None, state=None) -> dict[str, Any]:
+    def generate(self, image, wrist=None, task: str | None = None, state=None) -> dict[str, Any]:
         import numpy as np
         import torch
         from PIL import Image
 
         if not isinstance(image, Image.Image):
             image = Image.open(image).convert("RGB")
+        # Official demo_data/example1.jpg and example2.png are two unrelated
+        # scenes (TTT table vs toy kitchen). Do not invent a wrist pair.
+        # If the act batch schema wants wrist_image and we have none, reuse
+        # the same still and say so.
+        reused_wrist = False
         if wrist is not None and not isinstance(wrist, Image.Image):
             wrist = Image.open(wrist).convert("RGB")
         if wrist is None:
             wrist = image
+            reused_wrist = True
         if state is None:
             state = np.zeros(8, dtype=np.float32)
         task = task or OFFICIAL_TASK
@@ -81,6 +87,8 @@ class EO1Play:
         text = ""
         action = None
         path_used = "processor.generate"
+        if reused_wrist:
+            path_used += " (wrist_image=same still; no official wrist pair)"
         try:
             with torch.inference_mode():
                 out = self.processor.generate(self.model, batch)

@@ -107,19 +107,6 @@ def user_turn(image, text: str) -> list[dict]:
     ]
 
 
-def user_turn_two(image, wrist, text: str) -> list[dict]:
-    return [
-        {
-            "role": "user",
-            "content": [
-                {"type": "image", "image": image},
-                {"type": "image", "image": wrist},
-                {"type": "text", "text": text},
-            ],
-        }
-    ]
-
-
 def dump_block(title: str, body: str) -> None:
     from IPython.display import Markdown, display
 

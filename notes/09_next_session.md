@@ -18,7 +18,7 @@ These four are **below** the Gemma 4 12B reasoning bar (3B, 2B, ~3B+MoT, Llama-2
 
 **None of them are interruptible.** No true-async dual, no high-rate S1 that keeps seeing fresh pixels, no trained “something unexpected happened — stop and re-plan.” EO-1 interleaves text and flow in one generate. ChatVLA re-queries every *N* steps. WALL-OSS’s Uni-CoT paper can skip or interleave CoT, still one net. ECoT runs the full TASK/PLAN/SUBTASK/MOVE chain, then one action. OneTwoVLA is the surprise-flip paper; it has no weights. Fine for this window.
 
-**On-distribution stills (this smoke):** EO-1 uses their official `demo_data` frames (reasoning demo, not LIBERO). ECoT uses official Bridge `test_obs.png` + `unnorm_key=bridge_orig`. ChatVLA and WALL-OSS have no public observation PNGs / no installable training env in-folder — those two are stand-in stills and said so. Closed-loop LIBERO/SimplerEnv waits until a mouth works.
+**On-distribution stills (this smoke):** EO-1 `demo_data` is **two unrelated photos**, not a head/wrist pair: `example1.jpg` is the tic-tac-toe table; `example2.png` is a toy kitchen (their README chat file). ECoT uses official Bridge `test_obs.png` + `unnorm_key=bridge_orig`. ChatVLA and WALL-OSS have no public observation PNGs / no installable training env in-folder — those two are stand-in stills and said so. Closed-loop LIBERO/SimplerEnv waits until a mouth works.
 
 ## Closed crop (do not reopen)
 

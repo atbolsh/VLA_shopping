@@ -8,7 +8,7 @@ Same 3B must print English **and** an action. Official HF path: `processor.gener
 - Weights: [`IPEC-COMMUNITY/EO-1-3B`](https://huggingface.co/IPEC-COMMUNITY/EO-1-3B) (~4B listed, ~6.5 GB).
 - Code: https://github.com/EO-Robotics/EO1
 - Paper: https://arxiv.org/abs/2508.21112
-- Frames: official `demo_data/example1.jpg` + `example2.png` — **on-distribution** for their reasoning demo (not LIBERO).
+- Frames: official `demo_data/example1.jpg` (tic-tac-toe table) and `example2.png` (toy kitchen). **Two scenes, not a camera pair.** Their README chat snippet uses example2 only.
 - Not interruptible: one decoder, interleaved text + flow, no async S1.
 - Planner size is **3B** (below the 12B bar). This window tests the mouth-while-acting claim, not Path N.
 
