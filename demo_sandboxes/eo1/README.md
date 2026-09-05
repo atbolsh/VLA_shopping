@@ -1,5 +1,9 @@
 # EO-1 — interleaved text + action
 
+**Build-out (2026-09-05): this checkpoint + LIBERO.** That is the system. Bridge visual matching is not.
+
+Reasons: the 3B mouth already talks (`chat.ipynb`); they publish 98.2% on LIBERO after a light finetune; LIBERO is a full MuJoCo Franka gym you can stay in (many tasks, long horizon), whereas SimplerEnv’s Bridge exam is four short WidowX scenes; LIBERO data and `experiments/2_libero` / `lerobot-eval --env.type=libero` actually exist. The Hub 3B is a generalist — LIBERO act needs their LIBERO `robot_config` / tune, not the empty Hub config and not `play.ipynb` (that WidowX wrapper was a detour).
+
 **Run only on a rented RTX 5090 or RTX 5000 box. Do not execute `setup.sh` on the notes machine.**
 
 Same 3B must print English **and** an action. Official HF path: `processor.generate(model, batch)` → `output.text` + `output.action`. Do **not** load a second VLM.

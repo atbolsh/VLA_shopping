@@ -1,6 +1,6 @@
 # Test plan
 
-**Next window starts at [`09_next_session.md`](09_next_session.md).** **Start with EO-1**, then ChatVLA → WALL-OSS → ECoT. None interruptible. EO-1 and ECoT stills are on-distribution. The 2026-09-03/04 crop is **rejected**. InternVLA-N1 is **never** the next box.
+**Build-out is EO-1 + LIBERO** ([`09_next_session.md`](09_next_session.md), repo `README.md`). The 2026-09-03/04 crop is **rejected**. InternVLA-N1 is **never** the next box. Do not start ChatVLA / WALL-OSS / ECoT / Bridge VM.
 
 The rest of this file is later pull-day smokes, after a sandbox you still like.
 

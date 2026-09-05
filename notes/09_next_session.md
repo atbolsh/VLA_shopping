@@ -1,6 +1,12 @@
 # Next session (English while acting)
 
-Decided 2026-09-04 after the first crop failed. Do **not** start this in the window that wrote the note. **Next time: start with EO-1**, then ChatVLA → WALL-OSS → ECoT. One sandbox at a time.
+**Build-out decided 2026-09-05: EO-1 + LIBERO.** The English-while-acting crop stops here. Next work is a LIBERO closed loop on the same `EO-1-3B` (official `experiments/2_libero` / `lerobot-eval --env.type=libero`), not Bridge VM and not the other three sandboxes.
+
+Why: mouth already talks on the VL-eval railroad; LIBERO is a real MuJoCo Franka gym you can stay in (many tasks), with a 98.2% published number after a light finetune; Bridge visual matching is only four WidowX exam scenes; ChatVLA/WALL-OSS unopened; ECoT kernel/`timm` dead end on a `below_reject` Llama-2-7B. The 3B Hub dump is a generalist — LIBERO act needs their LIBERO config/tune, not the empty Hub `robot_config`.
+
+---
+
+Decided 2026-09-04 after the first crop failed. That window’s order was EO-1 → ChatVLA → WALL-OSS → ECoT. **Superseded by the 2026-09-05 build-out above.**
 
 **InternVLA-N1 is not the next box. Never again.** DualVLN is rejected. Do not reopen it, do not “just try System-2 chat,” do not rent 2×5090 for it.
 

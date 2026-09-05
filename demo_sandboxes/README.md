@@ -1,5 +1,7 @@
 # Demo sandboxes (vast.ai Blackwell: RTX 5090 or RTX 5000)
 
+**Build-out (2026-09-05): EO-1 + LIBERO.** Mouth already works; LIBERO is the playable 3D physics gym with published high numbers and an official tune/eval railroad. Do not spend the next window on Bridge VM, ChatVLA, WALL-OSS, or ECoT. Details at the top of [`../README.md`](../README.md) and [`eo1/README.md`](eo1/README.md).
+
 Four independent projects. Each has its own `setup.sh`, `requirements.txt`, harness, and notebook. **Do not run any of these on the notes machine** (`LVA_shopping` workstation). Rent a box, copy the repo (or just this directory plus the repo-root `.env`), run `setup.sh` there.
 
 The 2026-09-03/04 crop (JARVIS, Molmo, Rynn, InternVLA-N1) was **rejected** and **deleted**. InternVLA-N1 is never the next box.

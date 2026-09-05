@@ -1,5 +1,20 @@
 # LVA / VLA shopping
 
+**Build-out (decided 2026-09-05): EO-1 + LIBERO.** Not Bridge visual matching. Not ChatVLA, WALL-OSS, or ECoT.
+
+Why this pair:
+
+- **Mouth already works.** The same `IPEC-COMMUNITY/EO-1-3B` weights print readable English on their VL-eval railroad (`chat.ipynb`). That was the crop’s bar. ChatVLA / WALL-OSS were never opened; ECoT is blocked on a kernel/`timm` mess and a Llama-2-7B core you already reject.
+- **Published control numbers, and they are high.** Their LIBERO suite is 98.2% after a lightweight finetune — the number every other VLA quotes. Official railroad: `experiments/2_libero` and LeRobot `lerobot-eval --env.type=libero`.
+- **LIBERO is a real 3D physics gym you can stay in.** MuJoCo / robosuite Franka, four suites, many language tasks, long-horizon. Bridge *visual matching* is also physics (SAPIEN), but the shipped WidowX exam is **four short scenes**. BridgeData V2 (the real videos in EO-1’s pretrain) is a dataset, not a playable world. You are choosing the lounge, knowing the raw 3B *saw* Bridge in pretrain and *reports* LIBERO after a modest tune.
+- **Data and eval are actually available.** LIBERO demos, LeRobot env, and their tune scripts exist. Bridge VM needs SimplerEnv + Vulkan; that install is what you walked away from.
+
+This is not Path N and not Gemma 4 12B. Planner is 3B. Not interruptible. The 3B Hub dump is a generalist; LIBERO act needs their LIBERO `robot_config` / finetune, not the empty Hub config and not the WidowX wrapper in `play.ipynb`.
+
+Sandbox: [`demo_sandboxes/eo1`](demo_sandboxes/eo1/README.md). Crop log: [`notes/09_next_session.md`](notes/09_next_session.md).
+
+---
+
 Notes for picking a **Vision-Language-Action** model (literature name: VLA; here: LVA) that already splits **slow plan** from **quick twitch**, stays near the 7B class, and can live in a 3D world — ideally one that can later invent its own overnight training data.
 
 This repo does **not** download weights. It is the shopping list. Cards are written so a later agent can update scores after the first pull (`notes/04_test_plan.md`).
@@ -55,15 +70,8 @@ scripts/         fetch_papers.sh
 AGENTS.md        how a later agent should edit this
 ```
 
-## Next session (English while acting)
+## Next session
 
-Scorecard pull numbers are shopping rank, **not** the next window. First crop (JARVIS, Molmo-Think, Rynn, InternVLA-N1 DualVLN) is **rejected**. InternVLA-N1 is **never** the next box.
+**EO-1 + LIBERO.** Crop of four is closed. First crop (JARVIS, Molmo-Think, Rynn, InternVLA-N1 DualVLN) stays **rejected**.
 
-1. **EO-1** — [`demo_sandboxes/eo1`](demo_sandboxes/eo1/README.md) — **start here.** On-distribution demo stills. Not interruptible.
-2. **ChatVLA-1** — [`demo_sandboxes/chatvla`](demo_sandboxes/chatvla/README.md)
-3. **WALL-OSS** — [`demo_sandboxes/wall_oss`](demo_sandboxes/wall_oss/README.md)
-4. **ECoT-OpenVLA** — [`demo_sandboxes/ecot_openvla`](demo_sandboxes/ecot_openvla/README.md)
-
-Same policy weights must print English intermediate goals **and** an action. No second VLM. One folder at a time on a rented RTX 5090 or RTX 5000. **Do not run `setup.sh` on this notes machine.**
-
-Full link list: [`notes/09_next_session.md`](notes/09_next_session.md). Sandbox installers: [`demo_sandboxes/README.md`](demo_sandboxes/README.md). Later smokes: [`notes/04_test_plan.md`](notes/04_test_plan.md).
+Full note: [`notes/09_next_session.md`](notes/09_next_session.md). Sandbox: [`demo_sandboxes/eo1`](demo_sandboxes/eo1/README.md). **Do not run `setup.sh` on this notes machine.**
