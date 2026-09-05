@@ -70,7 +70,22 @@ fi
 
 _try python -m pip install "transformers>=4.49,<4.58"
 
-_try python -m pip install -r requirements.txt
+if ! _try python -m pip install -r requirements.txt; then
+  echo "requirements.txt failed (often torchcodec). Installing Hub import-time deps, then lerobot --no-deps."
+  _try python -m pip install accelerate safetensors huggingface-hub pillow numpy einops sentencepiece protobuf \
+    qwen-vl-utils ipykernel ipywidgets jupyter python-dotenv requests "transformers>=4.49,<4.58" \
+    "datasets>=2.19.0,<=3.6.0" "diffusers>=0.27.2" "jsonlines>=4.0.0" "draccus==0.10.0" \
+    "opencv-python-headless>=4.9.0" "av>=14.2.0"
+  _try python -m pip install "lerobot==0.3.3" --no-deps
+fi
+
+# lerobot may replace the cu128 wheel with a CPU/cu126 build. Put ours back.
+if [[ "$TORCH_RUNG" == "2.7.0+cu128" ]]; then
+  _try python -m pip install "torch==2.7.0" "torchvision==0.22.0" --index-url "$CU128"
+elif [[ "$TORCH_RUNG" == "2.8.0+cu128" ]]; then
+  _try python -m pip install "torch==2.8.0" --index-url "$CU128"
+  _try python -m pip install torchvision --index-url "$CU128"
+fi
 
 python - <<'PY'
 import torch, sys
@@ -79,6 +94,10 @@ arch = torch.cuda.get_arch_list() if torch.cuda.is_available() else []
 print("arch", arch)
 if not any(a.startswith("sm_12") for a in arch):
     sys.exit("FAIL: no sm_120")
+import lerobot
+from lerobot.configs.types import FeatureType, NormalizationMode, PolicyFeature
+from lerobot.policies.normalize import Normalize, Unnormalize
+print("lerobot", getattr(lerobot, "__version__", "?"))
 PY
 
 mkdir -p vendor weights logs screenshot
@@ -99,6 +118,7 @@ python download_frames.py
 python -m ipykernel install --user --name eo1 --display-name "eo1"
 {
   echo "torch=$TORCH_RUNG"
+  echo "lerobot=0.3.3"
   echo "kernel=eo1"
 } > .rung
 echo "EO-1 setup done. Rung:"

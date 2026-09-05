@@ -15,3 +15,6 @@ jupyter
 python-dotenv
 requests
 transformers>=4.49,<4.58
+# Hub processing_eo1.py imports lerobot. Official EO-1 pin is >=0.3.3,<=0.3.4;
+# 0.3.4 was never published. Do not float to 0.4+ (moved Normalize / FeatureType).
+lerobot==0.3.3

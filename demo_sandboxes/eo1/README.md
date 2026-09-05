@@ -18,4 +18,11 @@ bash setup.sh
 # kernel: eo1
 ```
 
-Open `demo.ipynb`. Raw text first, then the action array.
+If this venv already exists and the notebook raises `ImportError: ... lerobot`, do **not** re-run setup. In the eo1 venv:
+
+```bash
+python -m pip install "lerobot==0.3.3"
+python -m pip install "torch==2.7.0" "torchvision==0.22.0" --index-url https://download.pytorch.org/whl/cu128
+```
+
+Restart the **eo1** kernel. Open `demo.ipynb`. Raw text first, then the action array.
