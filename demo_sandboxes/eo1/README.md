@@ -25,10 +25,10 @@ python -m pip install "lerobot==0.3.3" "huggingface-hub>=0.34.2,<1.0"
 python -m pip install "torch==2.7.0" "torchvision==0.22.0" --index-url https://download.pytorch.org/whl/cu128
 ```
 
-If lerobot already landed and pip warned that `transformers` wants `huggingface-hub<1.0`:
+If pip then warns that `diffusers` wants `huggingface-hub>=1.23`:
 
 ```bash
-python -m pip install "huggingface-hub>=0.34.2,<1.0"
+python -m pip install "huggingface-hub>=0.34.2,<1.0" "diffusers>=0.27.2,<0.39"
 ```
 
 Restart the **eo1** kernel. Open `demo.ipynb`. Raw text first, then the action array.

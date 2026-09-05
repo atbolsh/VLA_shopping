@@ -74,13 +74,13 @@ if ! _try python -m pip install -r requirements.txt; then
   echo "requirements.txt failed (often torchcodec). Installing Hub import-time deps, then lerobot --no-deps."
   _try python -m pip install accelerate safetensors "huggingface-hub>=0.34.2,<1.0" pillow numpy einops sentencepiece protobuf \
     qwen-vl-utils ipykernel ipywidgets jupyter python-dotenv requests "transformers>=4.49,<4.58" \
-    "datasets>=2.19.0,<=3.6.0" "diffusers>=0.27.2" "jsonlines>=4.0.0" "draccus==0.10.0" \
+    "datasets>=2.19.0,<=3.6.0" "diffusers>=0.27.2,<0.39" "jsonlines>=4.0.0" "draccus==0.10.0" \
     "opencv-python-headless>=4.9.0" "av>=14.2.0"
   _try python -m pip install "lerobot==0.3.3" --no-deps
 fi
 
-# lerobot floats huggingface-hub to 1.x; transformers 4.57 needs <1.0.
-_try python -m pip install "huggingface-hub>=0.34.2,<1.0"
+# lerobot floats huggingface-hub to 1.x and diffusers to 0.40. Put the 4.57-safe pair back.
+_try python -m pip install "huggingface-hub>=0.34.2,<1.0" "diffusers>=0.27.2,<0.39"
 
 # lerobot may replace the cu128 wheel with a CPU/cu126 build. Put ours back.
 if [[ "$TORCH_RUNG" == "2.7.0+cu128" ]]; then
